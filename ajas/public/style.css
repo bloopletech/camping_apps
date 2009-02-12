@@ -1,0 +1,61 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; }
+* { font-family: "Lucida Grande", Georgia, "Times New Roman", serif; font-size: 100%; line-height: 1.2; }
+body { background-color: #ffffff; color: #000000; padding: 1em; text-align: center; }
+h1 { font-size: 200%; margin: 0 0; font-weight: bold; }
+h1 a { color: #000000; text-decoration: none; }
+h2 { font-size: 150%; margin: 0.8em 0 0.5em 0; font-weight: bold; }
+h3 { font-size: 110%; margin: 0.8em 0; font-weight: bold; }
+p { margin: 0 0 1em 0; }
+ul { margin: 1em 0 1em 1.5em; }
+label { width: 10em; display: block; float: left; text-align: right; padding: 0.2em 0.3em 0 0; }
+input, select, textarea { width: 20em; }
+textarea { height: 15em; }
+input.submit { margin-left: 10.3em; width: 8em; }
+form div { clear: left; margin: 0.5em; }
+form div div { clear: none; }
+div.upload div { width: 25em; }
+div.upload img { float: left; }
+div.upload div { float: left; }
+div.upload div.clear { float: none; }
+input.file { margin: 0 0.5em; }
+
+#header { padding-bottom: 0.5em; border-bottom: 1px solid #a0a0a0; margin-bottom: 1em; position: relative; height: 3em; }
+#nav { float: right; }
+
+#success { background-color: #008000; border: 1px solid #00ff00; padding: 0.5em; color: #ffffff; margin-bottom: 1em; }
+#success ul, #errors ul { list-style-type: none; margin: 0; }
+
+#errors { background-color: #a00000; border: 1px solid #ff0000; padding: 0.5em; color: #ffffff; margin-bottom: 1em; }
+
+#footer { margin: 1em 0 0 0; padding-top: 1em; border-top: 1px solid #a0a0a0; }
+
+#wrapper { width: 950px; margin: 0 auto; text-align: left; }
+
+.column { margin-right: 1em; float: left; width: 33%; }
+.clear { clear: both; }
+
+table { border: none; border-collapse: collapse; margin-bottom: 1em; }
+table td, table th { padding: 0.3em; border-right: 1px solid #a0a0a0; border-bottom: 1px solid #a0a0a0; vertical-align: top; }
+table td.last_r, table th.last_r { border-right: none; }
+table tr.last_b td, table tr.last_b th { border-bottom: none; }
+
+
+form table select { width: auto; }
+form table input.submit { width: 6em; margin-left: 0; }
+form table #consumed_advanced { width: 6em; }
+
+
+
+#column1, #column2, #column3 { float: left; width: 33.333333%; }
+#column1 .inner { margin-right: 0.5em; /*background-color: #ff0000;*/ }
+#column2 .inner { margin-left: 0.5em; margin-right: 0.5em; /*background-color: #ffff00;*/ }
+#column3 .inner { margin-left: 0.5em; /*background-color: #0000ff;*/ }
+
+#anime_image { float: right; margin-left: 1em; margin-bottom: 1em; }

@@ -1,0 +1,9 @@
+.svn
+_configuration.rb
+*.log
+*.sql
+.DS_Store
+stuff
+open.app
+open.rb
+portfolio/public
