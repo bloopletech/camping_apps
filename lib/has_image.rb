@@ -133,7 +133,7 @@ module ActiveRecord #:nodoc:
         @image_data ||= {}
         @image_data.each_pair do |field_name, (status, old_status, file_data, small_size, large_size)|
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
-
+puts "status: #{status}, old_status: #{old_status}, file_data: #{file_data}, small_sive: #{small_size}, large_size: #{large_size}, lp: #{send("#{field_name}_large_path")}"
           if status == :upload
             file_data.rewind
             tf = Tempfile.new("temp_image")

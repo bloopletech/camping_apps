@@ -1,0 +1,15 @@
+You will need to add a file called _configuration.rb with contents similar to:
+
+#start file
+DBCONN = { :adapter => 'mysql',
+:database => 'camping',
+:username => 'root',
+:password => '',
+:host => 'localhost' }
+
+EZCRYPTO1, EZCRYPTO2 = "long random string", "long random string"
+
+PORTFOLIO_PASSWORD = "random string"
+#end file
+
+This file contains the database configuration hash (DBCONN), the encryption key and salt for reauthrss, and the password for the portfolio administration.

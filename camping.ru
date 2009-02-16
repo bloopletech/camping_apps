@@ -7,6 +7,8 @@
 # rackup camping.ru
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
 
+require '_configuration'
+
 require 'camping'
 require 'lib/markaby/lib/markaby'
 require 'active_record'

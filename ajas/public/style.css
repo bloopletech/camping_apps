@@ -59,3 +59,6 @@ form table #consumed_advanced { width: 6em; }
 #column3 .inner { margin-left: 0.5em; /*background-color: #0000ff;*/ }
 
 #anime_image { float: right; margin-left: 1em; margin-bottom: 1em; }
+
+#header_image_wrap { margin-bottom: 1em; }
+#header_image_wrap img { border: 0; }

@@ -4,6 +4,24 @@ module Ajas::Models
   class AnimeTitle < Base
     has_image false, 'image', [250, nil], [1000, nil]
     has_image false, 'banner', [250, nil], [950, nil]
+    has_many :anime_title_comments
+    
+    def self.random
+      find(:first, :order => 'RAND()')
+    end
+
+    def self.random_with_image
+      find(:first, :conditions => 'has_image = true', :order => 'RAND()')
+    end
+  end
+  
+  class AnimeTitleComment < Base
+    validates_presence_of :username
+    validates_length_of :body, :within => 1..3000
+    validates_inclusion_of :bot, :in => %w(K)
+    validates_associated :page
+    belongs_to :page
+    attr_accessor :bot
   end
   
   class CreateAnimeModels < V 1.5
@@ -30,6 +48,19 @@ module Ajas::Models
       add_column :ajas_anime_titles, :episodes, :integer
     end
   end
+
+  class RenameBannerAndAddComments < V 5.0
+    def self.up
+      rename_column :ajas_anime_titles, :has_baner, :has_banner
+      
+      create_table :ajas_anime_title_comments do |table|
+        table.integer :anime_title_id
+        table.string :username
+        table.text :body
+        table.datetime :created_at
+      end
+    end
+  end
 end
 
 module Ajas::Controllers
@@ -44,13 +75,15 @@ module Ajas::Controllers
   class AnimeAdminCreate < R '/admin/anime/create'
     def get
       return unless admin_logged_in?
-      @anime_title = AnimeTitle.new(:title => '', :description => '', :has_image => false, :showing_start => Date.today, :showing_end => Date.today)
+      @anime_title = AnimeTitle.new(:title => '', :description => '', :has_image => false, :has_banner => false, :showing_start => Date.today,
+       :showing_end => Date.today)
       render :admin_anime_create
     end
     def post
       return unless admin_logged_in?
       @anime_title = AnimeTitle.new(:title => input.title, :description => input.description, :has_image => input.has_image,
-       :image => input.image[:tempfile], :showing_start => input.showing_start, :showing_end => input.showing_end)
+        :image => (!input.image.nil? ? input.image[:tempfile] : nil), :has_banner => input.has_banner,
+         :banner => (!input.banner.nil? ? input.banner[:tempfile] : nil), :showing_start => input.showing_start, :showing_end => input.showing_end)
       if @anime_title.save
         add_success("Added title")
         redirect '/admin/anime'
@@ -71,7 +104,8 @@ module Ajas::Controllers
       return unless admin_logged_in?
       @anime_title = AnimeTitle.find(id.to_i)
       if @anime_title.update_attributes(:title => input.title, :description => input.description, :has_image => input.has_image,
-        :image => (!input.image.nil? ? input.image[:tempfile] : nil), :showing_start => input.showing_start, :showing_end => input.showing_end)
+        :image => (!input.image.nil? ? input.image[:tempfile] : nil), :has_banner => input.has_banner,
+         :banner => (!input.banner.nil? ? input.banner[:tempfile] : nil), :showing_start => input.showing_start, :showing_end => input.showing_end)
         add_success("Updated title")
         redirect '/admin/anime'
       else
@@ -84,7 +118,30 @@ module Ajas::Controllers
   class AnimeShowTitle < R '/anime/(\d+)'
     def get(id)
       @anime_title = AnimeTitle.find(id.to_i)
+      @anime_title_comment = AnimeTitleComment.new
       render :anime_title
+    end
+    def post(id)
+      @anime_title = AnimeTitle.find(id.to_i)
+      @anime_title_comment = @anime_title.anime_title_comments.new(:username => input.username, :body => input.body, :bot => input.bot)
+      if @anime_title_comment.save
+        add_success("Comment posted")
+        redirect "/anime/#{@anime_title.id}"
+      else
+        @anime_title.errors.full_messages.each { |msg| add_error(msg) }
+        @anime_title_comment.errors.full_messages.each { |msg| add_error(msg) }
+        render :anime_title
+      end
+    end
+  end
+
+  class AnimeTitleDeleteComment < R '/anime/delete_comment/(\d+)'
+    def get(id)
+      @anime_title_comment = AnimeTitleComment.find(id.to_i)
+      anime_title_id = @anime_title_comment.anime_title_id
+      @anime_title_comment.destroy
+      add_success('Comment deleted')
+      redirect "/anime/#{anime_title_id}"
     end
   end
 end
@@ -180,6 +237,10 @@ module Ajas::Views
         text image_column(@anime_title, 'image')
       end
       div do
+        label_for :banner
+        text image_column(@anime_title, 'banner')
+      end
+      div do
         input :type => :submit, :class => 'submit', :value => 'Save title'
       end
     end
@@ -195,6 +256,33 @@ module Ajas::Views
     text @anime_title.description
     p { "Showing from #{nice_date @anime_title.showing_start} to #{nice_date @anime_title.showing_end}." }
     div.clear { "" }
+    h3 { "Comments" }
+    unless @anime_title.anime_title_comments.empty?
+      @anime_title.anime_title_comments.each do |c|
+        div.comment do
+          p.body c.body
+          p.username "#{c.username} @ #{nice_date_time(c.created_at)}"
+          a 'Delete', :href => "/anime/delete_comment/#{c.id}", :onclick => "return confirm('Are you sure?');" if admin_logged_in?
+        end
+      end
+    else
+      p { "There aren't any comments yet!" }
+    end
+    h3 { "Post a comment" }
+    form :action => "/anime/#{@anime_title.id}", :method => :post do
+      div do
+        label_for :name, @anime_title_comment, :username, :accesskey => 'C'
+        input.name! :name => :username, :value => @anime_title_comment.username, :size => 41, :type => :text
+      end
+      div do
+        label_for :comment, @anime_title_comment, :body
+        textarea.comment! @anime_title_comment.body, :name => :body, :cols => 60, :rows => 10
+        input.bot! :type => :hidden, :name => :bot, :value => 'spambot'
+      end
+      div do
+        input :type => :submit, :class => :submit, :value => 'Add', :onclick => "getElementById('bot').value='K'"
+      end
+    end
   end
     
 end

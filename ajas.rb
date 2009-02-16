@@ -119,6 +119,15 @@ module Ajas::Views
               h1 { a("AJAS: Adelaide Japanese Animation Society", :href => '/') }
             end
             div.main! do
+              div.header_image_wrap! do
+                if defined?(@anime_title) and @anime_title.has_banner?
+                  img(:src => @anime_title.banner_large_url)
+                else
+                  t = Ajas::Models::AnimeTitle.random_with_image
+                  a(:href => "/anime/#{t.id}", :id => 'header_image_link') { img(:src => t.banner_large_url) }
+                end
+              end
+
               @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
               unless @state[:flash][:success].empty?
                 div.success! do
