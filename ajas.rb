@@ -120,6 +120,7 @@ module Ajas::Views
             end
             div.main! do
               div.header_image_wrap! do
+                p.nav! { [a('Home', :href => '/'), a('Forum', :href => 'http://ajas.org.au/forum/'), a('Where to find us', :href => '/blog/1/')].join(' | ') }
                 if defined?(@anime_title) and @anime_title.has_banner?
                   img(:src => @anime_title.banner_large_url)
                 else
@@ -144,7 +145,6 @@ module Ajas::Views
               end
               @state[:flash][:errors] = []
 
-              p.nav! { [a('Home', :href => '/'), a('Forum', :href => 'http://ajas.org.au/forum/'), a('Where to find us', :href => '/blog/1/')].join(' | ') }
 
               if admin_logged_in?
                 p { [a('Blog', :href => '/admin/blog'), a('Anime', :href => '/admin/anime'), a("Pages", :href => '/admin/pages'),

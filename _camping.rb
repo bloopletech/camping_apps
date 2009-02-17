@@ -27,6 +27,10 @@ end
 if $0 == __FILE__
   require 'rubygems'
   require 'active_record'
+
+  require 'mysqlplus'
+  class Mysql; alias :query :async_query; end
+
   require 'will_paginate'
   require 'ostruct'
 

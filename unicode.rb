@@ -11,8 +11,12 @@ end
 module Unicode::Controllers
   class Index < R '/'
     def get
-1.upto(100000) do |n|
-end
+      if $mapping.empty?
+        IO.readlines(Unicode::PATH + "/unicode.txt").each do |line|
+          code_point, name = line.strip.split("\t")
+          $mapping[code_point] = name
+        end
+      end
       render :index
     end
   end
@@ -57,8 +61,4 @@ end
 
 def Unicode.create
   $mapping = {}
-  IO.readlines(Unicode::PATH + "/unicode.txt").each do |line|
-    code_point, name = line.strip.split("\t")
-    $mapping[code_point] = name
-  end
 end

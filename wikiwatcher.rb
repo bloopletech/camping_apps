@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+#=begin
 require 'hpricot'
 require 'htmlentities/string'
 require 'net/http'
@@ -276,3 +276,4 @@ def WikiWatcher.create
     end
   end  
 end
+#=end
