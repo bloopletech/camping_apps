@@ -185,6 +185,7 @@ module Ajas::Views
       h2 { h @page.title }
       text @page.body
       p { "Last updated: #{nice_date_time @page.updated_at}" }
+=begin
       h3 { "Comments" }
       unless @page.page_comments.empty?
         @page.page_comments.each do |c|
@@ -212,6 +213,7 @@ module Ajas::Views
           input :type => :submit, :class => :submit, :value => 'Add', :onclick => "getElementById('bot').value='K'"
         end
       end
+=end
     end
   end
 end

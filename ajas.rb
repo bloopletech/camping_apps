@@ -116,11 +116,12 @@ module Ajas::Views
         body do
           div.wrapper! do
             div.header! do
-              h1 { a("AJAS: Adelaide Japanese Animation Society", :href => '/') }
+              h1 { a(:href => '/') { img(:src => '/logo.png', :alt => "AJAS: Adelaide Japanese Animation Society") } }
             end
             div.main! do
               div.header_image_wrap! do
-                p.nav! { [a('Home', :href => '/'), a('Forum', :href => 'http://ajas.org.au/forum/'), a('Where to find us', :href => '/blog/1/')].join(' | ') }
+                pages = Ajas::Models::Page.find(:all, :conditions => 'id NOT IN (1, 2)', :order => 'title ASC')
+                p.nav! { ([a('Home', :href => '/'), a('Anime Titles', :href => '/anime/index'), a('Forum', :href => 'http://ajas.org.au/forum/')] + pages.map { |p| a(p.title, :href => "/page/#{p.id}") }).join(' | ') }
                 if defined?(@anime_title) and @anime_title.has_banner?
                   img(:src => @anime_title.banner_large_url)
                 else
@@ -153,7 +154,7 @@ module Ajas::Views
               self << content
             end
             div.footer! do
-              p { "This is a temporary design." }
+              p { "Website powered by Ruby. #{a('Admin login', :href => '/admin/login')}." }
             end
           end
         end
@@ -187,7 +188,7 @@ module Ajas::Views
     div.column1! do
       div.inner do
         h2 { "Blog" }
-        blog_list_posts
+        blog_list_posts(true)
         p { a('More...', :href => '/blog/archive/1') } unless Ajas::Models::BlogPost.count(:all) <= 1
       end
     end
@@ -201,6 +202,10 @@ module Ajas::Views
       div.inner do
         h2 { "Welcome to AJAS" }
         text Ajas::Models::Page.find(1).body
+        h2 { "Affiliates" }
+        p { a(:href => 'http://www.unisa.edu.au/unilife/') { img :src => '/unilife.png' } }
+        p { a(:href => 'http://www.unisaga.org/') { img :src => '/unisaga.png' } }
+        p { a(:href => 'http://www.facebook.com/group.php?gid=18203679976') { img :src => '/facebook.png' } }
       end
     end
     div.clear { "" }

@@ -87,6 +87,10 @@ module Kc::Models
     def lowest_score
       scores.find(:first, :order => 'score ASC')
     end
+
+    def most_recent_score
+      scores.find(:first, :order => 'kc_scores.when DESC')
+    end
   end
 
   class CreateKc < V 1
@@ -133,16 +137,17 @@ module Kc::Controllers
 
   class Index < R '/'
     def get
+      #z = Time.now
       @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
       @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 3)
-      user_ids = User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3)
-      @users_by_scores_submitted = user_ids.map { |u| User.find(u.id, :include => :scores) }
+      @users_by_scores_submitted = User.find(User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3).map(&:id), :include => :scores)
       @shouts = Shout.find(:all, :order => "posted DESC", :limit => 5)
       @shout = Shout.new
       @user = User.new
       @user_count = User.count
       @score_count = Score.count
+      #puts "time in controller: #{Time.now - z}"
       render :index
     end
   end
@@ -554,6 +559,7 @@ module Kc::Views
   end
 
   def index
+   #z = Time.now
     @content_for = {}
 
     div.col_right do
@@ -573,12 +579,12 @@ module Kc::Views
         end
 
         @users_by_scores_submitted.each do |u|
-          last_active = u.scores.sort_by { |s| s.when }.last.when
+          last_active = u.most_recent_score.when
           
           attrs = {}
           attrs['class'] = 'last_b' if u == @users_by_scores_submitted.last
           tr attrs do
-            td.score { number_with_delimiter(u.scores.length) }
+            td.score { number_with_delimiter(u.scores.count) }
             td { a(h(u.name), :href => "/users/#{u.id}") }
             text "<td class='last_r' rel='#{last_active.to_i * 1000}'>#{nice_date_time last_active}</td>"
           end
@@ -667,6 +673,7 @@ module Kc::Views
     end
 
     div.clear { " " }
+    #puts "Time in view method: #{Time.now - z}"
   end
 
   def show

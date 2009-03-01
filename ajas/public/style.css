@@ -6,7 +6,7 @@ small, strike, strong, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; }
-* { font-family: "Lucida Grande", Georgia, "Times New Roman", serif; font-size: 100%; line-height: 1.2; }
+* { font-family: "Lucida Grande", "Trebuchet MS", Verdana, sans-serif; font-size: 100%; line-height: 1.2; }
 body { background-color: #363636; color: #000000; padding: 1em; text-align: center; }
 h1 { font-size: 200%; margin: 0 0; font-weight: bold; }
 h1 a { color: #000000; text-decoration: none; }
@@ -25,9 +25,10 @@ div.upload img { float: left; }
 div.upload div { float: left; }
 div.upload div.clear { float: none; }
 input.file { margin: 0 0.5em; }
+img { border: 0; }
 
 #header { padding-bottom: 0.5em; border-bottom: 1px solid #a0a0a0; margin-bottom: 1em; position: relative; height: 3em; }
-#nav { position: absolute; right: 0.5em; top: 0.5em; background: #ffffff; opacity: 0.95; padding: 0.5em; margin: -0.5em -0.5em 0 0; font-size: 110%; }
+#nav { position: absolute; right: 0; top: 0; background: #ffffff; padding: 0.5em; margin: 0; font-size: 110%; }
 
 #success { background-color: #008000; border: 1px solid #00ff00; padding: 0.5em; color: #ffffff; margin-bottom: 1em; }
 #success ul, #errors ul { list-style-type: none; margin: 0; }
@@ -35,8 +36,9 @@ input.file { margin: 0 0.5em; }
 #errors { background-color: #a00000; border: 1px solid #ff0000; padding: 0.5em; color: #ffffff; margin-bottom: 1em; }
 
 #footer { margin: 1em 0 0 0; padding-top: 1em; border-top: 1px solid #a0a0a0; }
+#footer p { margin-bottom: 0; }
 
-#wrapper { width: 950px; margin: 0 auto; text-align: left; background-color: #ffffff; padding: 1em; }
+#wrapper { width: 930px; margin: 0 auto; text-align: left; background-color: #ffffff; padding: 1em; }
 
 .column { margin-right: 1em; float: left; width: 33%; }
 .clear { clear: both; }
@@ -54,11 +56,12 @@ form table #consumed_advanced { width: 6em; }
 
 
 #column1, #column2, #column3 { float: left; width: 33.333333%; }
-#column1 .inner { margin-right: 0.5em; /*background-color: #ff0000;*/ }
-#column2 .inner { margin-left: 0.5em; margin-right: 0.5em; /*background-color: #ffff00;*/ }
-#column3 .inner { margin-left: 0.5em; /*background-color: #0000ff;*/ }
+#column1 h2, #column2 h2, #column3 h2 { margin-top: 0; }
+#column1 .inner { margin-right: 0.5em; background-color: #9999ff; color: #000000; padding: 0.5em; }
+#column2 .inner { margin-left: 0.5em; margin-right: 0.5em; background-color: #000000; color: #ffffff; padding: 0.5em; /*background-color: #ffff00;*/ }
+#column3 .inner { margin-left: 0.5em; background-color: #2B2E40; color: #ffffff;  padding: 0.5em; /*background-color: #0000ff;*/ }
 
 #anime_image { float: right; margin-left: 1em; margin-bottom: 1em; }
 
-#header_image_wrap { margin-bottom: 1em; position: relative; }
+#header_image_wrap { margin-bottom: 1em; position: relative; background-position: top center; }
 #header_image_wrap img { border: 0; }

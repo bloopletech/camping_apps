@@ -231,10 +231,11 @@ module Ajas::Views
     r(200, rss.to_s, 'Content-Type' => 'application/rss+xml; charset=UTF-8')
   end
 
-  def blog_list_posts
+  def blog_list_posts(small = false)
     @blog_posts.each do |p|
       div.blog_post do
-        h2 { a(p.title, :href => "/blog/#{p.id}#comments") }
+        c = a(p.title, :href => "/blog/#{p.id}#comments")
+        small ? h3 { c } : h2 { c }
         text p.body
         p { "Posted: #{nice_date_time p.created_at}" }
       end
@@ -246,6 +247,7 @@ module Ajas::Views
       h2 { h @blog_post.title }
       text @blog_post.body
       p { "Posted: #{nice_date_time @blog_post.created_at}" }
+=begin
       h3 { "Comments" }
       unless @blog_post.blog_comments.empty?
         @blog_post.blog_comments.each do |c|
@@ -273,6 +275,7 @@ module Ajas::Views
           input :type => :submit, :class => :submit, :value => 'Add', :onclick => "getElementById('bot').value='K'"
         end
       end
+=end
     end
   end
 end

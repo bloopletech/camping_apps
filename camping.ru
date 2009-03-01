@@ -1,5 +1,5 @@
 #!/usr/bin/env rackup
-
+require 'profile'
 #prerequisites:
 # unix-style OS, ruby 1.8.6, rubygems 0.9+, camping 1.9+ (i.e. git), activerecord 2.0.2+, rack 0.3.0+
 #to run:
@@ -9,9 +9,20 @@
 
 require '_configuration'
 
-require 'camping'
-require 'lib/markaby/lib/markaby'
+require 'rubygems'
 require 'active_record'
+
+#require 'mysqlplus'
+#class Mysql; alias :query :async_query; end
+
+require 'will_paginate'
+require 'ostruct'
+
+$:.unshift Pathname.new('./lib/camping/lib/').realpath
+
+require 'camping'
+require 'camping/server'
+require 'lib/markaby/lib/markaby'
 
 class Fixnum
   alias_method :xchr_old, :xchr  
@@ -29,6 +40,8 @@ module TBIBase
         r(404, "<h3>Oops! Page could not be found.</h3>")
       end
       def r500(k,m,x)
+        puts $!
+        puts $!.backtrace
         r(500, "<h3>Oops! An error occured; please try again.</h3>")
       end
       alias_method :initialize_without_rootfix, :initialize
@@ -49,16 +62,17 @@ Thread.new do
 end
 
 
-Camping::Models::Base.establish_connection(DBCONN)
-=begin
+#Camping::Models::Base.establish_connection(DBCONN)
+#=begin
 Camping::Models::Base.establish_connection(
 :adapter => 'mysql',
 :database => 'camping',
 :username => 'root',
 :password => '',
-:host => 'localhost'
+:host => 'localhost',
+:pool => 20
 )
-=end
+#=end
 
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
@@ -66,6 +80,8 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 #ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
+  next if file[0, 1] == '_'
+  puts file
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
   load file
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil

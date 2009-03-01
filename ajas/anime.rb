@@ -3,7 +3,7 @@ require 'lib/has_image'
 module Ajas::Models
   class AnimeTitle < Base
     has_image false, 'image', [250, nil], [1000, nil]
-    has_image false, 'banner', [250, nil], [950, nil]
+    has_image false, 'banner', [250, nil], [930, nil]
     has_many :anime_title_comments
     
     def self.random
@@ -64,6 +64,13 @@ module Ajas::Models
 end
 
 module Ajas::Controllers
+  class AnimeIndex < R '/anime/index'
+    def get
+      @anime_titles = AnimeTitle.find(:all, :order => 'title ASC')
+      render :anime_index
+    end
+  end
+
   class AnimeAdminIndex < R '/admin/anime'
     def get
       return unless admin_logged_in?
@@ -81,6 +88,8 @@ module Ajas::Controllers
     end
     def post
       return unless admin_logged_in?
+      puts "request: #{@request.inspect}"
+      puts "input: #{input.inspect}"
       @anime_title = AnimeTitle.new(:title => input.title, :description => input.description, :has_image => input.has_image,
         :image => (!input.image.nil? ? input.image[:tempfile] : nil), :has_banner => input.has_banner,
          :banner => (!input.banner.nil? ? input.banner[:tempfile] : nil), :showing_start => input.showing_start, :showing_end => input.showing_end)
@@ -246,6 +255,13 @@ module Ajas::Views
     end
   end
 
+  def anime_index
+    h2 { "List of anime we're watching or have watched" }
+    @anime_titles.each do |anime|
+      p { a(anime.title, :href => "/anime/#{anime.id}") }
+    end
+  end
+
   def anime_title
     h2 { h @anime_title.title }
     if @anime_title.has_image?
@@ -256,6 +272,8 @@ module Ajas::Views
     text @anime_title.description
     p { "Showing from #{nice_date @anime_title.showing_start} to #{nice_date @anime_title.showing_end}." }
     div.clear { "" }
+    p { "Discuss this anime in our #{a('anime forum', :href => 'http://ajas.org.au/forum/viewforum.php?f=4')}." }
+=begin
     h3 { "Comments" }
     unless @anime_title.anime_title_comments.empty?
       @anime_title.anime_title_comments.each do |c|
@@ -283,6 +301,7 @@ module Ajas::Views
         input :type => :submit, :class => :submit, :value => 'Add', :onclick => "getElementById('bot').value='K'"
       end
     end
+=end
   end
     
 end

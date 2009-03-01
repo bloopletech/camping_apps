@@ -564,11 +564,21 @@ module Camping
     # argument is the environment variables hash as per the Rack specification.
     # And array with [statuc, headers, body] is expected at the output.
     def call(e)
+      z = Time.now
+      #rid = 0.09876543213456
+      #puts "Servicing request #{rid}..."
+#      puts "now: #{z}"
       X.M
       e = H[e.to_hash]
       k,m,*a=X.D e.PATH_INFO,(e.REQUEST_METHOD||'get').downcase
       e.REQUEST_METHOD = m
-      k.new(e).service(*a).to_a
+      o = k.new(e).service(*a).to_a
+#      puts "now: #{Time.now}"
+      #puts "Clearing active connection on #{rid}"
+      #ActiveRecord::Base.clear_active_connections!
+      #puts "Serviced request #{rid}"
+      puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
+      o
     end
 
     # The Camping scriptable dispatcher.  Any unhandled method call to the app module will
