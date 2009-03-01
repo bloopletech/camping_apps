@@ -1,5 +1,5 @@
 #!/usr/bin/env rackup
-require 'profile'
+#require 'profile'
 #prerequisites:
 # unix-style OS, ruby 1.8.6, rubygems 0.9+, camping 1.9+ (i.e. git), activerecord 2.0.2+, rack 0.3.0+
 #to run:
@@ -62,8 +62,8 @@ Thread.new do
 end
 
 
-#Camping::Models::Base.establish_connection(DBCONN)
-#=begin
+Camping::Models::Base.establish_connection(DBCONN)
+=begin
 Camping::Models::Base.establish_connection(
 :adapter => 'mysql',
 :database => 'camping',
@@ -72,7 +72,7 @@ Camping::Models::Base.establish_connection(
 :host => 'localhost',
 :pool => 20
 )
-#=end
+=end
 
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
@@ -80,8 +80,9 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 #ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
+#  next unless file == 'kc.rb'
   next if file[0, 1] == '_'
-  puts file
+#  puts file
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
   load file
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil

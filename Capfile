@@ -1,13 +1,17 @@
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
 set :application, "camping"
-set :user, "bloople"
-set :repository,  "svn+slice://bloople@67.207.142.56/home/bloople/repo/camping/trunk"
-set :port, 9979
+#set :user, "bloople"
+#set :repository,  "svn+slice://bloople@67.207.142.56/home/bloople/repo/camping/trunk"
+#set :port, 9979
+set :scm, :git
+set :repository, "git@github.com:bloopletech/camping_apps.git"
 
 set :deploy_to, "/home/bloople/www/#{application}"
 
-set :deploy_via, :export
+set :deploy_via, :remote_cache
+
+upload "_configuration.rb", "#{deploy_to}/current/_configuration.rb"
 
 role :app, "bloople.net"
 role :web, "bloople.net"
