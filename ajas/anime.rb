@@ -271,8 +271,8 @@ module Ajas::Views
     end
     text @anime_title.description
     p { "Showing from #{nice_date @anime_title.showing_start} to #{nice_date @anime_title.showing_end}." }
-    div.clear { "" }
     p { "Discuss this anime in our #{a('anime forum', :href => 'http://ajas.org.au/forum/viewforum.php?f=4')}." }
+    div.clear { "" }
 =begin
     h3 { "Comments" }
     unless @anime_title.anime_title_comments.empty?
