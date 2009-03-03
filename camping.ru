@@ -62,8 +62,8 @@ Thread.new do
 end
 
 
-#Camping::Models::Base.establish_connection(DBCONN)
-#=begin
+Camping::Models::Base.establish_connection(DBCONN)
+=begin
 Camping::Models::Base.establish_connection(
 :adapter => 'mysql',
 :database => 'camping',
@@ -72,15 +72,15 @@ Camping::Models::Base.establish_connection(
 :host => 'localhost',
 :pool => 20
 )
-#=end
+=end
 
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
-  next unless file == 'kc.rb'
+#  next unless file == 'kc.rb'
   next if file[0, 1] == '_'
 #  puts file
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
