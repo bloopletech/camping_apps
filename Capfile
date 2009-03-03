@@ -25,7 +25,7 @@ namespace :deploy do
 
   desc "Restart the mongrel cluster"
   task :restart, :roles => :app do
-    run "killall -w rackup;(cd ~/www/camping/current/ && rackup -p 8004 -E none camping.ru 2>/dev/null >/dev/null &) | exit;"
+    run "killall -w rackup;(cd #{deploy_to}/current/ && rackup -p 8004 -E none camping.ru 2>/dev/null >/dev/null &) | exit;"
   end
 
   task :start, :roles => :app do
@@ -36,8 +36,7 @@ namespace :deploy do
   end
 
   task :after_update_code, :roles => :app do
-    ENV["FILES"] = "_configuration.rb"
-    upload
+    `scp -P #{port} _configuration.rb #{user}@bloople.net:#{deploy_to}/current/`
     run "ln -nfs #{deploy_to}/shared/system/blog/assets #{release_path}/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
@@ -45,8 +44,7 @@ namespace :deploy do
   end
 
   task :after_setup, :roles => :app do
-    ENV["FILES"] = "_configuration.rb"
-    upload
+    `scp -P #{port} _configuration.rb #{user}@bloople.net:#{deploy_to}/current/`
     run "mkdir #{deploy_to}/shared/system/blog #{deploy_to}/shared/system/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
