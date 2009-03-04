@@ -142,7 +142,7 @@ module Kc::Controllers
       @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 3)
       user_ids = User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3)
-      @users_by_scores_submitted = user_ids.map { |u| User.find(u.id, :include => :scores) }
+      @users_by_scores_submitted = user_ids.map { |u| User.find(u.id) }
 #      @users_by_scores_submitted = User.find(User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3).map(&:id))
       @shouts = Shout.find(:all, :order => "posted DESC", :limit => 5)
       @shout = Shout.new
