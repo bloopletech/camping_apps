@@ -141,7 +141,9 @@ module Kc::Controllers
       @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
       @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 3)
-      @users_by_scores_submitted = User.find(User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3).map(&:id))
+      user_ids = User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3)
+      @users_by_scores_submitted = user_ids.map { |u| User.find(u.id, :include => :scores) }
+#      @users_by_scores_submitted = User.find(User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3).map(&:id))
       @shouts = Shout.find(:all, :order => "posted DESC", :limit => 5)
       @shout = Shout.new
       @user = User.new
