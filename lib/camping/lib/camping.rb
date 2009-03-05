@@ -578,6 +578,7 @@ module Camping
       #ActiveRecord::Base.clear_active_connections!
       #puts "Serviced request #{rid}"
       puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
+      Camping::Models::Base.connection_pool.release_connection
       o
     end
 
