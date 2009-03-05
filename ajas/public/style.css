@@ -38,7 +38,7 @@ img { border: 0; }
 #footer { margin: 1em 0 0 0; padding-top: 1em; border-top: 1px solid #a0a0a0; }
 #footer p { margin-bottom: 0; }
 
-#wrapper { width: 930px; margin: 0 auto; text-align: left; background-color: #ffffff; padding: 16px; background-image: url(/ajas/back_top.png); background-repeat: no-repeat; }
+#wrapper { width: 930px; margin: 0 auto; text-align: left; background-color: #ffffff; padding: 16px; background-image: url(/back_top.png); background-repeat: no-repeat; }
 
 .column { margin-right: 1em; float: left; width: 33%; }
 .clear { clear: both; }
