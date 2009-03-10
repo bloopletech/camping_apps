@@ -261,7 +261,7 @@ module Kc::Controllers
 
       @headers['Content-Type'] = 'image/png'
       @headers['Content-Disposition'] = 'inline'
-      mab { text g.to_blob }
+      g.to_blob
     end
   end
 
@@ -293,7 +293,7 @@ module Kc::Controllers
 
       @headers['Content-Type'] = 'image/png'
       @headers['Content-Disposition'] = 'inline'
-      mab { text g.to_blob }
+      g.to_blob
     end
   end
 
