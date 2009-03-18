@@ -267,7 +267,7 @@ def WikiWatcher.create
   WikiWatcher::Models.create_schema
   ActiveRecord::Base.connection.execute("DELETE FROM wikiwatcher_edits;")
   ActiveRecord::Base.default_timezone = :utc
-=begin
+#=begin
   Thread.new do
     while(true)
       z = Time.now
@@ -277,6 +277,6 @@ def WikiWatcher.create
       sleep(30)
     end
   end
-=end 
+#=end 
 end
 #=end

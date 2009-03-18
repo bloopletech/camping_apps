@@ -77,7 +77,7 @@ Camping::Models::Base.establish_connection(
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
 #  next unless file == 'kc.rb'
