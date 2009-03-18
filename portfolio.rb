@@ -105,7 +105,7 @@ module Portfolio::Controllers
     def post
       return unless admin?
       @work = Work.new(:title => input.title, :url => input.url, :description => input.description, :has_image => input.has_image,
-       :image => input.image[:tempfile], :flash_movie => input.flash_movie, :tag_list => input.tag_list, :active => input.active)
+       :image => (!input.image.nil? ? input.image[:tempfile] : nil), :flash_movie => input.flash_movie, :tag_list => input.tag_list, :active => input.active)
       @work.created = DateTime.now
       if @work.save
         redirect '/admin/'
@@ -126,7 +126,7 @@ module Portfolio::Controllers
       return unless admin?
       @work = Work.find(id.to_i)
       @work.update_attributes(:title => input.title, :url => input.url, :description => input.description, :has_image => input.has_image,
-       :image => input.image[:tempfile], :flash_movie => input.flash_movie, :tag_list => input.tag_list, :active => input.active)
+       :image => (!input.image.nil? ? input.image[:tempfile] : nil), :flash_movie => input.flash_movie, :tag_list => input.tag_list, :active => input.active)
       if @work.save
         redirect '/admin/'
       else
