@@ -1,0 +1,334 @@
+<html>
+
+
+<head>
+
+
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+
+
+<title>4 Part Harmony Checker</title>
+
+
+
+
+<script type="text/javascript" src="setup.js"></script>
+
+<script type="text/javascript" src="check.js"></script>
+
+<script type="text/javascript" src="chord.js"></script>
+
+<script type="text/javascript" src="interface.js"></script>
+
+
+
+
+<script type="text/javascript">
+<!--
+//Script copyright (c) 2005 BR Fletcher & R Williams
+//The files setup.js, check.js, interface.js, and chord.js, along with this file, fourpartharmony.htm are all copyright (c) 2005 BR Fletcher & R Williams
+//Portions of the code in interface.js are from www.quirksmode.org
+
+var chord1 = new Chord(0, 0, 0, 0, 0, 0);
+var chord2 = new Chord(0, 0, 0, 0, 0, 0);
+
+function check()
+{
+   var output = "";
+
+
+   var keysig = createKeySignature(document.forms[0].D70.options[document.forms[0].D70.selectedIndex].value,
+    document.forms[0].D71.options[document.forms[0].D71.selectedIndex].value);
+   //alert("lean0: " + keysig.lean);
+   if(keysig == 0)
+   {
+      alert("Please select a valid key signature");
+   }
+   calcBasedOnTonic(keysig);
+
+
+
+   output = setNotesOfChords(chord1, chord2, keysig, document);
+
+
+
+   if(output != "")
+   {
+      document.forms[0].S1.value = output;
+      return;
+   }
+
+
+   chord1 = CIC(chord1, keysig, 72);
+   chord2 = CIC(chord2, keysig, 74);
+   //alert("fourpartharmony: " + chord1.s + " " + chord1.a + " " + chord1.t + " " + chord1.b);
+   //alert(chord2.boogers);
+
+   setKeySig(keysig);
+
+
+
+   output = checkRanges(chord1, chord2);
+   output = output + checkFifthsOctaves(chord1, chord2);
+
+   output = output + checkRootsThirds(chord1, "1");
+   output = output + checkRootsThirds(chord2, "2");
+
+   //output = output + checkPresenceLeadingNote(chord1, chord2, keysig);
+
+   if(output == "")
+   {
+      output = "The checker did not find any errors.";
+   }
+
+   document.forms[0].S1.value = output;
+
+
+   //alert("Safe");
+   playC();
+}
+
+function fixKeySig()
+{
+   var keysig = createKeySignature(document.forms[0].D70.options[document.forms[0].D70.selectedIndex].value,
+    document.forms[0].D71.options[document.forms[0].D71.selectedIndex].value);
+   if(keysig == 0)
+   {
+      alert("Please select a valid key signature");
+   }
+   calcBasedOnTonic(keysig);
+
+   setKeySig(keysig);
+}
+
+
+function PlayChord(chord)
+{
+   document.all.sa.on(chord.s - 60);
+   document.all.sa.on(chord.a - 60);
+   document.all.sa.on(chord.t - 60);
+   document.all.sa.on(chord.b - 60);
+}
+
+function StopChord(chord)
+{
+   document.all.sa.off(chord.s - 60);
+   document.all.sa.off(chord.a - 60);
+   document.all.sa.off(chord.t - 60);
+   document.all.sa.off(chord.b - 60);
+}
+
+
+function playC()
+{
+   //alert("S PlayC");
+   PlayChord(chord1);
+   setTimeout("StopChord(chord1)", 1000);
+   setTimeout("PlayChord(chord2)", 1150);
+   setTimeout("StopChord(chord2)", 2150);
+   //alert("E PlayC");
+}
+
+function resetForm()
+{
+   resetRaise();
+   addMouseOver();
+}
+//-->
+</script>
+</head>
+
+<body onload="addMouseOver();">
+<!--<div name="box" id="box" style="position: absolute; zindex: 1; width: 120px; height: 22px; background: transparent; border: 1px #000000 solid"></div>-->
+<form method="GET" onreset="resetForm();">
+   <p>
+   <b><font face="Arial" size="5">Four Part Harmony Checker</font><font face="Arial" size="4"><br>
+   &lt;&lt;&lt;---- To use the four part harmony checker, follow the instructions on the 
+   left.</font></b>
+   <form method="GET" onreset="resetForm();">
+   <input type="hidden" name="T9" value="">
+   <input type="hidden" name="T5" value="">
+   <input type="hidden" name="T8" value="">
+   <input type="hidden" name="T4" value="">
+   <input type="hidden" name="T7" value="">
+   <input type="hidden" name="T3" value="">
+   <input type="hidden" name="T6" value="">
+   <input type="hidden" name="T2" value="">
+   <div align="left">
+   <span name="instruct1" id="instruct1">
+      <font face="Arial"><b>1:</b> What is the key signature? <select size="1" name="D70" onchange="fixKeySig();">
+   <option value="C" selected>C</option>
+   <option value="G">G</option>
+   <option value="D">D</option>
+   <option value="A">A</option>
+   <option value="E">E</option>
+   <option value="B">B</option>
+   <option value="F#">F#</option>
+   <option value="C#">C#</option>
+   <option value="F">F</option>
+   <option value="G#">G#</option>
+   <option value="D#">D#</option>
+   <option value="A#">A#</option>
+   <option value="Bb">Bb</option>
+   <option value="Eb">Eb</option>
+   <option value="Ab">Ab</option>
+   <option value="Db">Db</option>
+   <option value="Gb">Gb</option>
+   <option value="Cb">Cb</option>
+   </select> <select size="1" name="D71" onchange="fixKeySig();">
+   <option value="1" selected>Major</option>
+   <option value="2">Minor</option>
+   </select></font></span><font face="Arial">&nbsp;&nbsp;</font><span name="instruct4" id="instruct4"><font face="Arial">
+   <b>4:</b> </font>
+     <input type="button" value="Raise Semitone" name="B2" onclick="setRaise();">
+   <input type="button" value="Undo Raised Semitone" name="B3" onclick="resetRaise();"></span>
+
+
+
+
+
+
+   </div>
+   <div align="left">
+   <div name="instruct3" id="instruct3">
+   <div name="staff" id="staff" onclick='secondAction(window, event);'><img border="0" src="staff.gif" width="721" height="369">
+   <span name="sharps0" id="sharps0" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps1" id="sharps1" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps2" id="sharps2" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps3" id="sharps3" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps4" id="sharps4" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps5" id="sharps5" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps6" id="sharps6" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+
+
+   <span name="sharps20" id="sharps20" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps21" id="sharps21" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps22" id="sharps22" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps23" id="sharps23" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps24" id="sharps24" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps25" id="sharps25" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+   <span name="sharps26" id="sharps26" style="display: none; position: absolute;"><img src="sharp.gif"></span>
+
+
+
+
+
+   <span name="flats0" id="flats0" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats1" id="flats1" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats2" id="flats2" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats3" id="flats3" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats4" id="flats4" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats5" id="flats5" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats6" id="flats6" style="display: none; position: absolute;"><img src="flat.gif"></span>
+
+
+   <span name="flats20" id="flats20" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats21" id="flats21" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats22" id="flats22" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats23" id="flats23" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats24" id="flats24" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats25" id="flats25" style="display: none; position: absolute;"><img src="flat.gif"></span>
+   <span name="flats26" id="flats26" style="display: none; position: absolute;"><img src="flat.gif"></span>
+
+
+
+   <!--<span name="acc1box" id="acc1box" style="position: absolute"><select size="1" id="D99" name="D99"><option selected value=" ">Nat</option><option value="bb">bb</option><option value="b">b</option><option value="#">#</option><option value="x">x</option></select></span><span name="flat" id="flat" style="position: absolute"><img src="flat.gif"></span>-->
+   <span name="semi1con" id="semi1con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi2con" id="semi2con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi3con" id="semi3con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi4con" id="semi4con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi5con" id="semi5con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi6con" id="semi6con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi7con" id="semi7con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span>
+   <span name="semi8con" id="semi8con" onclick='action1(this, window, event);' style="position: absolute;"><img src="semibreve.gif"></span></div></div></div>
+
+
+   <input type="hidden" name="acc1i" id="acc1i" value="none">
+   <input type="hidden" name="acc2i" id="acc2i" value="none">
+   <input type="hidden" name="acc3i" id="acc3i" value="none">
+   <input type="hidden" name="acc4i" id="acc4i" value="none">
+   <input type="hidden" name="acc5i" id="acc5i" value="none">
+   <input type="hidden" name="acc6i" id="acc6i" value="none">
+   <input type="hidden" name="acc7i" id="acc7i" value="none">
+   <input type="hidden" name="acc8i" id="acc8i" value="none">
+   <span name="acc1box" id="acc1box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc2box" id="acc2box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc3box" id="acc3box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc4box" id="acc4box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc5box" id="acc5box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc6box" id="acc6box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc7box" id="acc7box" style="position: absolute"><img src="space.gif"></span>
+   <span name="acc8box" id="acc8box" style="position: absolute"><img src="space.gif"></span>
+
+
+
+
+
+
+
+         <div name="instruct2" id="instruct2">
+   <table border="0" cellpadding="0" cellspacing="0" width="721" id="table1">
+      <tr>
+         <td align="center" width="260">
+         <p align="left"><font face="Arial"><b>2:</b></font></td>
+         <td align="center" width="169">
+         <p align="left"><font face="Arial"><b>CHORD 1</b> </font><select size="1" name="D72">
+         <option value="I" selected>I</option>
+         <option value="II">II</option>
+         <option value="III">III</option>
+         <option value="IV">IV</option>
+         <option value="V">V</option>
+         <option value="VI">VI</option>
+         <option value="VII">VII</option>
+         </select><select size="1" name="D73">
+         <option value="a" selected>a</option>
+         <option value="b">b</option>
+         <option value="c">c</option>
+         </select></td>
+         <td align="center">
+         <p align="left"><font face="Arial"><b>CHORD 2 </b></font><select size="1" name="D74">
+         <option value="I">I</option>
+         <option value="II">II</option>
+         <option value="III">III</option>
+         <option value="IV">IV</option>
+         <option value="V" selected>V</option>
+         <option value="VI">VI</option>
+         <option value="VII">VII</option>
+         </select><select size="1" name="D75">
+         <option value="a" selected>a</option>
+         <option value="b">b</option>
+         <option value="c">c</option>
+         </select>
+</td>
+      </tr>
+      </table>
+   </div>
+   <b><font face="Arial">5: </font></b><font face="Arial">
+   <span name="instruct5" id="instruct5"><input type="button" value="Check!" name="B1" onclick="check(); return false;"></span>
+   When you click the Check! button the cadence will sound.
+  <input type="reset" value="Clear Form" name="B4"></font>
+   <font face="Arial"><br>
+   Output:<br>
+   <textarea rows="8" name="S1" cols="90"></textarea></font>
+
+</form>
+
+<applet code="SoundApplet.class" name="sa" width="12" height="12">
+</applet><font face="Arial">&lt; You may have to mouse over the square on the left before the
+sound output will work.</font></p>
+
+
+      <font size="-1">
+      <p>&nbsp;</p>
+
+      </font>
+
+V2.0
+</body>
+
+</html>

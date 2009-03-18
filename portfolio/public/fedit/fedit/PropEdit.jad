@@ -1,0 +1,273 @@
+// Decompiled by DJ v3.8.8.85 Copyright 2005 Atanas Neshkov  Date: 2/08/2005 2:21:17 PM
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   PropEdit.java
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+public class PropEdit extends JDialog
+{
+
+    public PropEdit()
+    {
+        status = new JLabel("   ");
+        hostBox = new JTextField(20);
+        remoteBox = new JTextField(20);
+        localBox = new JTextField(20);
+        usernameBox = new JTextField(20);
+        passwordBox = new JTextField(20);
+        okButton = new JButton("Save Changes");
+        addButton = new JButton("Add Filetype");
+        removeButton = new JButton("Remove Filetype");
+        host = "";
+        remoteLocation = "";
+        localLocation = "";
+        username = "";
+        password = "";
+        list = new ArrayList();
+        labels = new ArrayList();
+        textboxes = new ArrayList();
+        frame = this;
+        pane = new JScrollPane();
+        setModal(true);
+        final Properties config = new Properties();
+        try
+        {
+            config.load(new FileInputStream("fedit.config"));
+            host = config.getProperty("hostname");
+            remoteLocation = config.getProperty("remotefolder");
+            localLocation = config.getProperty("localfolder");
+            username = config.getProperty("username");
+            password = config.getProperty("password");
+            Enumeration enumeration = config.propertyNames();
+            do
+            {
+                if(!enumeration.hasMoreElements())
+                    break;
+                String s = (String)enumeration.nextElement();
+                if(s.substring(4).equals("editor"))
+                    list.add(s.substring(0, 4));
+            } while(true);
+            hostBox.setText(host);
+            remoteBox.setText(remoteLocation);
+            localBox.setText(localLocation);
+            usernameBox.setText(username);
+            passwordBox.setText(password);
+            final JPanel panel2 = new JPanel();
+            panel2.setLayout(new GridLayout(list.size() * 2 + 5, 2));
+            panel2.add(new JLabel("Hostname: ", 4));
+            panel2.add(hostBox);
+            panel2.add(new JLabel("Remote Folder to start in: ", 4));
+            panel2.add(remoteBox);
+            panel2.add(new JLabel("Local folder to start in: ", 4));
+            panel2.add(localBox);
+            panel2.add(new JLabel("Username: ", 4));
+            panel2.add(usernameBox);
+            panel2.add(new JLabel("Password: ", 4));
+            panel2.add(passwordBox);
+            panel2.setBorder(new EmptyBorder(3, 3, 3, 3));
+            for(int i = 0; i < list.size(); i++)
+            {
+                labels.add(new JLabel((new StringBuilder()).append(((String)list.get(i)).substring(0, 4)).append(" Editor: ").toString(), 4));
+                textboxes.add(new JTextField(config.getProperty((new StringBuilder()).append((String)list.get(i)).append("editor").toString()), 20));
+                panel2.add((JLabel)labels.get(labels.size() - 1));
+                panel2.add((JTextField)textboxes.get(textboxes.size() - 1));
+            }
+
+            pane.setViewportView(panel2);
+            class _cls1OKListener
+                implements ActionListener
+            {
+
+                public void actionPerformed(ActionEvent actionevent)
+                {
+                    host = hostBox.getText();
+                    remoteLocation = remoteBox.getText();
+                    localLocation = localBox.getText();
+                    username = usernameBox.getText();
+                    password = passwordBox.getText();
+                    config.setProperty("hostname", host);
+                    config.setProperty("remotefolder", remoteLocation);
+                    config.setProperty("localfolder", localLocation);
+                    config.setProperty("username", username);
+                    config.setProperty("password", password);
+                    for(int j = 0; j < list.size(); j++)
+                        config.setProperty((new StringBuilder()).append(list.get(j)).append("editor").toString(), ((JTextField)textboxes.get(j)).getText());
+
+                    try
+                    {
+                        config.store(new FileOutputStream("fedit.config"), "");
+                    }
+                    catch(IOException ioexception1)
+                    {
+                        JOptionPane.showMessageDialog(frame, (new StringBuilder()).append("There was an I/O error: ").append(ioexception1.getMessage()).toString());
+                    }
+                    frame.setVisible(false);
+                }
+
+                final Properties val$config;
+                final PropEdit this$0;
+
+            _cls1OKListener()
+            {
+                this$0 = PropEdit.this;
+                config = properties;
+                super();
+            }
+            }
+
+            okButton.addActionListener(new _cls1OKListener());
+            class _cls1AddActionListener
+                implements ActionListener
+            {
+
+                public void actionPerformed(ActionEvent actionevent)
+                {
+                    String s1 = JOptionPane.showInputDialog("Please enter the filetype you want to add:", ".css");
+                    list.add(s1);
+                    labels.add(new JLabel((new StringBuilder()).append(s1).append(" Editor: ").toString(), 4));
+                    textboxes.add(new JTextField(20));
+                    panel2.removeAll();
+                    panel2.setLayout(new GridLayout(list.size() * 2 + 5, 2));
+                    panel2.add(new JLabel("Hostname: ", 4));
+                    panel2.add(hostBox);
+                    panel2.add(new JLabel("Remote Folder to start in: ", 4));
+                    panel2.add(remoteBox);
+                    panel2.add(new JLabel("Local folder to start in: ", 4));
+                    panel2.add(localBox);
+                    panel2.add(new JLabel("Username: ", 4));
+                    panel2.add(usernameBox);
+                    panel2.add(new JLabel("Password: ", 4));
+                    panel2.add(passwordBox);
+                    for(int j = 0; j < list.size(); j++)
+                    {
+                        panel2.add((JLabel)labels.get(j));
+                        panel2.add((JTextField)textboxes.get(j));
+                    }
+
+                    pane.setViewportView(panel2);
+                }
+
+                final JPanel val$panel2;
+                final PropEdit this$0;
+
+            _cls1AddActionListener()
+            {
+                this$0 = PropEdit.this;
+                panel2 = jpanel;
+                super();
+            }
+            }
+
+            addButton.addActionListener(new _cls1AddActionListener());
+            class _cls1RemoveActionListener
+                implements ActionListener
+            {
+
+                public void actionPerformed(ActionEvent actionevent)
+                {
+                    String s1 = JOptionPane.showInputDialog("Please enter the filetype you want to remove:", ".css");
+                    list.remove(s1);
+                    labels.remove(new JLabel((new StringBuilder()).append(s1).append(" Editor: ").toString(), 4));
+                    textboxes.remove(new JTextField(20));
+                    panel2.removeAll();
+                    panel2.setLayout(new GridLayout(list.size() * 2 + 5, 2));
+                    panel2.add(new JLabel("Hostname: ", 4));
+                    panel2.add(hostBox);
+                    panel2.add(new JLabel("Remote Folder to start in: ", 4));
+                    panel2.add(remoteBox);
+                    panel2.add(new JLabel("Local folder to start in: ", 4));
+                    panel2.add(localBox);
+                    panel2.add(new JLabel("Username: ", 4));
+                    panel2.add(usernameBox);
+                    panel2.add(new JLabel("Password: ", 4));
+                    panel2.add(passwordBox);
+                    for(int j = 0; j < list.size(); j++)
+                    {
+                        panel2.add((JLabel)labels.get(j));
+                        panel2.add((JTextField)textboxes.get(j));
+                    }
+
+                    pane.setViewportView(panel2);
+                }
+
+                final JPanel val$panel2;
+                final PropEdit this$0;
+
+            _cls1RemoveActionListener()
+            {
+                this$0 = PropEdit.this;
+                panel2 = jpanel;
+                super();
+            }
+            }
+
+            removeButton.addActionListener(new _cls1RemoveActionListener());
+            JPanel jpanel = new JPanel();
+            jpanel.add(addButton);
+            jpanel.add(removeButton);
+            jpanel.add(okButton);
+            JPanel jpanel1 = (JPanel)getContentPane();
+            jpanel1.setLayout(new BorderLayout());
+            jpanel1.add(pane, "Center");
+            jpanel1.add(jpanel, "South");
+            setTitle("Property Editor");
+            setDefaultCloseOperation(3);
+            pack();
+            Dimension dimension = getPreferredSize();
+            setSize((int)dimension.getWidth(), (int)dimension.getHeight());
+            setDefaultCloseOperation(3);
+            setVisible(true);
+        }
+        catch(IOException ioexception)
+        {
+            JOptionPane.showMessageDialog(frame, (new StringBuilder()).append("There was an I/O error: ").append(ioexception.getMessage()).toString());
+        }
+    }
+
+    private JLabel status;
+    private JTextField hostBox;
+    private JTextField remoteBox;
+    private JTextField localBox;
+    private JTextField usernameBox;
+    private JTextField passwordBox;
+    private JButton okButton;
+    private JButton addButton;
+    private JButton removeButton;
+    private String host;
+    private String remoteLocation;
+    private String localLocation;
+    private String username;
+    private String password;
+    private ArrayList list;
+    private ArrayList labels;
+    private ArrayList textboxes;
+    private JDialog frame;
+    private JScrollPane pane;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

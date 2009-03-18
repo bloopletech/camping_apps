@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+   <head>
+      <title>Brenton Fletcher's 4 Part Harmony Checker</title>
+      
+      <style type="text/css">
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, font, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; }
+      body { padding: 20px; }
+      #instruct2 p { float: left; }
+      #chorddesc { width: 260px; }
+      #chord1, #chord2 { width: 169px; }
+      .clear { clear: both; }
+      p { margin-bottom: 1em; }
+      #sharps0, #sharps1, #sharps2, #sharps3, #sharps4, #sharps5, #sharps6, #sharps20, #sharps21, #sharps22, #sharps23, #sharps24, #sharps25,
+      #sharps26, #flats0, #flats1, #flats2, #flats3, #flats4, #flats5, #flats6, #flats20, #flats21, #flats22, #flats23, #flats24, #flats25,
+      #flats26 { position: absolute; display: none; }
+      #semi1con, #semi2con, #semi3con, #semi4con, #semi5con, #semi6con, #semi7con, #semi8con, #acc1box, #acc2box, #acc3box, #acc4box, #acc5box,
+      #acc6box, #acc7box, #acc8box { position: absolute; }
+      </style>
+
+      <!-- This script holds the initialization and setup for the program. -->
+      <script type="text/javascript" src="setup.js"></script>
+
+      <!-- This script contains the code that actually checks for errors in the chords the
+      user inputs. -->
+      <script type="text/javascript" src="check.js"></script>
+
+      <!-- This script contains code relating to the user interface. -->
+      <script type="text/javascript" src="interface.js"></script>
+
+      <script type="text/javascript">
+      <!--
+      //Script copyright (c) 2005 BR Fletcher & R Williams
+      //The files setup.js, check.js, interface.js, and chord.js, along with this file, fourpartharmony.htm are all copyright (c) 2007 BR Fletcher & R Williams
+      //Portions of the code in interface.js are from www.quirksmode.org
+
+      //Most of this script refers to the four part harmony checker as the "fphc"
+      /*This script represents music notes mathematically using the MIDI way,
+      numbering notes 0 to 120, 60 being middle C, or, in some parts of the script,
+       having 0 as middle C, and going to -60 and 60.*/
+
+
+      //Define the two chord objects that hold the two chords in the chord sequence we are analyzing
+      var chord1 = new Chord(0, 0, 0, 0, 0, 0);
+      var chord2 = new Chord(0, 0, 0, 0, 0, 0);
+
+
+      /*this is the central function of the script. It is called by the submit button of the main
+      form. this script triggers the analysis and ouput of the results of the fphc*/
+      function check()
+      {
+         // this is the string that contains the output to the user of the fphc
+         var output = "";
+
+
+         //this generates the key signature using the contents of the two drop-down boxes on the main form specifiying the keysig
+         var keysig = createKeySignature(get('D70').value, get('D71').value);
+
+         //if the keysig is not valid, alert the user
+         if(keysig == 0)
+         {
+            alert("Please select a valid key signature");
+         }
+         //this code initializes the keysignature based on the user's input
+         calcBasedOnTonic(keysig);
+
+
+
+         //this code initializes chord1 and chord2 with the correct notes
+         output = setNotesOfChords(chord1, chord2, keysig);
+
+
+
+         //if there are any errors by this stage, output them and abort
+         if(output != "")
+         {
+            (get('S1')).value = output;
+            return;
+         }
+
+
+         //this intialiazes the chords and their names and inversions
+         chord1 = CIC(chord1, keysig, 72);
+         chord2 = CIC(chord2, keysig, 74);
+
+         //put the keysignature on the web page
+         setKeySig(keysig);
+
+
+
+         //this code does thae actual checking that the user has followed the four part harmony rules
+         output = checkRanges(chord1, chord2);
+         output = output + checkFifthsOctaves(chord1, chord2);
+
+         output = output + checkRootsThirds(chord1, "1");
+         output = output + checkRootsThirds(chord2, "2");
+
+         //output = output + checkPresenceLeadingNote(chord1, chord2, keysig);
+
+         //if the user didn't do anything wrong, tell them
+         if(output == "")
+         {
+            output = "The checker did not find any errors.";
+         }
+
+         //output the output
+         get("S1").value = output;
+
+
+         //play the chord
+         playC();
+      }
+
+
+      //this function is called whenever the user changes the keysignature
+      //it initializes the new keysignature.
+      function fixKeySig()
+      {
+         //this generates the keysignature
+         var keysig = createKeySignature(get('D70').value, get('D71').value);
+
+         //if the user made a mistake, tell them
+         if(keysig == 0)
+         {
+            alert("Please select a valid key signature");
+         }
+
+         //this code initializes the keysignature based on the user's input  
+         calcBasedOnTonic(keysig);
+
+         //put the keysignature on the web page
+         setKeySig(keysig);
+      }
+
+      //this function sounds out a chord using the Java applet I wrote
+      function PlayChord(chord)
+      {
+         var applet = get('sa');
+         if(applet != null)
+         {
+            applet.on(chord.s - 60);
+            applet.on(chord.a - 60);
+            applet.on(chord.t - 60);
+            applet.on(chord.b - 60);
+         }
+      }
+
+      //this function stops playing a chord
+      function StopChord(chord)
+      {
+         var applet = get('sa');
+         if(applet != null)
+         {
+            applet.off(chord.s - 60);
+            applet.off(chord.a - 60);
+            applet.off(chord.t - 60);
+            applet.off(chord.b - 60);
+         }
+      }
+
+
+      //this function plays both chords, one after the other, to create a chord prograssion
+      function playC()
+      {
+         PlayChord(chord1);
+         setTimeout("StopChord(chord1)", 1000);
+         setTimeout("PlayChord(chord2)", 1150);
+         setTimeout("StopChord(chord2)", 2150);
+      }
+
+      //this function clears all form input and resets the notes and keysignature.
+      function resetForm()
+      {
+         //this function clears any accidentals;
+         resetRaise();
+
+         //this function repositions the notes.
+         addMouseOver();
+      }
+      //-->
+      </script>
+   </head>
+   <body onload="addMouseOver();">
+      <h1>Brenton Fletcher's Four Part Harmony Checker</h1>
+      <p>To use the four part harmony checker, follow the instructions on the right-----></p>
+      <form method="GET" onreset="resetForm();">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <input type="hidden" value="">
+         <div id="top">
+            <span id="instruct1">
+               <strong>1:</strong> What is the key signature?
+               <select size="1" id="D70" onchange="fixKeySig();">
+                  <option value="C" selected>C</option>
+                  <option value="G">G</option>
+                  <option value="D">D</option>
+                  <option value="A">A</option>
+                  <option value="E">E</option>
+                  <option value="B">B</option>
+                  <option value="F#">F#</option>
+                  <option value="C#">C#</option>
+                  <option value="F">F</option>
+                  <option value="G#">G#</option>
+                  <option value="D#">D#</option>
+                  <option value="A#">A#</option>
+                  <option value="Bb">Bb</option>
+                  <option value="Eb">Eb</option>
+                  <option value="Ab">Ab</option>
+                  <option value="Db">Db</option>
+                  <option value="Gb">Gb</option>
+                  <option value="Cb">Cb</option>
+               </select>
+               <select size="1" id="D71" onchange="fixKeySig();">
+                  <option value="1" selected>Major</option>
+                  <option value="2">Minor</option>
+               </select>
+            </span> &nbsp;&nbsp;
+            <span id="instruct4"> 
+               <strong>4:</strong>  
+               <input type="button" value="Raise Semitone" onclick="setRaise();">
+               <input type="button" value="Undo Raised Semitone" onclick="resetRaise();">
+            </span>
+         </div>
+         <div id="staff-wrap">
+            <div id="instruct3">
+               <div id="staff" onclick='secondAction(event);'><img border="0" src="staff.gif" width="721" height="369">
+                  <span id="sharps0"><img src="sharp.gif"></span>
+                  <span id="sharps1"><img src="sharp.gif"></span>
+                  <span id="sharps2"><img src="sharp.gif"></span>
+                  <span id="sharps3"><img src="sharp.gif"></span>
+                  <span id="sharps4"><img src="sharp.gif"></span>
+                  <span id="sharps5"><img src="sharp.gif"></span>
+                  <span id="sharps6"><img src="sharp.gif"></span>
+
+
+                  <span id="sharps20"><img src="sharp.gif"></span>
+                  <span id="sharps21"><img src="sharp.gif"></span>
+                  <span id="sharps22"><img src="sharp.gif"></span>
+                  <span id="sharps23"><img src="sharp.gif"></span>
+                  <span id="sharps24"><img src="sharp.gif"></span>
+                  <span id="sharps25"><img src="sharp.gif"></span>
+                  <span id="sharps26"><img src="sharp.gif"></span>
+
+
+
+                  <span id="flats0"><img src="flat.gif"></span>
+                  <span id="flats1"><img src="flat.gif"></span>
+                  <span id="flats2"><img src="flat.gif"></span>
+                  <span id="flats3"><img src="flat.gif"></span>
+                  <span id="flats4"><img src="flat.gif"></span>
+                  <span id="flats5"><img src="flat.gif"></span>
+                  <span id="flats6"><img src="flat.gif"></span>
+
+
+                  <span id="flats20"><img src="flat.gif"></span>
+                  <span id="flats21"><img src="flat.gif"></span>
+                  <span id="flats22"><img src="flat.gif"></span>
+                  <span id="flats23"><img src="flat.gif"></span>
+                  <span id="flats24"><img src="flat.gif"></span>
+                  <span id="flats25"><img src="flat.gif"></span>
+                  <span id="flats26"><img src="flat.gif"></span>
+
+
+
+                  <span id="semi1con"><img src="semibreve.gif"></span>
+                  <span id="semi2con"><img src="semibreve.gif"></span>
+                  <span id="semi3con"><img src="semibreve.gif"></span>
+                  <span id="semi4con"><img src="semibreve.gif"></span>
+                  <span id="semi5con"><img src="semibreve.gif"></span>
+                  <span id="semi6con"><img src="semibreve.gif"></span>
+                  <span id="semi7con"><img src="semibreve.gif"></span>
+                  <span id="semi8con"><img src="semibreve.gif"></span>
+               </div>
+            </div>
+         </div>
+
+         <input type="hidden" id="acc1i" value="none">
+         <input type="hidden" id="acc2i" value="none">
+         <input type="hidden" id="acc3i" value="none">
+         <input type="hidden" id="acc4i" value="none">
+         <input type="hidden" id="acc5i" value="none">
+         <input type="hidden" id="acc6i" value="none">
+         <input type="hidden" id="acc7i" value="none">
+         <input type="hidden" id="acc8i" value="none">
+         <span id="acc1box"><img src="space.gif"></span>
+         <span id="acc2box"><img src="space.gif"></span>
+         <span id="acc3box"><img src="space.gif"></span>
+         <span id="acc4box"><img src="space.gif"></span>
+         <span id="acc5box"><img src="space.gif"></span>
+         <span id="acc6box"><img src="space.gif"></span>
+         <span id="acc7box"><img src="space.gif"></span>
+         <span id="acc8box"><img src="space.gif"></span>
+
+
+         <div id="instruct2">
+            <p id="chorddesc"><strong>2:</strong></p>
+            <p id="chord1">
+               <strong>CHORD 1</strong>
+               <select size="1" id="D72">
+                  <option value="I" selected>I</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="IV">IV</option>
+                  <option value="V">V</option>
+                  <option value="VI">VI</option>
+                  <option value="VII">VII</option>
+               </select>
+               <select size="1" id="D73">
+                  <option value="a" selected>a</option>
+                  <option value="b">b</option>
+                  <option value="c">c</option>
+               </select>
+            </p>
+            <p id="chord2"><strong>CHORD 2</strong>
+               <select size="1" id="D74">
+                  <option value="I" selected>I</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="IV">IV</option>
+                  <option value="V">V</option>
+                  <option value="VI">VI</option>
+                  <option value="VII">VII</option>
+               </select>
+               <select size="1" id="D75">
+                  <option value="a" selected>a</option>
+                  <option value="b">b</option>
+                  <option value="c">c</option>
+               </select>
+            </p>
+            <div class="clear"></div>
+         </div>
+         
+         <strong>5:  </strong> 
+         <span id="instruct5"><input type="button" value="Check!" onclick="check(); return false;"></span>
+         When you click the Check! button the cadence will sound.
+         <input type="reset" value="Clear Form" name="B4"><br>
+         Output:<br>
+         <textarea rows="8" cols="90" id="S1"></textarea> 
+
+      </form>
+
+      <object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" width="100" height="100" id="sa">
+        <param name="code" value="SoundApplet">
+        <param name="codebase" value="./">
+
+        <!--[if gte IE 7]> <!-->
+        <object classid="java:SoundApplet.class" codebase="./" type="application/x-java-applet" width="100" height="100" id="sa">
+          <param name="code" value="SoundApplet">
+          <!-- Safari browser needs the following param -->
+          <param name="JAVA_CODEBASE" value="">
+        </object>
+        <!--<![endif]-->
+        <!--[if lt IE 7]>
+        <![endif]-->
+      </object>
+      <p> &lt; You may have to mouse over the square on the left before the
+sound output will work.</p>
+
+      <div id="instructions">To enter notes into the checker, follow these five steps:
+         <ol>
+            <li>Select the key signature using the drop-down boxes provided;</li>
+            <li>Select the chord number and inversion of each chord using the drop-down boxes below the staff;</li>
+            <li>Then move the notes so that they reflect the chord you want to enter: Click a note, then click where you would like it to go.</li>
+            <li>You can raise the 7th of a minor key by clicking the "Raise Semitone" button, then clicking the note you wish to raise.</li>
+               NOTE: If you want to change the key signature after this, you should click "Undo Raise Semitone", then raise the semitone again.
+            <li>Click the "Check!" button. The cadence will sound and your errors in 4-part harmonic progression will be displayed in the text area below.</li>
+         </ol>
+         NOTE: To place a note just below another one, click a bit to the right of where you want the note to go. If you want a unison, do the same.
+      </div>
+      <p>V2.1</p>
+   </body>
+</html>
