@@ -267,6 +267,7 @@ def WikiWatcher.create
   WikiWatcher::Models.create_schema
   ActiveRecord::Base.connection.execute("DELETE FROM wikiwatcher_edits;")
   ActiveRecord::Base.default_timezone = :utc
+=begin
   Thread.new do
     while(true)
       z = Time.now
@@ -275,6 +276,7 @@ def WikiWatcher.create
       puts "Got latest, elapsed #{Time.now - z}"
       sleep(30)
     end
-  end  
+  end
+=end 
 end
 #=end
