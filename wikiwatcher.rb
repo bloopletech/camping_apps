@@ -1,5 +1,5 @@
 # encoding: utf-8
-#=begin
+#=begin 
 require 'hpricot'
 require 'htmlentities/string'
 require 'net/http'
@@ -267,11 +267,12 @@ def WikiWatcher.create
   WikiWatcher::Models.create_schema
   ActiveRecord::Base.connection.execute("DELETE FROM wikiwatcher_edits;")
   ActiveRecord::Base.default_timezone = :utc
-  ActiveRecord::Base.allow_concurrency = true
   Thread.new do
     while(true)
+      z = Time.now
+      puts "Getting latest"
       get_latest
-      ActiveRecord::Base.verify_active_connections!
+      puts "Got latest, elapsed #{Time.now - z}"
       sleep(30)
     end
   end  
