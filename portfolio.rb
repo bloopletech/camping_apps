@@ -156,9 +156,9 @@ module Portfolio::Controllers
   end
   
   class Show < R '/(\d+)'
-    def get
-      @search_terms = "id #{params[:id]}"
-      @works = [Work.find(params[:id].to_i, :conditions => "active=TRUE")]
+    def get(id)
+      @search_terms = "id #{id.to_i}"
+      @works = [Work.find(id.to_i, :conditions => "active=TRUE")]
       @tags = Work.tag_counts
       render :tagged
     end
@@ -318,7 +318,7 @@ module Portfolio::Views
         if work.url.nil? or work.url.blank?
           h3 { h(work.title) }
         else
-          h3 { a(h(work.title), :href => work.url) }
+          h3 { a(work.title, :href => work.url) }
         end
         text textilize work.description
       end
