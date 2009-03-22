@@ -80,7 +80,7 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
-  next if file == 'wikiwatcher.rb'
+  next unless file == 'wikiwatcher.rb'
   next if file[0, 1] == '_'
 #  puts file
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
