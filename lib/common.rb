@@ -9,6 +9,7 @@ module AssetsClass
           @headers['Content-Type'] = MIME_TYPES[path[/\.\\\w+$/, 0]] || "text/plain"
           unless path.include? ".." # prevent directory traversal attacks
             @headers['X-Sendfile'] = "\#{PATH}/public/\#{path}"
+            @headers['X-Accel-Redirect'] = "\#{PATH}/public/\#{path}"
           else
             @status = "403"
             "403 - Invalid path"
