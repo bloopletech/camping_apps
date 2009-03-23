@@ -71,7 +71,7 @@ if $0 == __FILE__
     end
   end
 
-  #ActiveRecord::Base.logger = Logger.new(STDOUT)
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
 
   ActiveRecord::Base.default_timezone = :utc
 
