@@ -76,6 +76,7 @@ module Kc::Models
   end
   class User < Base
     has_many :scores
+    attr_accessor :scores_when
 #    has_many :users, :as => 'friends'
 
     has_image(false, 'avatar')
@@ -138,8 +139,16 @@ module Kc::Controllers
   class Index < R '/'
     def get
       #z = Time.now
-      @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
-      @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
+      
+      #@users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
+      #@users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
+      @users = User.find(:all, :order => 'high_score DESC', :limit => 3)
+      @users.each do |u|
+        score = u.scores.find(:first, :order => 'kc_scores.when DESC')
+        u.scores_when = score.when
+      end
+      @users = @users.sort_by { |u| u.scores_when }
+      
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 3)
       user_ids = User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3)
       @users_by_scores_submitted = user_ids.map { |u| User.find(u.id) }
