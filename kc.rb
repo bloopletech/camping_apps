@@ -76,10 +76,19 @@ module Kc::Models
   end
   class User < Base
     has_many :scores
-    attr_accessor :scores_when
 #    has_many :users, :as => 'friends'
 
     has_image(false, 'avatar')
+
+    def scores_when
+      read_attribute('scores_when')
+    end
+
+    def scores_when=(s)
+      write_attribute('scores_when', s)
+    end
+    
+    columns << ActiveRecord::ConnectionAdapters::Column.new('scores_when', '', 'timestamp', true)
 
     def highest_score
       scores.find(:first, :order => 'score DESC')
@@ -216,7 +225,6 @@ module Kc::Controllers
     def get
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 1000)
       @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 1000)
-      @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
       render :high_scores
     end
   end
@@ -232,7 +240,6 @@ module Kc::Controllers
     def get
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 50)
       @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 50)
-      @users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
       render :high_scores_average
     end
   end
