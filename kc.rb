@@ -80,16 +80,6 @@ module Kc::Models
 
     has_image(false, 'avatar')
 
-    def scores_when
-      read_attribute('scores_when')
-    end
-
-    def scores_when=(s)
-      write_attribute('scores_when', s)
-    end
-    
-    columns << ActiveRecord::ConnectionAdapters::Column.new('scores_when', '', 'timestamp', true)
-
     def highest_score
       scores.find(:first, :order => 'score DESC')
     end
@@ -133,6 +123,12 @@ module Kc::Models
   class AddSiteChanges122008 < V 3
     def self.up
       add_column :kc_users, :seen_site_changes_12_2008, :boolean, :default => false
+    end
+  end
+
+  class AddUserScoresWhen < V 4
+    def self.up
+      add_column :kc_users, :scores_when, :datetime, :default => nil
     end
   end
 end
@@ -203,7 +199,7 @@ module Kc::Controllers
             return
           end
         else
-          user = User.create(:name => name, :crypt => crypt)
+          user = User.create(:name => name, :crypt => crypt, :seen_site_changes_12_2008 => true)
         end
 
         Score.create(:version => version, :user => user, :score => score, :when => Time.now.getgm, :source => source)
