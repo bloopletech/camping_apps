@@ -87,9 +87,7 @@ module Portfolio::Controllers
         @heading = 'All Works'
         @works = Work.find(:all, :order => 'LOWER(title)')
       end
-      puts "works: #{@works.inspect}"
       @tags = Work.tag_counts
-      puts "tags: #{@tags.inspect}"
 
       render :admin_list
     end
