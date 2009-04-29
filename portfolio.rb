@@ -366,7 +366,7 @@ module Portfolio::Views
     h2 { "Works by category" }
     p do
       tag_cloud @tags.sort { |a, b| a.name.downcase <=> b.name.downcase }, %w(css1 css2 css3 css4) do |tag, css_class|
-        a(h(tag.name), :href => "/admin/#{h tag.name}", :class => css_class)
+        a(tag.name, :href => "/admin/#{h tag.name}", :class => css_class)
       end
     end
 
@@ -403,7 +403,7 @@ module Portfolio::Views
     end
     div do
       label_for :active
-      input :type => :checkbox, :value => '1', :checked => @work.active?
+      input :type => :checkbox, :name => :active, :value => '1', :checked => @work.active?
     end
     div do
       input.submit :type => :submit, :name => :login, :value => 'Save'
