@@ -149,10 +149,10 @@ module ActiveRecord #:nodoc:
             ImageScience.with_image(path) do |img|
               puts "gonna put image into #{send("#{field_name}_large_path")}, #{img.inspect}"
               if !large_size[0].nil? and !large_size[1].nil?
-                img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_large_path") }
+                img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| puts "thumbnail: #{thumb.inspect}"; thumb.save send("#{field_name}_large_path") }
               else
                 b = (large_size[0].nil? ? [large_size[1], ImageScience::WAY_HEIGHT] : [large_size[0], ImageScience::WAY_WIDTH])
-                img.forced_thumbnail(b[0], b[1]) { |thumb| thumb.save send("#{field_name}_large_path") }
+                img.forced_thumbnail(b[0], b[1]) { |thumb| puts "thumbnail: #{thumb.inspect}"; thumb.save send("#{field_name}_large_path") }
               end
               if !small_size[0].nil? and !small_size[1].nil?
                 img.cropped_thumbnail2(small_size[0], small_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_small_path") }
