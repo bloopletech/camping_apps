@@ -62,7 +62,7 @@ module Kc::Models
     def update_high_scores
       hs = user.scores.find(:all, :order => "kc_scores.when DESC", :limit => 100)
       
-      user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id)
+      user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id, :total_scores => user.scores.count)
     end
   end
   class Shout < Base
@@ -77,8 +77,8 @@ module Kc::Models
   end
   class User < Base
     has_many :scores
-    has_one :top_score, :class_name => 'Score'
-    has_one :latest_score, :class_name => 'Score'
+    belongs_to :top_score, :class_name => 'Score'
+    belongs_to :latest_score, :class_name => 'Score'
 #    has_many :users, :as => 'friends'
 
     has_image(false, 'avatar')
@@ -146,6 +146,16 @@ module Kc::Models
       end
     end
   end
+
+  class AdduserTotalScores < V 6
+    def self.up
+      add_column :kc_users, :total_scores, :integer
+      Kc::Models::User.find(:all).each do |u|
+        u.total_scores = u.scores.count
+        u.save!
+      end
+    end
+  end
 end
 
 module Kc::Controllers
@@ -159,20 +169,9 @@ module Kc::Controllers
   class Index < R '/'
     def get
       #z = Time.now
-      
-      #@users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
-      #@users.each { |u| u.scores_when = Time.parse(u.scores_when + " GMT") }
-      @users = User.find(:all, :order => 'high_score DESC', :limit => 3)
-      @users.each do |u|
-        score = u.scores.find(:first, :order => 'kc_scores.when DESC')
-        u.scores_when = score.when
-      end
-      @users = @users.sort_by { |u| u.scores_when }
-      
+      @users = User.find(:all, :include => :latest_score, :order => 'high_score DESC, kc_scores.when DESC', :limit => 3)
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 3)
-      user_ids = User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3)
-      @users_by_scores_submitted = user_ids.map { |u| User.find(u.id) }
-#      @users_by_scores_submitted = User.find(User.find(:all, :select => "kc_users.id", :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id = kc_users.id', :order => 'COUNT(kc_scores.id) DESC', :group => 'kc_users.id', :limit => 3).map(&:id))
+      @users_by_scores_submitted = User.find(:all, :order => 'total_scores DESC', :limit => 3)
       @shouts = Shout.find(:all, :order => "posted DESC", :limit => 5)
       @shout = Shout.new
       @user = User.new
@@ -235,7 +234,7 @@ module Kc::Controllers
   class HighScores < R '/high_scores'
     def get
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 1000)
-      @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 1000)
+      @users = User.find(:all, :include => :latest_score, :order => 'high_score DESC, kc_scores.when DESC', :limit => 1000)
       render :high_scores
     end
   end
@@ -250,7 +249,7 @@ module Kc::Controllers
   class HighScoresAverage < R '/high_scores_average.rss'
     def get
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 50)
-      @users = User.find(:all, :select => 'kc_users.*, kc_scores.id AS scores_id, kc_scores.when AS scores_when', :joins => 'LEFT JOIN kc_scores ON kc_scores.user_id=kc_users.id', :group => 'kc_users.id, kc_users.name, kc_users.high_score, kc_users.crypt, kc_users.has_avatar', :order => 'high_score DESC, kc_scores.when DESC', :limit => 50)
+      @users = User.find(:all, :include => :latest_score, :order => 'high_score DESC, kc_scores.when DESC', :limit => 50)
       render :high_scores_average
     end
   end
@@ -608,7 +607,7 @@ module Kc::Views
         end
 
         @users_by_scores_submitted.each do |u|
-          last_active = u.most_recent_score.when
+          last_active = u.latest_score.when
           
           attrs = {}
           attrs['class'] = 'last_b' if u == @users_by_scores_submitted.last
@@ -1071,7 +1070,7 @@ module Kc::Views
       end
 
       users.each do |u|
-        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.scores_when.to_i * 1000}'>#{nice_date_time u.scores_when}</td>"
+        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td>"
 =begin
         attrs = {}
         attrs[:class] = 'last_b' if u == users.last
