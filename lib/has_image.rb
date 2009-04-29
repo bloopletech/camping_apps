@@ -85,8 +85,10 @@ module ActiveRecord #:nodoc:
           def #{field_name}=(file_data)
             puts "image set: \#{file_data.inspect}"
             return nil if file_data.nil? || file_data.stat.size == 0
+            puts "adding to image data"
             @image_data ||= {}
             @image_data['#{field_name}'] = [:upload, has_#{field_name}?, file_data, #{small_size.inspect}, #{large_size.inspect}]
+            puts "image data: \#{@image_data.inspect}
           end
 
           def has_#{field_name}=(has_image)
@@ -132,6 +134,7 @@ module ActiveRecord #:nodoc:
       end
       def save_images
         @image_data ||= {}
+        puts "image_data: #{@image.inspect}"
         @image_data.each_pair do |field_name, (status, old_status, file_data, small_size, large_size)|
           puts "looping through image_date: #{field_name}, #{status}, #{old_status}, #{field_name}, #{small_size}, #{large_size}"
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
@@ -144,6 +147,7 @@ module ActiveRecord #:nodoc:
             path = tf.path
 
             ImageScience.with_image(path) do |img|
+              puts "gonna put image into #{send("#{field_name}_large_path")}, #{img.inspect}"
               if !large_size[0].nil? and !large_size[1].nil?
                 img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_large_path") }
               else
