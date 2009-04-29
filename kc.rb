@@ -134,6 +134,18 @@ module Kc::Models
       add_column :kc_users, :scores_when, :datetime, :default => nil
     end
   end
+
+  class AdduserCachedStats < V 5
+    def self.up
+      add_column :kc_users, :top_score_id, :integer
+      add_column :kc_users, :latest_score_id, :integer
+      Kc::Models::User.find(:all).each do |u|
+        u.top_score_id = u.scores.find(:first, :order => 'score DESC').id
+        u.latest_score_id = u.scores.find(:first, :order => 'kc_scores.when DESC').id
+        u.save
+      end
+    end
+  end
 end
 
 module Kc::Controllers
@@ -1080,6 +1092,7 @@ def Kc.create
   Kc::Models.create_schema
   ActiveRecord::Base.default_timezone = :utc
 
+=begin
   ActiveRecord::Base.connection.execute("ALTER TABLE kc_users ADD COLUMN top_score_id INT")
   ActiveRecord::Base.connection.execute("ALTER TABLE kc_users ADD COLUMN latest_score_id INT")
   Kc::Models::User.find(:all).each do |u|
@@ -1087,5 +1100,6 @@ def Kc.create
     u.latest_score_id = u.scores.find(:first, :order => 'kc_scores.when DESC').id
     u.save
   end
+=end
 end
 
