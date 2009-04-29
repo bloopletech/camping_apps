@@ -61,7 +61,8 @@ module Kc::Models
 
     def update_high_scores
       hs = user.scores.find(:all, :order => "kc_scores.when DESC", :limit => 100)
-      user.update_attribute(:high_score, hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round)
+      
+      user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id)
     end
   end
   class Shout < Base
@@ -76,6 +77,8 @@ module Kc::Models
   end
   class User < Base
     has_many :scores
+    has_one :top_score, :class_name => 'Score'
+    has_one :latest_score, :class_name => 'Score'
 #    has_many :users, :as => 'friends'
 
     has_image(false, 'avatar')
@@ -1076,4 +1079,13 @@ end
 def Kc.create
   Kc::Models.create_schema
   ActiveRecord::Base.default_timezone = :utc
+
+  ActiveRecord::Base.connection.execute("ALTER TABLE kc_users ADD COLUMN top_score_id INT")
+  ActiveRecord::Base.connection.execute("ALTER TABLE kc_users ADD COLUMN latest_score_id INT")
+  Kc::Models::User.find(:all).each do |u|
+    u.top_score_id = u.scores.find(:first, :order => 'score DESC').id
+    u.latest_score_id = u.scores.find(:first, :order => 'kc_scores.when DESC').id
+    u.save
+  end
 end
+
