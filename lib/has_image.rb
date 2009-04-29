@@ -83,7 +83,8 @@ module ActiveRecord #:nodoc:
           end
 
           def #{field_name}=(file_data)
-            return nil if file_data.nil? || file_data.size == 0
+            puts "image set: \#{file_data.inspect}"
+            return nil if file_data.nil? || file_data.stat.size == 0
             @image_data ||= {}
             @image_data['#{field_name}'] = [:upload, has_#{field_name}?, file_data, #{small_size.inspect}, #{large_size.inspect}]
           end
@@ -132,6 +133,7 @@ module ActiveRecord #:nodoc:
       def save_images
         @image_data ||= {}
         @image_data.each_pair do |field_name, (status, old_status, file_data, small_size, large_size)|
+          puts "looping through image_date: #{field_name}, #{status}, #{old_status}, #{field_name}, #{small_size}, #{large_size}"
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
 
           if status == :upload
