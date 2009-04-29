@@ -88,7 +88,7 @@ module ActiveRecord #:nodoc:
             puts "adding to image data"
             @image_data ||= {}
             @image_data['#{field_name}'] = [:upload, has_#{field_name}?, file_data, #{small_size.inspect}, #{large_size.inspect}]
-            puts "image data: \#{@image_data.inspect}
+            puts "image data: \#{@image_data.inspect}"
           end
 
           def has_#{field_name}=(has_image)
