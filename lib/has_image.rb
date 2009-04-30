@@ -141,11 +141,9 @@ module ActiveRecord #:nodoc:
             tf.flush
             path = tf.path
 
-            puts path
-
             ImageScience.with_image(path) do |img|
               if !large_size[0].nil? and !large_size[1].nil?
-                img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| send("#{field_name}_large_path") }
+                img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_large_path") }
               else
                 b = (large_size[0].nil? ? [large_size[1], ImageScience::WAY_HEIGHT] : [large_size[0], ImageScience::WAY_WIDTH])
                 img.forced_thumbnail(b[0], b[1]) { |thumb| thumb.save send("#{field_name}_large_path") }
