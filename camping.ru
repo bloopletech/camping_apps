@@ -1,4 +1,5 @@
 #!/usr/bin/env rackup
+$DEBUG = 1
 #require 'profile'
 #prerequisites:
 # unix-style OS, ruby 1.8.6, rubygems 0.9+, camping 1.9+ (i.e. git), activerecord 2.0.2+, rack 0.3.0+
