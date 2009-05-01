@@ -131,6 +131,7 @@ module ActiveRecord #:nodoc:
       end
       def save_images
         @image_data ||= {}
+        puts @image_data.inspect
         @image_data.each_pair do |field_name, (status, old_status, file_data, small_size, large_size)|
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
 
@@ -140,9 +141,12 @@ module ActiveRecord #:nodoc:
             tf << file_data.read.strip
             tf.flush
             path = tf.path
+            puts path
+            puts send("#{field_name}_large_path")
 
             ImageScience.with_image(path) do |img|
               if !large_size[0].nil? and !large_size[1].nil?
+                puts "cropped_thumbnail2"
                 img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_large_path") }
               else
                 b = (large_size[0].nil? ? [large_size[1], ImageScience::WAY_HEIGHT] : [large_size[0], ImageScience::WAY_WIDTH])
