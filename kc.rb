@@ -880,8 +880,8 @@ module Kc::Views
         for u in @users
           item do
             title "#{u.name} has an averaged high score of #{number_with_delimiter u.high_score}"
-            description "#{u.name} has an average of #{number_with_delimiter u.high_score} over their last 100 scores, or if they have less than 100 scores submitted, the average of all their scores. #{u.name}'s latest score was submitted at #{nice_date_time u.scores_when} UTC."
-            pubDate u.scores_when.to_s(:rfc822)
+            description "#{u.name} has an average of #{number_with_delimiter u.high_score} over their last 100 scores, or if they have less than 100 scores submitted, the average of all their scores. #{u.name}'s latest score was submitted at #{nice_date_time u.latest_score.when} UTC."
+            pubDate u.latest_score.when.to_s(:rfc822)
             link({ :action => 'show', :id => u.id })
             guid({ :action => 'show', :id => u.id })
           end

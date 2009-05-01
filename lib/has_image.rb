@@ -138,7 +138,7 @@ module ActiveRecord #:nodoc:
           if status == :upload
             file_data.rewind
             tf = Tempfile.new("temp_image")
-            tf << file_data.read.strip
+            tf << file_data.read
             tf.flush
             path = tf.path
             puts path
