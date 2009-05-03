@@ -1,8 +1,6 @@
 require 'fileutils'
 require 'image_science'
 
-require 'digest/md5'
-
 class ImageScience
   WAY_WIDTH = 0
   WAY_HEIGHT = 1
@@ -138,23 +136,12 @@ module ActiveRecord #:nodoc:
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
 
           if status == :upload
-            #file_data.rewind
-            tf = Tempfile.new("temp_image")
-            temp = file_data.read
-            puts "hexdigest: #{Digest::MD5.hexdigest(temp)}"
-            $stdout.flush
-            tf << temp
-            tf.flush
-            path = tf.path
-            puts path
-            puts send("#{field_name}_large_path")
-            
-            puts "hex2: #{Digest::MD5.hexdigest(IO.read(path))}"
-            $stdout.flush
+            file_data.rewind
+            fn = "/tmp/#{ActiveSupport::SecureRandom.hex(32)}"
+            File.open(fn, "w") { |f| f << file_data.read; f.flush }
 
-            ImageScience.with_image(path) do |img|
+            ImageScience.with_image(fn) do |img|
               if !large_size[0].nil? and !large_size[1].nil?
-                puts "cropped_thumbnail2"
                 img.cropped_thumbnail2(large_size[0], large_size[1], ImageScience::WAY_WIDTH) { |thumb| thumb.save send("#{field_name}_large_path") }
               else
                 b = (large_size[0].nil? ? [large_size[1], ImageScience::WAY_HEIGHT] : [large_size[0], ImageScience::WAY_WIDTH])
@@ -168,7 +155,7 @@ module ActiveRecord #:nodoc:
               end
             end
 
-            tf.close! unless tf.nil?
+            File.unlink(fn)
           end
         end
         return true
