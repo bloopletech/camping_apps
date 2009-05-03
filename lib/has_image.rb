@@ -1,6 +1,8 @@
 require 'fileutils'
 require 'image_science'
 
+require 'digest/md5'
+
 class ImageScience
   WAY_WIDTH = 0
   WAY_HEIGHT = 1
@@ -136,9 +138,11 @@ module ActiveRecord #:nodoc:
           [:small, :large].each { |size| File.unlink(send("#{field_name}", size, :path, true)) if File.exists?(send("#{field_name}", size, :path, true)) } if status != :keep_same
 
           if status == :upload
-            file_data.rewind
+            #file_data.rewind
             tf = Tempfile.new("temp_image")
-            tf << file_data.read
+            temp = file_data.read
+            puts Digest::MD5.hexdigest(temp)
+            tf << temp
             tf.flush
             path = tf.path
             puts path
@@ -163,6 +167,7 @@ module ActiveRecord #:nodoc:
             tf.close! unless tf.nil?
           end
         end
+        return true
       end
     end
   end
