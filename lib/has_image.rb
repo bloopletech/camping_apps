@@ -141,7 +141,7 @@ module ActiveRecord #:nodoc:
             #file_data.rewind
             tf = Tempfile.new("temp_image")
             temp = file_data.read
-            puts Digest::MD5.hexdigest(temp)
+            puts "hexdigest: #{Digest::MD5.hexdigest(temp)}"
             tf << temp
             tf.flush
             path = tf.path
