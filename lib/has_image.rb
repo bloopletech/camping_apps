@@ -142,6 +142,7 @@ module ActiveRecord #:nodoc:
             File.open(fn, "w") { |f| f << file_data.read; f.flush }
             
             puts "hex: #{Digest::MD5.hexdigest(IO.read(fn))}"
+            $stdout.flush
 
             ImageScience.with_image(fn) do |img|
               if !large_size[0].nil? and !large_size[1].nil?
