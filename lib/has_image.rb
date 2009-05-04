@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'image_science'
+require 'digest/md5'
 
 class ImageScience
   WAY_WIDTH = 0
@@ -139,6 +140,8 @@ module ActiveRecord #:nodoc:
             file_data.rewind
             fn = "/tmp/#{ActiveSupport::SecureRandom.hex(32)}"
             File.open(fn, "w") { |f| f << file_data.read; f.flush }
+            
+            puts "hex: #{Digest::MD5.hexdigest(IO.read(fn))}"
 
             ImageScience.with_image(fn) do |img|
               if !large_size[0].nil? and !large_size[1].nil?
