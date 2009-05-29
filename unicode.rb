@@ -45,6 +45,7 @@ module Unicode::Views
             body { background-color: #ffffff; color: #000000; padding: 1em; text-align: center; }
             h1 { font-size: 200%; margin: 0.5em 0 1em 0; }
             p { margin: 0 0 1em 0; }
+            a { color: #0000ff; }
             #code_point { font-size: 300%; margin-bottom: 0.5em; }
             #name { font-size: 150%; }
             #note { font-size: 70%; width: 40em; margin: 0 auto 1em auto; } 
@@ -63,7 +64,7 @@ module Unicode::Views
   def index
     h1 { "Random Unicode Character" }
     p.code_point! { "&#x#{@code_point};" }
-    p.name! { "#{$mapping[@code_point]} (#{@code_point})" }
+    p.name! { "#{$mapping[@code_point]} (<a href='/#{@code_point}'>#{@code_point}</a>)" }
     p.note! { "Does not include the ranges CJK Ideograph Extension A, CJK Ideograph Extension B, CJK Ideograph, Hangul Syllable, Non Private Use High Surrogate, Private Use High Surrogate, Low Surrogate, High Surrogate, Private Use, Plane 15 Private Use, Plane 16 Private Use." }
   end
 
