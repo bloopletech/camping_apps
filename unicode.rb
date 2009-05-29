@@ -63,7 +63,7 @@ module Unicode::Views
   def index
     h1 { "Random Unicode Character" }
     p.code_point! { "&#x#{@code_point};" }
-    p.name! { "#{$mapping[@code_point]}" }
+    p.name! { "#{$mapping[@code_point]} (#{@code_point})" }
     p.note! { "Does not include the ranges CJK Ideograph Extension A, CJK Ideograph Extension B, CJK Ideograph, Hangul Syllable, Non Private Use High Surrogate, Private Use High Surrogate, Low Surrogate, High Surrogate, Private Use, Plane 15 Private Use, Plane 16 Private Use." }
   end
 
