@@ -300,7 +300,7 @@ module Blog; VERSION = 0.99
       def post id
         @comment = Comment.create :post_id => id, :bot => input.bot,
           :username => (name = input.name), :body => (comment = input.comment)
-        redirect self / "/read/#{id}?name=#{C.escape name}&comment=#{C.escape comment}"
+        redirect self / "/read/#{id}?name=#{CGI::escape name}&comment=#{CGI::escape comment}"
       end
     end
 
