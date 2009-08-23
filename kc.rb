@@ -6,6 +6,7 @@ require 'gruff'
 require 'lib/has_image'
 require 'lib/common'
 require 'lib/linear_regression'
+require 'kc/models'
 
 Camping.goes :Kc
 
