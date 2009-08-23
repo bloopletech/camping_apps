@@ -1,0 +1,56 @@
+* { margin: 0; padding: 0; font-family: "Lucida Grande", "Lucida Sans Unicode", sans-serif; font-size: 100%; font-weight: normal; }
+body { margin: 20px 0; background-color: #101010; color: #dfdfdf; letter-spacing: 0.08em; line-height: 1.4em; font-size: 90%; text-align: center; }
+p { margin-bottom: 15px; }
+a { color: #48ba32; }
+h1 { font-size: 160%; }
+h2 { margin: 15px 0; font-size: 150%; }
+#sidebar h2 { font-size: 130%; }
+#sidebar h2.first { margin-top: 0; }
+#sidebar h4 { margin-bottom: 5px; }
+h3 { margin: 5px 0; font-size: 120%; }
+
+#wrap { text-align: left; width: 900px; margin: 20px auto; }
+#header { margin-bottom: 20px; }
+#logo { height: 150px; background-color: #48ba32; margin-bottom: 20px; }
+#logo h1 a { color: #000000; display: block; width: 900px; height: 150px; line-height: 150px; font-size: 75px; text-decoration: none; vertical-align: middle; text-align: center; }
+#footer { margin-top: 20px; }
+#content { width: 600px; margin-right: 20px; }
+#sidebar { float: right; width: 280px; }
+
+.clear { clear: both; font-size: 0; line-height: 0; height: 0; }
+
+ul { margin: 15px 30px; }
+li { margin: 5px 0; }
+* html ul { padding-left: 30px; }
+
+ul.menu { margin: 0 0 15px 0; padding: 0; list-style-type: none; }
+ul.menu li { display: inline; margin: 0 8px 0 0; padding: 2px 8px 2px 0; border-right: 1px solid #ffffff; }
+ul.menu li.last { margin-right: none; border-right: none; }
+
+/* form stuff */
+label { width: 92px; display: block; float: left; text-align: right; padding: 9px 6px 0 0; }
+input, textarea { width: 492px; margin: 5px 0; padding: 4px; border: 1px solid #808080; }
+input.submit { margin-left: 98px; width: 100px; }
+input:hover, textarea:hover { background-color: #ddefff; }
+form div { clear: left; }
+
+/* table stuff */
+table { border: 1px solid #a0a0a0; border-collapse: collapse; margin-bottom: 15px; }
+table td, table th { border: 1px solid #a0a0a0; padding: 6px; }
+table th { background-color: #5555ff; color: #eeeeee; }
+
+/* posts stuff */
+.post { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
+/*.first { border-top: 1px dotted #a0a0a0; padding-top: 15px; }*/
+.post h3 { margin-top: 0; }
+p.subtitle, p.username { font-size: 90%; color: #808080; text-align: right; }
+
+pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 500px; overflow: auto; margin-bottom: 15px; }
+pre, code { font-family: Monaco, "Courier New", sans-serif; color: #00ff00; font-size: 90%; }
+
+blockquote { margin: 0 50px; }
+
+.asset { width: 400px; float: left; margin: 20px; }
+.badge { float: left; margin-right: 20px; }
+
+.rss2html-note { display: none; }

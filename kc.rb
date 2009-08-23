@@ -5,46 +5,7 @@ require 'htmlentities/string'
 require 'gruff'
 require 'lib/has_image'
 require 'lib/common'
-
-
-
-
-class LinearRegression
-  attr_accessor :slope, :offset
-
-  def initialize dx, dy=nil
-    @size = dx.size
-    dy,dx = dx,axis() unless dy  # make 2D if given 1D
-    raise "arguments not same length!" unless @size == dy.size
-    sxx = sxy = sx = sy = 0
-    dx.zip(dy).each do |x,y|
-      sxy += x*y
-      sxx += x*x
-      sx  += x
-      sy  += y
-    end
-    if @size == 1
-      @slope = 1
-      @offset = dy.first
-    else
-      @slope = ( @size * sxy - sx*sy ) / ( @size * sxx - sx * sx )
-      @offset = (sy - @slope*sx) / @size
-    end
-  end
-
-  def fit
-    return axis.map{|data| predict(data) }
-  end
-
-  def predict( x )
-    y = @slope * x + @offset
-  end
-
-  def axis
-    (0...@size).to_a
-  end
-end
-
+require 'lib/linear_regression'
 
 Camping.goes :Kc
 
@@ -54,108 +15,7 @@ module Kc
 end
 
 module Kc::Models
-  class Score < Base
-    belongs_to :user
-
-    after_save :update_high_scores
-
-    def update_high_scores
-      hs = user.scores.find(:all, :order => "kc_scores.when DESC", :limit => 100)
-      
-      user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id, :total_scores => user.scores.count)
-    end
-  end
-  class Shout < Base
-    validates_presence_of :username
-    validates_presence_of :text
-
-    attr_accessor :captcha
-
-    def validate
-      errors.add(:captcha, 'was entered incorrectly') unless captcha.downcase == 'captcha'
-    end
-  end
-  class User < Base
-    has_many :scores
-    belongs_to :top_score, :class_name => 'Score'
-    belongs_to :latest_score, :class_name => 'Score'
-#    has_many :users, :as => 'friends'
-
-    has_image(false, 'avatar')
-
-    def highest_score
-      scores.find(:first, :order => 'score DESC')
-    end
-
-    def lowest_score
-      scores.find(:first, :order => 'score ASC')
-    end
-
-    def most_recent_score
-      scores.find(:first, :order => 'kc_scores.when DESC')
-    end
-  end
-
-  class CreateKc < V 1
-    def self.up
-      create_table "kc_scores", :force => false do |t|
-        t.integer  "version", "user_id", "score"
-        t.datetime "when"
-        t.string   "source"
-      end
-
-      create_table "kc_shouts", :force => false do |t|
-        t.string   "username", "text"
-        t.datetime "posted"
-      end
-
-      create_table "kc_users", :force => false do |t|
-        t.string  "name", "crypt"
-        t.integer "high_score"
-        t.boolean "has_avatar", :default => false
-      end
-    end
-  end
-
-  class AddViewCount < V 2
-    def self.up
-      add_column :kc_users, :view_count, :integer, :default => 0
-    end
-  end
-
-  class AddSiteChanges122008 < V 3
-    def self.up
-      add_column :kc_users, :seen_site_changes_12_2008, :boolean, :default => false
-    end
-  end
-
-  class AddUserScoresWhen < V 4
-    def self.up
-      add_column :kc_users, :scores_when, :datetime, :default => nil
-    end
-  end
-
-  class AdduserCachedStats < V 5
-    def self.up
-      add_column :kc_users, :top_score_id, :integer
-      add_column :kc_users, :latest_score_id, :integer
-      Kc::Models::User.find(:all).each do |u|
-        u.top_score_id = u.scores.find(:first, :order => 'score DESC').id
-        u.latest_score_id = u.scores.find(:first, :order => 'kc_scores.when DESC').id
-        u.save
-      end
-    end
-  end
-
-  class AdduserTotalScores < V 6
-    def self.up
-      add_column :kc_users, :total_scores, :integer
-      Kc::Models::User.find(:all).each do |u|
-        u.total_scores = u.scores.count
-        u.save!
-      end
-    end
-  end
+  include KcModels
 end
 
 module Kc::Controllers
@@ -437,7 +297,7 @@ module Kc::Controllers
     end
   end
 
-  include AssetsClass
+  include StaticAssetsClass
 end
 
 module Kc::Helpers
@@ -717,14 +577,14 @@ module Kc::Views
     div.user_show_col_right do
       h3 { "Top 10 scores" }
       _scores(@high_scores, false)
-      p { a('All of your scores', :href => "/users/#{@user.id}/all_scores") }
+      p { a('All of ' + h(@user.name) + '\'s scores', :href => "/users/#{@user.id}/all_scores") }
       p { a('RSS feed for top scores', :href => "/users/#{@user.id}/high_scores.rss") }
     end
 
     div.user_show_col_middle do
       h3 { "Latest 10 scores" }
       _scores(@latest_scores, false)
-      p { a('All of your scores', :href => "/users/#{@user.id}/all_scores") }
+      p { a('All of ' + h(@user.name) + '\'s scores', :href => "/users/#{@user.id}/all_scores") }
       p { a('RSS feed for latest scores', :href => "/users/#{@user.id}/latest_scores.rss") }
     end
 

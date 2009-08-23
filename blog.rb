@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-%w(redcloth camping/ar camping/session image_science).each { |lib| require lib }
+%w(redcloth camping/ar camping/session image_science lib/common).each { |lib| require lib }
 
 # Fix unicode urls
 $KCODE = 'u'
@@ -275,7 +275,8 @@ module Blog; VERSION = 0.99
         end
       end
     end
-      
+
+    include StaticAssetsClass
     
     class Login < R '/login', '/logout'
       def post
@@ -303,65 +304,6 @@ module Blog; VERSION = 0.99
         redirect self / "/read/#{id}?name=#{CGI::escape name}&comment=#{CGI::escape comment}"
       end
     end
-
-    class Style < R '/main.css'
-      def get
-        @headers["Content-Type"] = "text/css; charset=utf-8"
-        @body = %{
-          * { margin: 0; padding: 0; font-family: "Lucida Grande", "Lucida Sans Unicode", sans-serif; font-size: 100%; font-weight: normal; }
-          body { margin: 20px 0; background-color: #101010; color: #dfdfdf; letter-spacing: 0.08em; line-height: 1.4em; font-size: 90%; text-align: center; }
-          p { margin-bottom: 15px; }
-          a { color: #48ba32; }
-          h1 { font-size: 160%; }
-          h2 { margin: 15px 0; font-size: 150%; }
-          h3 { margin: 5px 0; font-size: 120%; }
-
-          #wrap { text-align: left; width: 600px; margin: 20px auto; }
-          #header { margin-bottom: 20px; }
-          #logo { height: 150px; background-color: #48ba32; margin-bottom: 20px; }
-          #logo h1 a { color: #000000; display: block; width: 600px; height: 150px; line-height: 150px; font-size: 75px; text-decoration: none; vertical-align: middle; }
-          #footer { margin-top: 20px; }
-
-          .clear { clear: both; font-size: 0; line-height: 0; height: 0; }
-
-          ul { margin: 15px 30px; }
-          li { margin: 5px 0; }
-          * html ul { padding-left: 30px; }
-          
-          ul.menu { margin: 0 0 15px 0; padding: 0; list-style-type: none; }
-          ul.menu li { display: inline; margin: 0 8px 0 0; padding: 2px 8px 2px 0; border-right: 1px solid #ffffff; }
-          ul.menu li.last { margin-right: none; border-right: none; }
-
-          /* form stuff */
-          label { width: 92px; display: block; float: left; text-align: right; padding: 9px 6px 0 0; }
-          input, textarea { width: 492px; margin: 5px 0; padding: 4px; border: 1px solid #808080; }
-          input.submit { margin-left: 98px; width: 100px; }
-          input:hover, textarea:hover { background-color: #ddefff; }
-          form div { clear: left; }
-
-          /* table stuff */
-          table { border: 1px solid #a0a0a0; border-collapse: collapse; margin-bottom: 15px; }
-          table td, table th { border: 1px solid #a0a0a0; padding: 6px; }
-          table th { background-color: #5555ff; color: #eeeeee; }
-
-          /* posts stuff */
-          .post { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
-          .first { border-top: 1px dotted #a0a0a0; padding-top: 15px; }
-          .post h3 { margin-top: 0; }
-          p.subtitle, p.username { font-size: 90%; color: #808080; text-align: right; }
-          
-          pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 500px; overflow: auto; margin-bottom: 15px; }
-          pre, code { font-family: Monaco, "Courier New", sans-serif; color: #00ff00; font-size: 90%; }
-
-          blockquote { margin: 0 50px; }
-          
-          .asset { width: 400px; float: left; margin: 20px; }
-          .badge { float: left; margin-right: 20px; }
-        }
-      end
-    end
-    # Use FIXCSS=1 to get the main.css served via Camping.
-    if ENV['FIXCSS']; class Style < R '/(\w+\.\w+)'; def get file; r 200, File.read(__FILE__.sub(/blog\.rb\z/, file)), 'Content-Type' => '*'; end; end; end
   end
   
   module Views
@@ -371,7 +313,7 @@ module Blog; VERSION = 0.99
         head do
           meta :'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8'
           title "Coderplay #{' - ' + @title if @title}"
-          link :rel => 'stylesheet', :type => 'text/css', :href => self / '/main.css'
+          link :rel => 'stylesheet', :type => 'text/css', :href => '/style.css'
           link :rel => 'alternate', :type => 'application/rss+xml', :href => "/rss#{"/#@tag" if @tag != 'Index'}"
           link :rel => 'shortcut icon', :type => 'image/x-icon', :href => '/murfy32.png'
         end
@@ -383,15 +325,28 @@ module Blog; VERSION = 0.99
                   a(:href => R(Index), :accesskey => 'I') { span "Coderplay" }
                 end
               end
-              menu[:top][:visitor] = tags.sort.map { |t| a t, :href => self / "/tag/#{t}" }
+            end
+            div.sidebar! do
+              h2.first 'Tags'
+              p { tags.sort.map { |t| a t, :href => self / "/tag/#{t}" }.join("&nbsp; ") }
+              h2 'About me'
+              img(:src => '/images/me.jpg')
+              p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Web Design</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
+              p { a('More...', :href => '/read/about') }
+              h2 'Twitter posts'
+              text '<script id="feed-1250996587956855" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Ftwitter.com%2Fstatuses%2Fuser_timeline%2F15440326.rss&detail=-1&limit=5&showtitle=false&type=js&id=1250996587956855"></script>'
+              p { a('More...', :href => 'http://twitter.com/bloopletech') }
+              h2 'Last.fm feed'
+              text "<div class=\"badge\"><style type=\"text/css\">table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e td {margin:0 !important;padding:0 !important;border:0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmHead a:hover {background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmEmbed object {float:left;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmConfig a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px 0 !important;;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmView a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmPopup a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px 0 !important;}</style>              <table class=\"lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:184px;\"><tr class=\"lfmHead\"><td><a title=\"bloopletech: Recently Listened Tracks\" href=\"http://www.last.fm/user/bloopletech\" target=\"_blank\" style=\"display:block;overflow:hidden;height:20px;width:184px;background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 -20px;text-decoration:none;border:0;\"></a></td></tr><tr class=\"lfmEmbed\"><td><object type=\"application/x-shockwave-flash\" data=\"http://cdn.last.fm/widgets/chart/19.swf\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" id=\"lfmEmbed_28629697\" width=\"184\" height=\"179\"> <param name=\"movie\" value=\"http://cdn.last.fm/widgets/chart/19.swf\" /> <param name=\"flashvars\" value=\"type=recenttracks&amp;user=bloopletech&amp;theme=black&amp;lang=en&amp;widget_id=chart_821f77321b90c94f61be2fbbddf9dd5e\" /> <param name=\"allowScriptAccess\" value=\"always\" /> <param name=\"allowNetworking\" value=\"all\" /> <param name=\"allowFullScreen\" value=\"true\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"000000\" /> <param name=\"wmode\" value=\"transparent\" /> <param name=\"menu\" value=\"true\" /> </object></td></tr><tr class=\"lfmFoot\"><td style=\"background:url(http://cdn.last.fm/widgets/images/footer_bg/black.png) repeat-x 0 0;text-align:right;\"><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:184px;\"><tr><td class=\"lfmConfig\"><a href=\"http://www.last.fm/widgets/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart\" title=\"Get your own widget\" target=\"_blank\" style=\"display:block;overflow:hidden;width:85px;height:20px;float:right;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmView\" style=\"width:74px;\"><a href=\"http://www.last.fm/user/bloopletech\" title=\"View bloopletech's profile\" target=\"_blank\" style=\"display:block;overflow:hidden;width:74px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmPopup\"style=\"width:25px;\"><a href=\"http://www.last.fm/widgets/popup/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart&amp;resize=1\" title=\"Load this chart in a pop up\" target=\"_blank\" style=\"display:block;overflow:hidden;width:25px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px -20px;text-decoration:none;border:0;\" onclick=\"window.open(this.href + '&amp;resize=0','lfm_popup','height=279,width=234,resizable=yes,scrollbars=yes'); return false;\"></a></td></tr></table></td></tr></table></div><div class=\"clear\"></div>"
+            end
+            div.content! do
+              menu[:top][:visitor] = []
               menu[:top][:admin] << a('New', :href => self / "/new#{"/#@tag" if @tag != 'Index'}") if logged_in?
               menu[:top][:admin] << a('Assets', :href => "/assets") if logged_in?
               menu[:top][:admin] << 'Logout' if logged_in?
-              div.bar! { menu :top }
-            end
-            div.content! do
+              div.bar! { menu :top } if logged_in?
+              
               self << yield
-              self << "<div class=\"badge\"><style type=\"text/css\">table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e td {margin:0 !important;padding:0 !important;border:0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmHead a:hover {background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmEmbed object {float:left;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmConfig a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px 0 !important;;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmView a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmPopup a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px 0 !important;}</style>              <table class=\"lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:184px;\"><tr class=\"lfmHead\"><td><a title=\"bloopletech: Recently Listened Tracks\" href=\"http://www.last.fm/user/bloopletech\" target=\"_blank\" style=\"display:block;overflow:hidden;height:20px;width:184px;background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 -20px;text-decoration:none;border:0;\"></a></td></tr><tr class=\"lfmEmbed\"><td><object type=\"application/x-shockwave-flash\" data=\"http://cdn.last.fm/widgets/chart/19.swf\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" id=\"lfmEmbed_28629697\" width=\"184\" height=\"179\"> <param name=\"movie\" value=\"http://cdn.last.fm/widgets/chart/19.swf\" /> <param name=\"flashvars\" value=\"type=recenttracks&amp;user=bloopletech&amp;theme=black&amp;lang=en&amp;widget_id=chart_821f77321b90c94f61be2fbbddf9dd5e\" /> <param name=\"allowScriptAccess\" value=\"always\" /> <param name=\"allowNetworking\" value=\"all\" /> <param name=\"allowFullScreen\" value=\"true\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"000000\" /> <param name=\"wmode\" value=\"transparent\" /> <param name=\"menu\" value=\"true\" /> </object></td></tr><tr class=\"lfmFoot\"><td style=\"background:url(http://cdn.last.fm/widgets/images/footer_bg/black.png) repeat-x 0 0;text-align:right;\"><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:184px;\"><tr><td class=\"lfmConfig\"><a href=\"http://www.last.fm/widgets/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart\" title=\"Get your own widget\" target=\"_blank\" style=\"display:block;overflow:hidden;width:85px;height:20px;float:right;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmView\" style=\"width:74px;\"><a href=\"http://www.last.fm/user/bloopletech\" title=\"View bloopletech's profile\" target=\"_blank\" style=\"display:block;overflow:hidden;width:74px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmPopup\"style=\"width:25px;\"><a href=\"http://www.last.fm/widgets/popup/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart&amp;resize=1\" title=\"Load this chart in a pop up\" target=\"_blank\" style=\"display:block;overflow:hidden;width:25px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px -20px;text-decoration:none;border:0;\" onclick=\"window.open(this.href + '&amp;resize=0','lfm_popup','height=279,width=234,resizable=yes,scrollbars=yes'); return false;\"></a></td></tr></table></td></tr></table></div><div style=\"width:176px;text-align:center\" class=\"badge\"><embed src=\"http://twitter.com/flash/twitter_badge.swf\"  flashvars=\"color1=0&type=user&id=15440326\"  quality=\"high\" width=\"176\" height=\"176\" name=\"twitter_badge\" align=\"middle\" allowScriptAccess=\"always\" wmode=\"transparent\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" /><br><a style=\"font-size: 10px; color: #000000; text-decoration: none\" href=\"http://twitter.com/bloopletech\">follow bloopletech at http://twitter.com</a></div><div class=\"clear\"></div>"
             end
               
             div.footer! { "All posts created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "blokk #{VERSION}", :href => 'http://murfy.de/read/blokk'} (modified) on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
@@ -404,19 +359,25 @@ module Blog; VERSION = 0.99
       if @posts.empty?
         p 'No posts yet.'
       else
-        @posts.each { |post| _post post }
-        if @has_older_pages
+        div.post do
           p { a('Older posts', :href => "/archive/#{@tag}/1") }
-        end
+        end if @has_older_pages
+        @posts.each { |post| _post post }
+        div.post do
+          p { a('Older posts', :href => "/archive/#{@tag}/1") }
+        end if @has_older_pages
       end
     end
     
     def archive
-      @posts.each { |post| _post post }
       links = []
       links << a('Older posts', :href => "/archive/#{@tag}/#{@page + 1}") if @has_older_posts
       links << a('Newer posts', :href => (@has_newer_posts ? "/archive/#{@tag}/#{@page - 1}" : "/"))
-      p { links.join(' | ') }
+      p.pagination { links.join(' | ') }
+
+      @posts.each { |post| _post post }
+
+      p.pagination { links.join(' | ') }
     end
     
     def login
@@ -447,7 +408,7 @@ module Blog; VERSION = 0.99
       
       # comments
       h2 'Say something!'
-      for c in @post.comments
+      @post.comments.each do |c|
         div.comment do
           p.body c.body
           timestamp = c.created_at.strftime('%H:%M on %A, %Y-%m-%d')

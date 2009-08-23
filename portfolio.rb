@@ -163,7 +163,7 @@ module Portfolio::Controllers
     end
   end
 
-  include AssetsClass
+  include StaticAssetsClass
 end
 
 module Portfolio::Helpers
@@ -240,7 +240,7 @@ module Portfolio::Views
         div.wrap! do
           div.header! { a('', :href => '/') }
           self << yield
-          div.copyright! { '&copy; 2008 Brenton Fletcher. Comments? <a href="mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;">&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;</a>. Made on a Mac with Ruby on Rails.' }
+          div.copyright! { "&copy; #{Date.today.year} Brenton Fletcher. Comments? <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;</a>. Made on a Mac with Ruby on Rails." }
         end
       end
     end

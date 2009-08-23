@@ -194,5 +194,5 @@ module Watchlist::Controllers
     end
   end
 
-  include AssetsClass
+  include StaticAssetsClass
 end

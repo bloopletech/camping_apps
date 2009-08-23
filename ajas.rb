@@ -48,7 +48,7 @@ module Ajas::Controllers
     end
   end
 
-  include AssetsClass
+  include StaticAssetsClass
 end
 
 module Ajas::Helpers
