@@ -7,7 +7,7 @@ module KcModels
         after_save :update_high_scores
 
         def update_high_scores
-          hs = user.scores.find(:all, :order => "\#{self.table_name}.when DESC", :limit => 100)
+          hs = user.scores.find(:all, :order => "\#{self.class.table_name}.when DESC", :limit => 100)
 
           user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id, :total_scores => user.scores.count)
         end
@@ -39,7 +39,7 @@ module KcModels
         end
 
         def most_recent_score
-          scores.find(:first, :order => '\#{self.table_name}.when DESC')
+          scores.find(:first, :order => '\#{self.class.table_name}.when DESC')
         end
       end
     EOF
