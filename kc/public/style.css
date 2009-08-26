@@ -54,6 +54,7 @@ input.file { margin: 0 0 0 5px; padding: 0; }
 div.upload img { float: left; margin: 5px; }
 div.upload div { float: left; }
 div.upload div.clear { float: none; }
+input.radio { width: auto; }
 
 .errorExplanation, #errorExplanation, .notification, #success, #errors { background-color: #ffffcc; border: 1px solid #ffff00; padding: 8px; color: #303030; margin: 8px 0; }
 .flash p { margin-bottom: 0; }
