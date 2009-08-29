@@ -120,7 +120,15 @@ module Blog; VERSION = 0.99
     def tags
       Models::Post.find(:all, :select => 'DISTINCT tags').map(&:tags).join(' ').split(/\s+/).uniq
     end
-    
+
+    def ellipsis(content)
+      t = content.split(/\s+/)
+      t[0...10].join(' ') + (t.length > 10 ? "..." : "")
+    end
+
+    def nice_date_time(dt)
+      dt.in_time_zone('Adelaide').strftime('%I:%M %p on %A, %d/%m/%Y')
+    end
   end
   
   # beautiful XHTML 11
@@ -320,10 +328,11 @@ module Blog; VERSION = 0.99
         body do
           div.wrap! do
             div.header! do
-              div.logo! do
-                h1 do
-                  a(:href => R(Index), :accesskey => 'I') { span "Coderplay" }
-                end
+              h1 do
+                a(:href => R(Index), :accesskey => 'I') { span "Coderplay" }
+              end
+              h2 do
+                "Like a truck through a plate glass window, Brenton Fletcher is comin' at you with more code than you can handle."
               end
             end
             div.sidebar! do
@@ -332,12 +341,18 @@ module Blog; VERSION = 0.99
               h2 'About me'
               img(:src => '/images/me.jpg')
               p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Web Design</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
+              p { "You can email me at <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;</a>." }
               p { a('More...', :href => '/read/about') }
+              h2 'Recent comments'
+              Models::Comment.find(:all, :order => 'created_at DESC', :limit => 5).each do |c|
+                h4 { a(ellipsis(c.body), :href => R(Read, c.post.id) + "#comment-#{c.id}") + " on " + a(c.post.title, :href => R(Read, c.post.id)) }
+              end
               h2 'Twitter posts'
               text '<script id="feed-1250996587956855" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Ftwitter.com%2Fstatuses%2Fuser_timeline%2F15440326.rss&detail=-1&limit=5&showtitle=false&type=js&id=1250996587956855"></script>'
               p { a('More...', :href => 'http://twitter.com/bloopletech') }
               h2 'Last.fm feed'
-              text "<div class=\"badge\"><style type=\"text/css\">table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e td {margin:0 !important;padding:0 !important;border:0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmHead a:hover {background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmEmbed object {float:left;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmConfig a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px 0 !important;;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmView a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px 0 !important;}table.lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e tr.lfmFoot td.lfmPopup a:hover {background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px 0 !important;}</style>              <table class=\"lfmWidgetchart_821f77321b90c94f61be2fbbddf9dd5e\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:184px;\"><tr class=\"lfmHead\"><td><a title=\"bloopletech: Recently Listened Tracks\" href=\"http://www.last.fm/user/bloopletech\" target=\"_blank\" style=\"display:block;overflow:hidden;height:20px;width:184px;background:url(http://cdn.last.fm/widgets/images/en/header/chart/recenttracks_regular_black.png) no-repeat 0 -20px;text-decoration:none;border:0;\"></a></td></tr><tr class=\"lfmEmbed\"><td><object type=\"application/x-shockwave-flash\" data=\"http://cdn.last.fm/widgets/chart/19.swf\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" id=\"lfmEmbed_28629697\" width=\"184\" height=\"179\"> <param name=\"movie\" value=\"http://cdn.last.fm/widgets/chart/19.swf\" /> <param name=\"flashvars\" value=\"type=recenttracks&amp;user=bloopletech&amp;theme=black&amp;lang=en&amp;widget_id=chart_821f77321b90c94f61be2fbbddf9dd5e\" /> <param name=\"allowScriptAccess\" value=\"always\" /> <param name=\"allowNetworking\" value=\"all\" /> <param name=\"allowFullScreen\" value=\"true\" /> <param name=\"quality\" value=\"high\" /> <param name=\"bgcolor\" value=\"000000\" /> <param name=\"wmode\" value=\"transparent\" /> <param name=\"menu\" value=\"true\" /> </object></td></tr><tr class=\"lfmFoot\"><td style=\"background:url(http://cdn.last.fm/widgets/images/footer_bg/black.png) repeat-x 0 0;text-align:right;\"><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:184px;\"><tr><td class=\"lfmConfig\"><a href=\"http://www.last.fm/widgets/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart\" title=\"Get your own widget\" target=\"_blank\" style=\"display:block;overflow:hidden;width:85px;height:20px;float:right;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat 0px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmView\" style=\"width:74px;\"><a href=\"http://www.last.fm/user/bloopletech\" title=\"View bloopletech's profile\" target=\"_blank\" style=\"display:block;overflow:hidden;width:74px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -85px -20px;text-decoration:none;border:0;\"></a></td><td class=\"lfmPopup\"style=\"width:25px;\"><a href=\"http://www.last.fm/widgets/popup/?colour=black&amp;chartType=recenttracks&amp;user=bloopletech&amp;chartFriends=0&amp;from=code&amp;widget=chart&amp;resize=1\" title=\"Load this chart in a pop up\" target=\"_blank\" style=\"display:block;overflow:hidden;width:25px;height:20px;background:url(http://cdn.last.fm/widgets/images/en/footer/black.png) no-repeat -159px -20px;text-decoration:none;border:0;\" onclick=\"window.open(this.href + '&amp;resize=0','lfm_popup','height=279,width=234,resizable=yes,scrollbars=yes'); return false;\"></a></td></tr></table></td></tr></table></div><div class=\"clear\"></div>"
+              text '<script id="feed-1251529262816519" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Fws.audioscrobbler.com%2F1.0%2Fuser%2Fbloopletech%2Frecenttracks.rss&detail=-1&limit=5&showtitle=false&type=js&id=1251529262816519"></script>'
+              p { a('More...', :href => 'http://www.last.fm/user/bloopletech') }
             end
             div.content! do
               menu[:top][:visitor] = []
@@ -348,7 +363,9 @@ module Blog; VERSION = 0.99
               
               self << yield
             end
-              
+
+            div.clear { "" }
+
             div.footer! { "All posts created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "blokk #{VERSION}", :href => 'http://murfy.de/read/blokk'} (modified) on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
           end
         end
@@ -409,9 +426,9 @@ module Blog; VERSION = 0.99
       # comments
       h2 'Say something!'
       @post.comments.each do |c|
-        div.comment do
+        div(:class => "comment", :id => "comment-#{c.id}") do
           p.body c.body
-          timestamp = c.created_at.strftime('%H:%M on %A, %Y-%m-%d')
+          timestamp = nice_date_time(c.created_at)
           p.username "#{c.username} @ #{timestamp}"
           a 'Delete', :href => R(Shoot, c), :onclick => "return confirm('Sure?');" if logged_in?
         end
@@ -419,11 +436,11 @@ module Blog; VERSION = 0.99
       
       form :action => R(Read, @post), :method => :post do
         div do
-          label_for :name, @comment, :username, :accesskey => 'C'
+          label_for :Name, @comment, :username, :accesskey => 'C'
           input.name! :name => :name, :value => @comment.username, :size => 41, :type => :text
         end
         div do
-          label_for :comment, @comment, :body
+          label_for :Comment, @comment, :body
           textarea.comment! @comment.body, :name => :comment, :cols => 60, :rows => 10
           input.bot! :type => :hidden, :name => :bot, :value => 'spambot'
           input :type => :submit, :class => :submit, :value => 'OK', :onclick => "getElementById('bot').value='K'"
@@ -466,11 +483,11 @@ module Blog; VERSION = 0.99
         excerpt, body = *post.body.split(/^---+/, 2)
         div.body { text RedCloth.new("#{excerpt}#{body if full}").to_html }
         p.subtitle do
-          text "#{post.created_at.strftime('%H:%M %a %Y-%m-%d')} "
-          text '(%s)' % post.tags.scan(/[-\w]+/).map { |t| a t, :href => R(Index, t) }.join(' ')
+          text "#{nice_date_time(post.created_at)}"
         end
         cs = post.comments.size
-        menu[id = post.nickname || post.id][:visitor] << "#{cs} comment#{'s' unless cs == 1}"
+        
+        menu[id = post.nickname || post.id][:visitor] << "Tagged with #{post.tags.scan(/[-\w]+/).map { |t| a t, :href => R(Index, t) }.join(' ')}, #{cs} comment#{'s' unless cs == 1}"
         menu[id][:visitor] << a('Read', :href => R(Read, id)) unless full
         menu[id][:admin] << a('Edit', :href => R(Edit, id), :accesskey => ('E' if full)) if logged_in?
         menu[id][:admin] << 'Delete' if logged_in?

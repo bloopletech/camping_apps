@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; font-family: "Lucida Grande", "Lucida Sans Unicode", sans-serif; font-size: 100%; font-weight: normal; }
-body { margin: 20px 0; background-color: #101010; color: #dfdfdf; letter-spacing: 0.08em; line-height: 1.4em; font-size: 90%; text-align: center; }
+body { margin: 20px 0; background-color: #ffffff; color: #000000; letter-spacing: 0.08em; line-height: 1.4em; font-size: 90%; text-align: center; }
 p { margin-bottom: 15px; }
 a { color: #48ba32; }
 h1 { font-size: 160%; }
@@ -10,10 +10,11 @@ h2 { margin: 15px 0; font-size: 150%; }
 h3 { margin: 5px 0; font-size: 120%; }
 
 #wrap { text-align: left; width: 900px; margin: 20px auto; }
-#header { margin-bottom: 20px; }
-#logo { height: 150px; background-color: #48ba32; margin-bottom: 20px; }
-#logo h1 a { color: #000000; display: block; width: 900px; height: 150px; line-height: 150px; font-size: 75px; text-decoration: none; vertical-align: middle; text-align: center; }
-#footer { margin-top: 20px; }
+#header { margin-bottom: 20px; width: 900px; background-color: #48ba32; text-align: center; }
+#header h2 { width: 400px; text-align: center; margin: 0 auto; padding-bottom: 20px; font-size: 80%; line-height: 1.4em; }
+#header h1 a { color: #000000; display: block; width: 900px; line-height: 120px; font-size: 75px; text-decoration: none; vertical-align: middle; text-align: center; }
+#footer { margin: 20px 0; padding: 20px; background-color: #48ba32; }
+#footer a { color: #303030; }
 #content { width: 600px; margin-right: 20px; }
 #sidebar { float: right; width: 280px; }
 
@@ -43,10 +44,11 @@ table th { background-color: #5555ff; color: #eeeeee; }
 .post { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
 /*.first { border-top: 1px dotted #a0a0a0; padding-top: 15px; }*/
 .post h3 { margin-top: 0; }
-p.subtitle, p.username { font-size: 90%; color: #808080; text-align: right; }
+p.subtitle, p.username { font-size: 90%; color: #808080; text-align: left; }
+div.comment { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
 
 pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 500px; overflow: auto; margin-bottom: 15px; }
-pre, code { font-family: Monaco, "Courier New", sans-serif; color: #00ff00; font-size: 90%; }
+pre, code { font-family: Monaco, "Courier New", sans-serif; background-color: #000000; color: #00ff00; font-size: 90%; }
 
 blockquote { margin: 0 50px; }
 

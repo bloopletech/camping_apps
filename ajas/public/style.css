@@ -18,6 +18,7 @@ label { width: 10em; display: block; float: left; text-align: right; padding: 0.
 input, select, textarea { width: 20em; }
 textarea { height: 15em; }
 input.submit { margin-left: 10.3em; width: 8em; }
+input.radio { width: auto; }
 form div { clear: left; margin: 0.5em; }
 form div div { clear: none; }
 div.upload div { width: 25em; }
