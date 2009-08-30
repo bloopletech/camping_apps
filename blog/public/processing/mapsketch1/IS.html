@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+
+<head>
+
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Procession</title>
+
+
+  <style type="text/css">
+<!--
+body { font-family: Verdana, Arial, Helvicita, sans-serif; }
+div.sketch { padding: 5px; border: #000000 solid 1px; background-image: url("grad.html"); background-repeat: repeat-y; }
+/* \*\
+* html div.sketch { height: 1%; }
+/* */
+div.main { background: #ffffff; padding: 10px; border: #00FF00 solid 1px; }
+img.imgsketch { float: left; border: #888888 1px solid; margin: 5px; }
+div.clr { clear: both; width: 0px; height: 0px; }
+big { font-family: Euromode; }
+big.heading { padding-right: 3px; padding-bottom: 3px; border-right: #000000 solid 1px; border-bottom: #000000 solid 1px; }
+ul { margin-left: 18px; padding-left: 0px; list-style: none; }
+li { padding-left: 10px; background-image: url("../bullet.gif"); background-repeat: no-repeat; background-position: 0 0.5em; }
+-->
+  </style>
+</head>
+
+
+<body style="color: rgb(51, 0, 0); background-color: rgb(0, 0, 0);" alink="#000099" link="#3333ff" vlink="#990099">
+
+<p style="text-align: center;"><img style="height: 112px; width: 365px;" alt="Procession" src="logo.png"></p>
+
+<div style="text-align: left;" class="main"><big>
+How to use the ImageScroller class.</big>
+<hr style="margin: 8px auto 8px 0px; background-color: rgb(128, 128, 128); height: 2px; width: 100%;" noshade="noshade">You declare an ImageScroller in the format
+<code>new
+ImageScroller(image, x, y, width, height)</code>.<br>
+
+To use Image Scroller, there's some prerequisites you have to fulfill.<br>
+
+<ul>
+
+  <li>First, you have to make the ImageScroller wide enough to
+include the width of the image, and the scrollbar.</li>
+
+  <li>Second, your <code>draw()</code> function must
+include a call to <code>sc.drawImage()</code> at the end.</li>
+
+  <li>Third, your <code>mouseReleased()</code>
+function must include the
+following lines of code at the <span style="font-weight: bold;">beginning</span>
+of the function:<br>
+
+    <code>if(sc.mouseReleased(mouseX, mouseY))<br>
+
+{<br>
+
+&nbsp;&nbsp; redraw();<br>
+
+&nbsp;&nbsp; return;<br>
+
+}</code></li>
+
+  <li>Another point to note: if you are going to use measurements
+based on <code>width</code> and <code>height</code>,
+you'll have to initialize the ImageScroller in the draw function. The
+example below, which you can see in operation <a href="index.html">here</a>,
+does this.</li>
+
+</ul>
+
+Here's a skeleton you can use in designing your own sketches:<br>
+
+<code>ImageScroller sc = null;<br>
+
+<br>
+
+void setup()<br>
+
+{<br>
+
+&nbsp; &nbsp;//...<br>
+
+}<br>
+
+<br>
+
+void draw()<br>
+
+{<br>
+
+&nbsp; &nbsp;//this code will place the image-scroller at the
+bottom right of the screen<br>
+
+&nbsp; &nbsp;PImage im = loadImage("YourImageGoesHere.gif");<br>
+
+&nbsp; &nbsp;//how many pixels to put to the right and below
+the image<br>
+
+&nbsp; &nbsp;int spacer = 10;<br>
+
+&nbsp;&nbsp; //note the use of ImageScroller.SCROLLBAR_WIDTH to
+set the right width \/ \/<br>
+
+&nbsp; &nbsp;sc = (sc == null ? new ImageScroller(im, width -
+(im.width + spacer + ImageScroller.SCROLLBAR_WIDTH),<br>
+
+&nbsp; &nbsp; height - (im.height + spacer), (im.width +
+ImageScroller.SCROLLBAR_WIDTH), 200) : sc);<br>
+
+<br>
+
+&nbsp; &nbsp;//...<br>
+
+<br>
+
+&nbsp; &nbsp;sc.drawImage();<br>
+
+}<br>
+
+<br>
+
+void mouseReleased()<br>
+
+{<br>
+
+&nbsp; &nbsp;</code><code>if(sc.mouseReleased(mouseX,
+mouseY))<br>
+
+&nbsp; &nbsp;{<br>
+
+&nbsp;&nbsp; &nbsp; &nbsp;redraw();<br>
+
+&nbsp;&nbsp; &nbsp; &nbsp;return;<br>
+
+&nbsp; &nbsp;}<br>
+
+&nbsp; &nbsp;//...<br>
+
+}</code>
+<p><span style="font-weight: bold;">You can download</span>
+the ImageScroller pde file for use in your own projects <a href="ImageScroller.pde">here</a>.</p>
+
+</div>
+
+</body>
+
+
+</html>

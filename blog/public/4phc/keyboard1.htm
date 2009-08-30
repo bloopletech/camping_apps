@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+
+<title>Brenton Fletcher's Keyboard Simulator</title>
+<style type="text/css">
+span, button { width: 50px; height: 100px; }
+span { display: block; float: left; }
+</style>
+<script type="text/javascript">
+
+var lastNote = -99;
+function soundout(a)
+{
+   if(lastNote == a) return;
+
+   if(lastNote != -99) document.sa.off(lastNote);
+
+   lastNote = a;
+
+   document.sa.on(a);
+}
+function stopSound()
+{
+   document.sa.off(lastNote);
+}
+
+</script>
+
+</head>
+
+<body>
+<h1>Brenton Fletcher's Java Piano</h1>
+
+      <p>The buttons below are arranged like a piano keyboard.</p>
+      <p>To play one of these keys, click on the button and the sound that matches 
+   that note will be played.</p>
+   
+
+<div style="width: 700px; height: 200px">
+<div style="position: relative; left: 0px; top: 100px"><span><button onclick="soundout(0);">C</button></span><span><button onclick="soundout(2);">D</button></span><span><button onclick="soundout(4);">E</button></span><span><button onclick="soundout(5);">F</button></span><span><button onclick="soundout(7);">G</button></span><span><button onclick="soundout(9);">A</button></span><span><button onclick="soundout(11);">B</button></span><span><button onclick="soundout(12);">C</button></span><span><button onclick="soundout(14);">D</button></span><span><button onclick="soundout(16);">E</button></span><span><button onclick="soundout(17);">F</button></span><span><button onclick="soundout(19);">G</button></span></div>
+
+
+<div style="position: relative; left: 25px; top: -75px"><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(1);">C#/Db</button></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(3);">D#/Eb</button></span><span></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(6);">F#/Gb</button></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(8);">G#/Ab</button></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(10);">A#/Bb</button></span><span></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(13);">C#Db</button></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(15);">D#/Eb</button></span><span></span><span><button style="background-color: #000000; color: #FFFFFF" onclick="soundout(18);">F#/Gb</button></span></div>
+
+To stop the notes playing, click&nbsp;<button onclick="stopSound()">Stop Music</button>.<p>
+<applet code="SoundApplet.class" name="sa" width="12" height="12">
+</applet>&lt; You may have to mouse over the square on the left before the simulator will work. </td>
+<p>Web site copyright BR Fletcher &amp; R Williams 2007.</p>
+
+</body>
+
+</html>

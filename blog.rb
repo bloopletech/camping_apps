@@ -146,7 +146,9 @@ module Blog; VERSION = 0.99
     class Index < R '/', '/index', '/tag/()([-\w]*)', '/all()()', '/(rss)', '/(rss)/([-\w]+)'
       def get format = 'html', tag = 'Index'
         conditions = tag ? { :conditions => "tags LIKE '%#{@tag = tag}%'" } : {}
-        @has_older_pages = Post.count(:all, conditions) > 5
+        @tag = tag
+        @total_pages = (Post.count(:all, conditions) / 5.0).floor
+        @has_older_pages = @total_pages > 1
         standard_conds = { :order => 'created_at DESC' }
         standard_conds[:limit] = 5 if format == 'html' or format == ''
         @posts = Post.find :all, conditions.merge(standard_conds)
@@ -174,6 +176,7 @@ module Blog; VERSION = 0.99
         start = (@page * 5)
         @has_older_posts = (start + 5) < count
         @has_newer_posts = @page > 1
+        @total_pages = (count / 5.0).floor
         @posts = Post.find :all, :conditions => "tags LIKE '%#{@tag}%'", :order => 'created_at DESC', :limit => 5, :offset => start
         render :archive
       end
@@ -373,6 +376,8 @@ module Blog; VERSION = 0.99
     end
     
     def index
+      _index_archive_header
+
       if @posts.empty?
         p 'No posts yet.'
       else
@@ -387,6 +392,8 @@ module Blog; VERSION = 0.99
     end
     
     def archive
+      _index_archive_header
+
       links = []
       links << a('Older posts', :href => "/archive/#{@tag}/#{@page + 1}") if @has_older_posts
       links << a('Newer posts', :href => (@has_newer_posts ? "/archive/#{@tag}/#{@page - 1}" : "/"))
@@ -528,6 +535,10 @@ module Blog; VERSION = 0.99
           input :type => :submit, :class => "submit", :value => 'Save', :accesskey => 'S'
         end
       end
+    end
+
+    def _index_archive_header
+      h2.breaker "All posts#{@tag ? " tagged with #{@tag}" : ""}#{@has_older_pages ? ", page #{@page || 0 + 1} of #{@total_pages}" : ""}"
     end
     
   end

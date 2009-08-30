@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Triad Simulator</title>
+<script language="JavaScript1.2" type="text/javascript">
+<!--
+
+var sc = 0;
+var notes = new Array();
+function soundout(a)
+{
+   if(sc == -1)
+   {
+      return;
+   }
+   var temp = document.sa.on(a);
+   notes[sc] = a;
+
+   if(temp != "2")
+   {
+      alert("There was an error.");
+      soundstop();
+   }
+   else
+   {
+      sc++;
+   }
+
+   if(sc >= 3)
+   {
+      sc = -1;
+      setTimeout("soundstop()", 1000);
+      return;
+   }
+}
+function soundstop()
+{
+   document.sa.off(notes[0]);
+   document.sa.off(notes[1]);
+   document.sa.off(notes[2]);
+   sc = 0;
+}
+//-->
+</script>
+<meta name="Microsoft Theme" content="studio 011, default">
+</head>
+
+<body background="../_themes/studio/stubkgnd.gif" bgcolor="#FFFFFF" text="#000000" link="#330099" vlink="#CCCC33" alink="#993333"><!--mstheme--><font face="arial, Arial, Helvetica">
+<!--webbot bot="Navigation" S-Type="banner" S-Orientation="horizontal" S-Rendering="graphics" startspan --><img src="_derived/keyboard2.htm_cmp_studio010_bnr.gif" width="600" height="64" border="0" alt="Triad Simulator"><!--webbot bot="Navigation" i-checksum="30404" endspan --><!--mstheme--></font><table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="914" id="AutoNumber1" bordercolordark="#999966" bordercolorlight="#999966">
+   <tr>
+      <td valign="top" width="142"><!--mstheme--><font face="arial, Arial, Helvetica">
+      <!--webbot bot="Navigation" S-Orientation="vertical" S-Rendering="graphics" S-Type="siblings" B-Include-Home="TRUE" B-Include-Up="FALSE" startspan --><script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../_derived/home_cmp_studio010_vbtn.gif"); MSFPnav1h=MSFPpreload("../_derived/home_cmp_studio010_vbtn_a.gif"); }
+// --></script><a href="../index.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onmouseout="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../_derived/home_cmp_studio010_vbtn.gif" width="141" height="22" border="0" alt="Home" name="MSFPnav1"></a><br><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../data/shared/Theory1/_derived/lesson_eight.htm_cmp_studio010_vbtn.gif"); MSFPnav2h=MSFPpreload("../data/shared/Theory1/_derived/lesson_eight.htm_cmp_studio010_vbtn_a.gif"); }
+// --></script><a href="../data/shared/Theory1/lesson_eight.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onmouseout="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../data/shared/Theory1/_derived/lesson_eight.htm_cmp_studio010_vbtn.gif" width="141" height="22" border="0" alt="Scales" name="MSFPnav2"></a><br><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("_derived/keyboard1.htm_cmp_studio010_vbtn.gif"); MSFPnav3h=MSFPpreload("_derived/keyboard1.htm_cmp_studio010_vbtn_a.gif"); }
+// --></script><a href="keyboard1.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onmouseout="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="_derived/keyboard1.htm_cmp_studio010_vbtn.gif" width="141" height="22" border="0" alt="Keyboard Simulator" name="MSFPnav3"></a><br><img src="_derived/keyboard2.htm_cmp_studio010_vbtn_p.gif" width="141" height="22" border="0" alt="Triad Simulator"><br><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav4n=MSFPpreload("_derived/keyboard3.htm_cmp_studio010_vbtn.gif"); MSFPnav4h=MSFPpreload("_derived/keyboard3.htm_cmp_studio010_vbtn_a.gif"); }
+// --></script><a href="keyboard3.htm" language="JavaScript" onmouseover="if(MSFPhover) document['MSFPnav4'].src=MSFPnav4h.src" onmouseout="if(MSFPhover) document['MSFPnav4'].src=MSFPnav4n.src"><img src="_derived/keyboard3.htm_cmp_studio010_vbtn.gif" width="141" height="22" border="0" alt="The Melody Maker" name="MSFPnav4"></a><!--webbot bot="Navigation" i-checksum="47114" endspan --><p>
+      NOTE: Your computer needs certain capabilities to play these games. Click
+      <a href="../data/requirements.htm">here</a> for more information.<!--mstheme--></font></td>
+      <td valign="top" width="769"><!--mstheme--><font face="arial, Arial, Helvetica">
+<div style="width: 700px; height: 200px">
+<div style="position: relative; left: 0px; top: 100px"><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(0);"><font face="News Gothic MT">C</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(2);"><font face="News Gothic MT">D</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(4);"><font face="News Gothic MT">E</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(5);"><font face="News Gothic MT">F</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(7);"><font face="News Gothic MT">G</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(9);"><font face="News Gothic MT">A</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(11);"><font face="News Gothic MT">B</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(12);"><font face="News Gothic MT">C</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(14);"><font face="News Gothic MT">D</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(16);"><font face="News Gothic MT">E</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(17);"><font face="News Gothic MT">F</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px;" onclick="soundout(19);"><font face="News Gothic MT">G</font></button></span></div>
+<div style="position: relative; left: 25px; top: -75px"><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(1);"><font face="News Gothic MT">C#/Db</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(3);"><font face="News Gothic MT">D#/Eb</font></button></span><span style="width: 50px; height: 100px;"></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(6);"><font face="News Gothic MT">F#/Gb</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(8);"><font face="News Gothic MT">G#/Ab</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(10);"><font face="News Gothic MT">A#/Bb</font></button></span><span style="width: 50px; height: 100px;"></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(13);"><font face="News Gothic MT">C#Db</font></button></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(15);"><font face="News Gothic MT">D#/Eb</font></button></span><span style="width: 50px; height: 100px;"></span><span style="width: 50px; height: 100px;"><button style="width: 50px; height: 100px; background-color: #000000; color: #FFFFFF" onclick="soundout(18);"><font face="News Gothic MT">F#/Gb</font></button></span></div>
+</div>
+<div name="sound" id="sound"></div>
+
+
+      <p>
+
+
+<applet code="SoundApplet.class" name="sa" width="12" height="12">
+</applet>&lt; You may have to mouse over the square on the left before the 
+      simulator will work.</p>
+      <p>&nbsp;<!--mstheme--></font></td>
+   </tr>
+</table><!--mstheme--><font face="arial, Arial, Helvetica">
+<font face="arial, Arial, Helvetica">
+<p><font face="Arial">Web site copyright BR Fletcher &amp; R Williams 2005.</font></p>
+</font><!--mstheme--></font></body>
+
+</html>

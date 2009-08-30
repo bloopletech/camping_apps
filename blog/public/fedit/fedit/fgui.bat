@@ -1,0 +1,1 @@
+java -cp ftp.jar;. runf

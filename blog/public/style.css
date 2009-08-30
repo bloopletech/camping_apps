@@ -4,6 +4,7 @@ p { margin-bottom: 15px; }
 a { color: #48ba32; }
 h1 { font-size: 160%; }
 h2 { margin: 15px 0; font-size: 150%; }
+h2.breaker { padding-bottom: 15px; border-bottom: 1px dotted #a0a0a0; }
 #sidebar h2 { font-size: 130%; }
 #sidebar h2.first { margin-top: 0; }
 #sidebar h4 { margin-bottom: 5px; }
@@ -47,7 +48,7 @@ table th { background-color: #5555ff; color: #eeeeee; }
 p.subtitle, p.username { font-size: 90%; color: #808080; text-align: left; }
 div.comment { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
 
-pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 500px; overflow: auto; margin-bottom: 15px; }
+pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 300px; overflow: auto; margin-bottom: 15px; }
 pre, code { font-family: Monaco, "Courier New", sans-serif; background-color: #000000; color: #00ff00; font-size: 90%; }
 
 blockquote { margin: 0 50px; }
