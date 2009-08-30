@@ -538,7 +538,7 @@ module Blog; VERSION = 0.99
     end
 
     def _index_archive_header
-      h2.breaker "All posts#{@tag ? " tagged with #{@tag}" : ""}#{@has_older_pages ? ", page #{@page || 0 + 1} of #{@total_pages}" : ""}"
+      #h2.breaker "All posts#{@tag ? " tagged with #{@tag}" : ""}#{@has_older_pages ? ", page #{@page || 0 + 1} of #{@total_pages}" : ""}"
     end
     
   end
