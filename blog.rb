@@ -54,7 +54,7 @@ module Blog; VERSION = 0.99
     class Admin < Base; end
     
     class Post < Base
-      has_many :comments, :order => 'created_at ASC'
+      has_many :comments, :order => 'created_at ASC', :dependent => :destroy
       validates_presence_of :title, :nickname
       validates_uniqueness_of :nickname
     end
@@ -223,7 +223,7 @@ module Blog; VERSION = 0.99
         render :delete
       end
       def post
-        (@post = Post.find(input[:id])).destroy if logged_in?
+        (@post = Post.find(input['id'])).destroy if logged_in?
         redirect Index
       end
     end
@@ -341,8 +341,8 @@ module Blog; VERSION = 0.99
               Models::Comment.find(:all, :order => 'created_at DESC', :limit => 5).each do |c|
                 h4 { a(ellipsis(c.body), :href => R(Read, c.post.id) + "#comment-#{c.id}") + " on " + a(c.post.title, :href => R(Read, c.post.id)) }
               end
-              #h2 'Twitter posts'
-              #text '<script id="feed-1250996587956855" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Ftwitter.com%2Fstatuses%2Fuser_timeline%2F15440326.rss&detail=-1&limit=5&showtitle=false&type=js&id=1250996587956855"></script>'
+              h2 'Twitter posts'
+              text '<script id="feed-1250996587956855" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Ftwitter.com%2Fstatuses%2Fuser_timeline%2F15440326.rss&detail=-1&limit=5&showtitle=false&type=js&id=1250996587956855"></script>'
               p { a('More...', :href => 'http://twitter.com/bloopletech') }
               h2 'Last.fm feed'
               text '<script id="feed-1251529262816519" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Fws.audioscrobbler.com%2F1.0%2Fuser%2Fbloopletech%2Frecenttracks.rss&detail=-1&limit=5&showtitle=false&type=js&id=1251529262816519"></script>'
