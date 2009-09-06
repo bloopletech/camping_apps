@@ -864,7 +864,7 @@ module Kc::Views
       div do
         label_for :avatar_image
         text image_column(@user, 'avatar')
-        end
+      end
       div do
         input :type => 'submit', :class => 'submit', :value => "Save"
       end

@@ -85,7 +85,6 @@ module Blog; VERSION = 0.99
     
     def login name, password
       @current_user = Models::Admin.find_by_name_and_password input.name, input.password
-      puts "current_user: #{@current_user.inspect}"
       @state.admin_id = @current_user.id if @current_user
     end
     
@@ -144,10 +143,12 @@ module Blog; VERSION = 0.99
   module Controllers
     
     class Index < R '/', '/index', '/tag/()([-\w]*)', '/all()()', '/(rss)', '/(rss)/([-\w]+)'
+      TAG_PATTERN = ['% ? %', '? %', '% ?', '?']
       def get format = 'html', tag = 'Index'
-        conditions = tag ? { :conditions => "tags LIKE '%#{@tag = tag}%'" } : {}
         @tag = tag
-        @total_pages = (Post.count(:all, conditions) / 5.0).floor
+        conditions = tag ? { :conditions => TAG_PATTERN.map { |t| "tags LIKE " + ActiveRecord::Base.connection.quote(t.gsub('?', tag)) }.join(" OR ") } : {}
+        @tag = tag
+        @total_pages = (Post.count(:all, conditions) / 5.0).ceil
         @has_older_pages = @total_pages > 1
         standard_conds = { :order => 'created_at DESC' }
         standard_conds[:limit] = 5 if format == 'html' or format == ''
@@ -176,7 +177,7 @@ module Blog; VERSION = 0.99
         start = (@page * 5)
         @has_older_posts = (start + 5) < count
         @has_newer_posts = @page > 1
-        @total_pages = (count / 5.0).floor
+        @total_pages = (count / 5.0).ceil
         @posts = Post.find :all, :conditions => "tags LIKE '%#{@tag}%'", :order => 'created_at DESC', :limit => 5, :offset => start
         render :archive
       end
@@ -237,24 +238,14 @@ module Blog; VERSION = 0.99
 
     class ManageAssets < R '/assets'
       def get
-        #return unless logged_in?
+        return unless logged_in?
         render :assets
       end
       def post
-        #return unless logged_in?
-
-        #puts "env: #{@env.inspect}"
-        #puts "params: #{@request.params.inspect}"
-        #puts "input: #{input.inspect}"
-        #puts "filename: #{input.fn.inspect}"
-        #puts "upload: #{input.upload.inspect}"
-        puts "tempfile: #{input.upload[:tempfile].inspect}"
-        puts "path: #{input.upload[:tempfile].path}"
-        puts "PATH: #{PATH}"
+        return unless logged_in?
 
         fn = "#{Time.now.to_i}_#{rand(999999)}"
-        #puts IO.readlines(input.upload[:tempfile].path).join("\n")
-        puts "path: #{PATH}/public/assets/#{fn}.jpg"
+
         ImageScience.with_image(input.upload[:tempfile].path) do |img|
           img.thumbnail(1000) { |thumb| thumb.save("#{PATH}/public/assets/#{fn}.jpg") }
           img.thumbnail(400) { |thumb| thumb.save("#{PATH}/public/assets/#{fn}_small.jpg") }
@@ -538,7 +529,7 @@ module Blog; VERSION = 0.99
     end
 
     def _index_archive_header
-      #h2.breaker "All posts#{@tag ? " tagged with #{@tag}" : ""}#{@has_older_pages ? ", page #{@page || 0 + 1} of #{@total_pages}" : ""}"
+      h2.breaker "All posts#{@tag && @tag != "Index" ? " tagged with #{@tag}" : ""}#{@total_pages > 1 ? ", page #{(@page || 0) + 1} of #{@total_pages}" : ""}"
     end
     
   end
