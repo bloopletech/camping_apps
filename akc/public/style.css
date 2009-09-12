@@ -66,7 +66,7 @@ div.upload div.clear { float: none; }
 form#scores { display: block; float: right; }
 form#scores input { width: 300px; }
 
-.screenshot { float: right; padding: 4px; margin: 0 0 4px 4px; background-color: #ffffff; color: #000000; }
+.screenshot { float: right; padding: 4px; margin: 0 0 4px 4px; background-color: #ffffff; color: #000000; width: 197px; }
 .screenshot img { display: block; margin-bottom: 1px; }
 #screenshot_wrapper { width: 408px; float: right; }
 #screenshot_wrapper .screenshot { margin: 0 0 10px 0; }

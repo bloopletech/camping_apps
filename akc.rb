@@ -521,7 +521,7 @@ module Akc::Views
 =end
       h2 { "About" }
       div.screenshot do
-        img :src => '/images/screenshot.jpg'
+        img :src => '/images/screenshot.png'
         text "Screenshot of ArrowKeyControl"
       end
       p { "ArrowKeyControl is a fast-paced game for the Apple Dashboard, Yahoo! Widgets, and your browser, that tests your speed." }
@@ -827,28 +827,6 @@ module Akc::Views
     div do
       input.submit :type => :submit, :value => 'Save'
     end
-  end
-
-  def create
-    h2 { "Create Question" }
-    form :method => :post, :action => '/create' do
-       _form
-    end
-  end
-
-  def check_out_akc
-    h2 { "The ArrowKeyControl website" }
-    div.screenshot do
-      img :src => '/images/site_changes_12_2008/profile.png'
-      text "A user's profile"
-    end
-    p { "Hello, #{@user.name}. I'd like a couple minutes of your time to tell you about some of the major features on <a href='http://akc.bloople.net/'>the ArrowKeyControl website</a> that benefit <strong>you</strong>." }
-    p { "You have your very own <a href='http://akc.bloople.net/users/#{@user.id}'>profile</a> at the ArrowKeyControl website</a>. Your profile has all of your scores, including your top 10 scores, as well as a graph of your scores over time - so you can see if you're improving." }
-    p { "You can also upload an avatar image to your profile. This avatar will be displayed next your username across the ArrowKeyControl website." }
-    p { "The website also has the global <a href='http://akc.bloople.net/high_scores'>high scores</a> list; perhaps you're on it! Are any of your friends playing ArrowKeyControl? Then why not compare your scores with theirs?" }
-    h3 { "What is this message?" }
-    p { "Very occasionally, I put out messages like this one to tell ArrowKeyControl users about major changes to ArrowKeyControl or the ArrowKeyControl website. You can stop these messages for ever appearing by clicking the 'i' or 's' button in the lower-right-hand corner of the ArrowKeyControl widget and unchecking 'Internet Scoring'." }
-    div.clear { " " }
   end
 
   def update_user
