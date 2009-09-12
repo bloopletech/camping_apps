@@ -3,10 +3,10 @@
 body { background-color: #191919; color: #ffffff; text-align: center; }
 #wrap { width: 1000px; background-color: #2f34a1; margin: 15px auto 15px auto; text-align: left; }
 
-#header { border-bottom: 1px solid #dedede; background-color: #262971; background-image: url(/images/header.jpg); background-position: middle right; padding: 8px; }
+#header { border-bottom: 1px solid #dedede; background-color: #262971; padding: 8px; }
 #header h1 { font-size: 200%; }
 
-#main { padding: 8px; background-image: url(/images/bg.png); background-repeat: no-repeat; }
+#main { padding: 8px; }
 
 #footer { padding: 8px; border-top: 1px solid #dedede; }
 
