@@ -524,7 +524,7 @@ module Akc::Views
         img :src => '/images/screenshot.png'
         text "Screenshot of ArrowKeyControl"
       end
-      p { "ArrowKeyControl is a fast-paced game for the Apple Dashboard, Yahoo! Widgets, and your browser, that tests your speed." }
+      p { "ArrowKeyControl is a fast-paced game for the Apple Dashboard that tests your speed." }
       p { "The idea is simple - the game shows an arrow, and you have to hit the corresponding arrow key; get it right, and you go again; get it wrong, or hit the key too slowly, and it's game over. Did I mention you have to keep getting faster all the time?" }
       p { "The faster you are, the more you score. Your scores are automatically submited to this web site, so you can compare scores with other players." }
       h2 { "How to Play" }
