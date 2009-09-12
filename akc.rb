@@ -457,7 +457,7 @@ module Akc::Views
               self << content
             end
             div.footer! do
-              p { "&copy; 2008 Brenton Fletcher. Check out <a href=\"http://i.bloople.net\">my portfolio</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
+              p { "&copy; 2009 Brenton Fletcher. Check out <a href=\"http://blog.bloople.net\">my blog</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
             end
           end
         end
@@ -562,7 +562,7 @@ module Akc::Views
         end
         li { "Show Dashboard, click the Plus sign to display the Widget Bar and click the widget's icon in the Widget Bar to open it." }
       end
-      p { '<a id="dl" href="/ArrowKeyControl.zip"><img src="/images/download.png" alt="Download now" /></a>' }
+      p { '<a href="/ArrowKeyControl.zip">Download now</a>' }
     end
 =begin
     @content_for[:yahoo] = capture(true) do
