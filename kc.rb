@@ -263,19 +263,6 @@ module Kc::Controllers
       @user.increment!(:view_count)
       render :show
     end
-
-    def post(id)
-      return unless ensure_logged_in
-      @question = Question.find(id.to_i)
-      @resp = Response.new(:question => @question, :user_id => current_user.id, :body => input.body, :positive_votes => 1, :negative_votes => 1)
-      if @resp.save
-        add_success("Response posted")
-        redirect "/#{id}"
-      else
-        @resp.errors.full_messages.each { |msg| add_error(msg) }
-        render :show
-      end
-    end
   end
 
   class ShowAllScoresForUser < R '/users/(\d+)/all_scores'
@@ -825,13 +812,6 @@ module Kc::Views
     end
     div do
       input.submit :type => :submit, :value => 'Save'
-    end
-  end
-
-  def create
-    h2 { "Create Question" }
-    form :method => :post, :action => '/create' do
-       _form
     end
   end
 

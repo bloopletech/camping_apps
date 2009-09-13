@@ -256,19 +256,6 @@ module Akc::Controllers
       @user.increment!(:view_count)
       render :show
     end
-
-    def post(id)
-      return unless ensure_logged_in
-      @question = Question.find(id.to_i)
-      @resp = Response.new(:question => @question, :user_id => current_user.id, :body => input.body, :positive_votes => 1, :negative_votes => 1)
-      if @resp.save
-        add_success("Response posted")
-        redirect "/#{id}"
-      else
-        @resp.errors.full_messages.each { |msg| add_error(msg) }
-        render :show
-      end
-    end
   end
 
   class ShowAllScoresForUser < R '/users/(\d+)/all_scores'
@@ -393,7 +380,7 @@ module Akc::Helpers
     attrs = { :type => :file, :name => name, :id => name, :class => 'file' }
     attrs[:disabled] = "disabled" if has_file
     attrs[:checked] = "checked" if !has_file
-    out << "#{input attrs}</div><div class='clear'></div></div>"
+    out << "#{input attrs}<br />Image will be resized automatically.</div><div class='clear'></div></div>"
     out
   end
 
@@ -618,28 +605,8 @@ module Akc::Views
     end
 
     div.user_show_col_left do
-  #    h3 { "Avatar and Social Network" }
-     # div.avatars_wrap! do
-    #    span.avatar_wrap { large_avatar(@user) }
-    #    div.friends! { "Coming soon..." }
-#        ul.friends! do
-#          @user.friends.each do |friend|
-#            li { span.avatar_wrap { small_avatar(friend) } + friend.name }
-#          end
-#        end
-     #   div.clear { " " }
-    #  end
-
       h3 { "Summary" }
       table do
-=begin
-        tr do
-          td { "Social network" + div.friends! { "Coming soon..." } }
-          td(:class => 'last_r') do
-            "Avatar" + span.avatar_wrap { large_avatar(@user) }
-          end
-        end
-=end
         if @user.has_avatar?
           tr do
             td { "Avatar" }
@@ -699,6 +666,9 @@ module Akc::Views
       _scores_by_users(@users)
       p { a('RSS feed of averaged high scores', :href => '/high_scores_average.rss') }
     end
+
+    div.clear { " " }
+
     p.utc! { "Note: all dates are in <acronym title=\"Greenwich Mean Time\">GMT</acronym> / <acronym title=\"Coordinated Universal Time\">UTC</acronym>." }
     p.local! { "Note: all dates are in your local time." }
   end
@@ -957,14 +927,4 @@ end
 def Akc.create
   Akc::Models.create_schema
   ActiveRecord::Base.default_timezone = :utc
-
-=begin
-  ActiveRecord::Base.connection.execute("ALTER TABLE akc_users ADD COLUMN top_score_id INT")
-  ActiveRecord::Base.connection.execute("ALTER TABLE akc_users ADD COLUMN latest_score_id INT")
-  Akc::Models::User.find(:all).each do |u|
-    u.top_score_id = u.scores.find(:first, :order => 'score DESC').id
-    u.latest_score_id = u.scores.find(:first, :order => 'akc_scores.when DESC').id
-    u.save
-  end
-=end
 end

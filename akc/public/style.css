@@ -46,6 +46,7 @@ label { width: 105px; display: block; float: left; text-align: right; padding: 9
 input, textarea { width: 363px; margin: 5px 0; padding: 4px; border: 1px solid #a0a0ff; }
 .readonly { width: 363px; margin: 5px 0; padding: 4px; display: inline-block; }
 * html input, * html textarea { width: 360px; }
+input.radio { width: auto; }
 input.submit { margin-left: 116px; width: 100px; }
 input:hover, textarea:hover { background-color: #ddefff; }
 form div { clear: left; }
