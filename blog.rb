@@ -486,7 +486,7 @@ module Blog; VERSION = 0.99
         cs = post.comments.size
         
         menu[id = post.nickname || post.id][:visitor] << "Tagged with #{post.tags.scan(/[-\w]+/).map { |t| a t, :href => R(Index, t) }.join(' ')}, #{cs} comment#{'s' unless cs == 1}"
-        menu[id][:visitor] << a('Read', :href => R(Read, id)) unless full
+        menu[id][:visitor] << a('Comments', :href => R(Read, id)) unless full
         menu[id][:admin] << a('Edit', :href => R(Edit, id), :accesskey => ('E' if full)) if logged_in?
         menu[id][:admin] << 'Delete' if logged_in?
         menu id
