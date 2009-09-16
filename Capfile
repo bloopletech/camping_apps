@@ -26,7 +26,7 @@ namespace :deploy do
   desc "Restart the mongrel cluster"
   task :restart, :roles => :app do
 #    run "killall -w rackup;(cd #{deploy_to}/current/ && rackup -p 8004 -E none camping.ru 2>kc-err.log >kc-req.log &);(cd #{deploy_to}/current/ && rackup -p 8005 -E none wikiwatcher.ru 2>/dev/null >/dev/null &); exit;"
-    run "killall -w rackup;(cd #{deploy_to}/current/ && rackup -p 8004 -E none camping.ru >/dev/null 2>kc-err.log &); exit;"
+    run "cd #{deploy_to}/current/;killall -w rackup;rackup -p 8004 -E none camping.ru >/dev/null 2>kc-err.log &; exit;"
   end
 
   task :start, :roles => :app do
@@ -42,6 +42,7 @@ namespace :deploy do
     system cmd
     run "ln -nfs #{deploy_to}/shared/system/blog/assets #{release_path}/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
+    run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
     run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
   end
@@ -52,6 +53,7 @@ namespace :deploy do
     system cmd
     run "mkdir #{deploy_to}/shared/system/blog #{deploy_to}/shared/system/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
+    run "ln -nfs #{deploy_to}/shared/systemakc/images/users #{release_path}/akc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
     run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
   end
