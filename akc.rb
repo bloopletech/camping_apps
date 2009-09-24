@@ -518,7 +518,7 @@ module Akc::Views
       ol do
         li { "To begin a game, click the Play button on the widget. You will have 1.5 seconds to get ready." }
         li { "The widget will then display an arrow. You have to hit the corresponding arrow key as fast as possible - you've got 1 second to hit the first key." }
-        li { "While the game is showing the arrow, the background of the game fills from left to right in red - this shows how much time you hav left to hit the key; if this fills up before you hit the key, the game ends." }
+        li { "While the game is showing the arrow, the background of the game fills from left to right in red - this shows how much time you have left to hit the key; if this fills up before you hit the key, the game ends." }
         li { "The faster you press the correct key, the more you score. The game then displays another arrow key (sometimes the same one as the last one), and reduces the amount of time you have to hit the next key (so you have to get faster!)." }
         li { "This continues until you aren't fast enough to keep up with the computer, or you hit the wrong key." }
       end
