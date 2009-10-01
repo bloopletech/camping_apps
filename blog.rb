@@ -270,7 +270,7 @@ module Blog; VERSION = 0.99
       def get(path)
         @headers['Content-Type'] = MIME_TYPES[path[/\.\w+$/, 0]] || "text/plain"
         unless path.include? ".." # prevent directory traversal attacks
-          @headers['X-Sendfile'] = "#{PATH}/public/assets/#{path}"
+          @headers['X-Accel-Redirect'] = "#{PATH}/public/assets/#{path}"
         else
           @status = "403"
           "403 - Invalid path"
