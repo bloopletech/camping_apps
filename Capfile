@@ -10,6 +10,8 @@ set :deploy_to, "/home/bloople/www/#{application}"
 
 set :deploy_via, :remote_cache
 
+set :keep_releases, 2
+
 role :app, "bloople.net"
 role :web, "bloople.net"
 role :db,  "bloople.net", :primary => true
