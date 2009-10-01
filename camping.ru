@@ -18,6 +18,7 @@ require 'active_record'
 
 require 'will_paginate'
 require 'ostruct'
+require 'pp'
 
 $:.unshift Pathname.new('./lib/camping/lib/').realpath
 
@@ -41,9 +42,24 @@ module TBIBase
         r(404, "<h3>Oops! Page could not be found.</h3>")
       end
       def r500(k,m,x)
-        puts $!
-        puts $!.backtrace
         r(500, "<h3>Oops! An error occured; please try again.</h3>")
+
+        begin
+          msg = <<END_OF_MESSAGE
+From: Camping Applications <i@bloople.net>
+To: Brenton Fletcher <i@bloople.net>
+Subject: Camping app error
+Date: \#{Time.now.rfc2822}
+Message-Id: <\#{Time.now.to_i}.\#{rand(10000000)}@bloople.net>
+
+Exception class: \#{$!.class}
+Exception message: \#{$!.message.inspect}
+Exception backtrace: \#{$!.backtrace.inspect}
+END_OF_MESSAGE
+
+          Net::SMTP.start("localhost", 25, "localhost") { |smtp| smtp.send_message msg, @settings[:recipient], @settings[:recipient] }
+        rescue Exception => e
+        end
       end
       alias_method :initialize_without_rootfix, :initialize
       def initialize_with_rootfix(env)
@@ -63,8 +79,8 @@ Thread.new do
 end
 
 
-Camping::Models::Base.establish_connection(DBCONN)
-=begin
+#Camping::Models::Base.establish_connection(DBCONN)
+#=begin
 Camping::Models::Base.establish_connection(
 :adapter => 'mysql',
 :database => 'camping',
@@ -73,7 +89,7 @@ Camping::Models::Base.establish_connection(
 :host => 'localhost',
 :pool => 50
 )
-=end
+#=end
 
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
@@ -81,7 +97,7 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Dir.glob("*.rb").each do |file|
-#  next if file == 'wikiwatcher.rb'
+  next unless file == 'portfolio.rb'
   next if file[0, 1] == '_'
 #  puts file
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
