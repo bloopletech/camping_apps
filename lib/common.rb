@@ -9,12 +9,15 @@ module StaticAssetsClass
         def get(path, ext)
           path = path + "." + ext
           @headers['Content-Type'] = MIME_TYPES[path[/\.\\\w+$/, 0]] || "text/plain"
-          unless path.include? ".." # prevent directory traversal attacks
-            @headers['X-Sendfile'] = "\#{PATH}/public/\#{path}"
-            @headers['X-Accel-Redirect'] = "/\#{path}"
-          else
+          if path.include? ".." # prevent directory traversal attacks
             @status = "403"
             "403 - Invalid path"
+          elsif !File.exists?("\{PATH}/public/\#{path}")
+            @status = "404"
+            "404 - File not found"
+          else
+            @headers['X-Sendfile'] = "\#{PATH}/public/\#{path}"
+            @headers['X-Accel-Redirect'] = "/\#{path}"
           end
         end
       end
