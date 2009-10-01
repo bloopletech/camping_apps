@@ -3,7 +3,6 @@ load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 set :application, "camping"
 set :user, "bloople"
 set :port, 9979
-#set :repository,  "svn+slice://bloople@67.207.142.56/home/bloople/repo/camping/trunk"
 set :scm, :git
 set :repository, "git@github.com:bloopletech/camping_apps.git"
 
@@ -25,8 +24,7 @@ namespace :deploy do
 
   desc "Restart the mongrel cluster"
   task :restart, :roles => :app do
-#    run "killall -w rackup;(cd #{deploy_to}/current/ && rackup -p 8004 -E none camping.ru 2>kc-err.log >kc-req.log &);(cd #{deploy_to}/current/ && rackup -p 8005 -E none wikiwatcher.ru 2>/dev/null >/dev/null &); exit;"
-    run "cd #{deploy_to}/current/;killall -w rackup;rackup -p 8004 -E none camping.ru >/dev/null 2>kc-err.log &; exit;"
+    run "cd #{deploy_to}/current/;killall -w rackup;(rackup -p 8004 -E none camping.ru >/dev/null 2>kc-err.log &); exit;"
   end
 
   task :start, :roles => :app do
