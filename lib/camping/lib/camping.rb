@@ -565,6 +565,7 @@ module Camping
     # And array with [statuc, headers, body] is expected at the output.
     def call(e)
       begin
+        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
         z = Time.now
 
         X.M
