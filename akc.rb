@@ -300,7 +300,10 @@ module Akc::Controllers
 
   class AddShout < R '/add_shout'
     def post
-      Shout.create(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
+      @shout = Shout.new(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
+      unless @shout.save
+        @shout.errors.full_messages.each { |msg| add_error(msg) }
+      end
       redirect '/'
     end
   end
@@ -425,6 +428,7 @@ module Akc::Views
               div.nav! { links.join(" | ") }
             end
             div.main! do
+              puts "@state: #{@state.inspect}"
               @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
               unless @state[:flash][:success].empty?
                 div.success! do

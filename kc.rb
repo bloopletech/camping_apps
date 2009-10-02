@@ -307,7 +307,10 @@ module Kc::Controllers
 
   class AddShout < R '/add_shout'
     def post
-      Shout.create(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
+      @shout = Shout.new(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
+      unless @shout.save
+        @shout.errors.full_messages.each { |msg| add_error(msg) }
+      end
       redirect '/'
     end
   end
