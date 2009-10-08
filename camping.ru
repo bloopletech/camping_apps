@@ -12,6 +12,8 @@ require '_configuration'
  
 require 'rubygems'
 require 'active_record'
+
+require 'lib/active_record_mysql_gone_patch'
  
 #require 'mysqlplus'
 #class Mysql; alias :query :async_query; end
