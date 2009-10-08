@@ -11,12 +11,15 @@
 require '_configuration'
  
 require 'rubygems'
-require 'active_record'
 
+require 'mysqlplus'
+
+class Mysql
+  alias_method :query, :c_async_query
+end
+
+require 'active_record'
 require 'lib/active_record_mysql_gone_patch'
- 
-#require 'mysqlplus'
-#class Mysql; alias :query :async_query; end
  
 require 'will_paginate'
 require 'ostruct'

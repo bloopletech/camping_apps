@@ -29,12 +29,15 @@ end
 
 if $0 == __FILE__
   require 'rubygems'
-  gem 'activerecord', '=2.2.2'
-  require 'active_record'
 
+  require 'mysqlplus'
+
+  class Mysql
+    alias_method :query, :c_async_query
+  end
+
+  require 'active_record'
   require 'lib/active_record_mysql_gone_patch'
-  #require 'mysqlplus'
-  #class Mysql; alias :query :async_query; end
 
   require 'will_paginate'
   require 'ostruct'
