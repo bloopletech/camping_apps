@@ -76,7 +76,15 @@ module Blog; VERSION = 0.99
   end
   
   module Helpers
-    
+    def add_success(msg)
+      @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
+      @state[:flash][:success] << msg
+    end
+    def add_error(msg)
+      @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
+      @state[:flash][:errors] << msg
+    end
+
     # login system
     def current_user
       @current_user ||= Models::Admin.find(@state.admin_id) unless @state.admin_id.blank?
@@ -301,9 +309,14 @@ module Blog; VERSION = 0.99
         render :view if @post
       end
       def post id
-        @comment = Comment.create :post_id => id, :bot => input.bot,
-          :username => (name = input.name), :body => (comment = input.comment)
-        redirect self / "/read/#{id}?name=#{CGI::escape name}&comment=#{CGI::escape comment}"
+        @post = Post.find :first, :conditions => ['id = ? OR nickname = ?', id, id]
+        @comment = @post.comments.new :bot => input.bot, :username => (name = input.name), :body => (comment = input.comment)
+        if @comment.save
+          redirect self / "/read/#{id}"
+        else
+          @comment.errors.full_messages.each { |msg| add_error(msg) }
+          render :view
+        end
       end
     end
   end
@@ -354,6 +367,22 @@ module Blog; VERSION = 0.99
               menu[:top][:admin] << a('Assets', :href => "/assets") if logged_in?
               menu[:top][:admin] << 'Logout' if logged_in?
               div.bar! { menu :top } if logged_in?
+
+              @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
+              unless @state[:flash][:success].empty?
+                div.success! do
+                  ul { @state[:flash][:success].each { |s| li { h s } } }
+                end
+              end
+              @state[:flash][:success] = []
+
+              unless @state[:flash][:errors].empty?
+                div.errors! do
+                  p { "There were some errors:" }
+                  ul { @state[:flash][:errors].each { |s| li { h s } } }
+                end
+              end
+              @state[:flash][:errors] = []
               
               self << yield
             end

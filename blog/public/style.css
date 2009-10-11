@@ -36,6 +36,10 @@ input.submit { margin-left: 98px; width: 100px; }
 input:hover, textarea:hover { background-color: #ddefff; }
 form div { clear: left; }
 
+.errorExplanation, #errorExplanation, .notification, #success, #errors { background-color: #ffffcc; border: 1px solid #ffff00; padding: 8px; color: #303030; margin: 8px 0; }
+.flash p { margin-bottom: 0; }
+.fieldWithErrors input, .fieldWithErrors textarea { border: 1px solid #ff0000; }
+
 /* table stuff */
 table { border: 1px solid #a0a0a0; border-collapse: collapse; margin-bottom: 15px; }
 table td, table th { border: 1px solid #a0a0a0; padding: 6px; }

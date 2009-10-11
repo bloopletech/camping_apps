@@ -428,7 +428,6 @@ module Akc::Views
               div.nav! { links.join(" | ") }
             end
             div.main! do
-              puts "@state: #{@state.inspect}"
               @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
               unless @state[:flash][:success].empty?
                 div.success! do
