@@ -437,7 +437,11 @@ module Blog; VERSION = 0.99
 #      links << a('Newer posts', :href => (@has_newer_posts ? "/archive/#{@tag}/#{@page - 1}" : "/"))
 #      p.pagination { links.join(' | ') }
 
-      @posts.each { |post| _post post }
+      if @posts.empty?
+        p 'No posts match your search query.'
+      else
+        @posts.each { |post| _post post }
+      end
 
 #      p.pagination { links.join(' | ') }
     end
