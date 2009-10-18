@@ -1,4 +1,5 @@
 module StaticAssetsClass
+  #TODO: Not actually *needed*, also should not be a massive string
   def self.included(base)
     base.class_eval <<-EOF
       class StaticAssets < R '/(.+)\\\.(css|gif|js|jpg|png|zip|txt|ico|swf|flv)'
@@ -12,7 +13,7 @@ module StaticAssetsClass
           if path.include? ".." # prevent directory traversal attacks
             @status = "403"
             "403 - Invalid path"
-          elsif !File.exists?("\{PATH}/public/\#{path}")
+          elsif !File.exists?("\#{PATH}/public/\#{path}")
             @status = "404"
             "404 - File not found"
           else

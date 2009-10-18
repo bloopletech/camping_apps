@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 %w(redcloth camping/ar camping/session image_science lib/common).each { |lib| require lib }
 
 # Fix unicode urls
@@ -7,27 +6,12 @@ $KCODE = 'u'
 
 Camping.goes :Blog
 
-# TODO: safe Textile for comments
-# TODO: fix Textile (produces improper HTML at times, < for example)
-# TODO: document
-# DONE: the whole title is one single link
-# DONE: RSS feed link links to current tag.
-# DONE: RSS feed is served with correct Content-Type.
-# DONE: RSS feed converts Textile to HTML.
-# DONE: RSS feed has an image now.
 module Blog; VERSION = 0.99
   PATH = File.expand_path(File.dirname(__FILE__)) + '/blog'
 
   include Camping::Session
-  def service(*a)
-    # Don't set any cookies unless necessary
-    
-    #def @cookies.[]=(k,v); end unless @env.PATH_INFO == self / '/login'
-    super(*a)
-  end
   
   module Models
-    
     class CreateTheBasics < V 1.0
       def self.up
         create_table :blog_admins, :force => true do |table|
@@ -67,7 +51,6 @@ module Blog; VERSION = 0.99
       belongs_to :post
       attr_accessor :bot
     end
-    
   end
   
   def self.create
@@ -138,6 +121,7 @@ module Blog; VERSION = 0.99
     end
   end
   
+  #TODO: Used? If so, change so HTML 4, otherwise drop this cod
   # beautiful XHTML 11
   class Mab
     def xhtml11(&block)
@@ -152,10 +136,10 @@ module Blog; VERSION = 0.99
     
     class Index < R '/', '/index', '/tag/()([-\w]*)', '/all()()', '/(rss)', '/(rss)/([-\w]+)'
       TAG_PATTERN = ['% ? %', '? %', '% ?', '?']
+      #TODO: Following code is ridiculous
       def get format = 'html', tag = 'Index'
         @tag = tag
         conditions = tag ? { :conditions => TAG_PATTERN.map { |t| "tags LIKE " + ActiveRecord::Base.connection.quote(t.gsub('?', tag)) }.join(" OR ") } : {}
-        @tag = tag
         @total_pages = (Post.count(:all, conditions) / 5.0).ceil
         @has_older_pages = @total_pages > 1
         standard_conds = { :order => 'created_at DESC' }
@@ -174,6 +158,21 @@ module Blog; VERSION = 0.99
         else
           render :index
         end
+      end
+    end
+
+    class Search < R '/search'
+      def post
+#        @page = page.to_i
+#        count = Post.count :all, :conditions => "tags LIKE '%#{@tag}%'"
+#        start = (@page * 5)
+#        @has_older_posts = (start + 5) < count
+#        @has_newer_posts = @page > 1
+#        @total_pages = (count / 5.0).ceil
+        c = ActiveRecord::Base.connection
+        @search_query = input.query
+        @posts = Post.find :all, :conditions => "title LIKE #{c.quote "%#{@search_query}%"} OR body LIKE #{c.quote "%#{@search_query}%"}", :order => 'created_at DESC'#, :limit => 5, :offset => start
+        render :search
       end
     end
 
@@ -344,7 +343,13 @@ module Blog; VERSION = 0.99
             end
             div.sidebar! do
               h2.first 'Tags'
+              p { "Use the links below to browse my past works." }
               p { tags.sort.map { |t| a t, :href => self / "/tag/#{t}" }.join("&nbsp; ") }
+              h2 'Search'
+              form :action => '/search', :method => :post do
+                input :type => :text, :name => :query, :value => @search_query || ''
+                input :type => :submit, :class => :submit, :value => 'Search'
+              end
               h2 'About me'
               img(:src => '/images/me.jpg')
               p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Web Design</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
@@ -422,6 +427,19 @@ module Blog; VERSION = 0.99
       @posts.each { |post| _post post }
 
       p.pagination { links.join(' | ') }
+    end
+
+    def search
+      h2.breaker { "All posts containing '#{h @search_query}'" }#"#{@total_pages > 1 ? ", page #{(@page || 0) + 1} of #{@total_pages}" : ""}"}
+
+#      links = []
+#      links << a('Older posts', :href => "/search/#{@tag}/#{@page + 1}") if @has_older_posts
+#      links << a('Newer posts', :href => (@has_newer_posts ? "/archive/#{@tag}/#{@page - 1}" : "/"))
+#      p.pagination { links.join(' | ') }
+
+      @posts.each { |post| _post post }
+
+#      p.pagination { links.join(' | ') }
     end
     
     def login

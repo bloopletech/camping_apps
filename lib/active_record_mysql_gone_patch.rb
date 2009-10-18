@@ -1,3 +1,5 @@
+#Based on http://coderrr.wordpress.com/2009/01/08/activerecord-threading-issues-and-resolutions/
+
 require 'active_record/connection_adapters/mysql_adapter'
 
 module ActiveRecord::ConnectionAdapters
