@@ -9,7 +9,7 @@ module KcModels
         def update_high_scores
           hs = user.scores.find(:all, :order => "\#{self.class.table_name}.when DESC", :limit => 100)
 
-          user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score_id => self.id, :top_score_id => user.scores.find(:first, :order => 'score DESC').id, :total_scores => user.scores.count)
+          user.update_attributes(:high_score => hs.empty? ? 0 : ((hs.inject(0) { |sum, val| sum + val.score }) / hs.length.to_f).round, :latest_score => self, :top_score => user.scores.find(:first, :order => 'score DESC'), :total_scores => user.scores.count)
         end
       end
       class Shout < Base
