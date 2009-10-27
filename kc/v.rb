@@ -336,6 +336,7 @@ module Kc::Views
             description "#{s.user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://kc.bloople.net/users/#{s.user.id}")
+            guid("http://kc.bloople.net/users/#{s.user.id}")
           end
         end
       end
@@ -357,6 +358,7 @@ module Kc::Views
             description "#{u.name} has an average of #{number_with_delimiter u.high_score} over their last 100 scores, or if they have less than 100 scores submitted, the average of all their scores. #{u.name}'s latest score was submitted at #{nice_date_time u.latest_score.when} UTC."
             pubDate u.latest_score.when.to_s(:rfc822)
             link("http://kc.bloople.net/users/#{u.id}")
+            guid("http://kc.bloople.net/users/#{u.id}")
           end
         end
       end
@@ -378,6 +380,7 @@ module Kc::Views
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://kc.bloople.net/users/#{@user.id}")
+            guid("http://kc.bloople.net/users/#{@user.id}")
           end
         end
       end
@@ -399,6 +402,7 @@ module Kc::Views
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://kc.bloople.net/users/#{@user.id}")
+            guid("http://kc.bloople.net/users/#{@user.id}")
           end
         end
       end
