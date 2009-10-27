@@ -1,4 +1,4 @@
-module Akc::Views
+module Kc::Views
   def layout
     content = yield
 #    puts "content: #{content.inspect}"
@@ -10,7 +10,7 @@ module Akc::Views
     if @render_layout
       xhtml_transitional do
         head do
-          title "ArrowKeyControl"
+          title "KeyControl"
           link :rel => 'stylesheet', :type => 'text/css', :href => '/style.css', :media => 'screen'
           script :type => 'text/javascript', :src => '/application.js'
           link :rel => 'shortcut icon', :href => '/favicon.ico'
@@ -19,7 +19,7 @@ module Akc::Views
         body do
           div.wrap! do
             div.header! do
-              h1 { a("ArrowKeyControl", :href => '/') }
+              h1 { a("KeyControl", :href => '/') }
               links = if logged_in?
                 ["Logged in as #{current_user.name}", a('Customise', :href => "/users/update"), a('Your Scores', :href => "/users/#{current_user.id}"), a('Logout', :href => '/users/logout')]
               else
@@ -47,7 +47,7 @@ module Akc::Views
               self << content
             end
             div.footer! do
-              p { "&copy; 2009 Brenton Fletcher. Check out <a href=\"http://blog.bloople.net\">my blog</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
+              p { "&copy; 2008 Brenton Fletcher. Check out <a href=\"http://i.bloople.net\">my portfolio</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
             end
           end
         end
@@ -101,37 +101,31 @@ module Akc::Views
       p.local! { "Note: all dates are in your local time." }
     end
 
-#    types = [:playinbrowser, :apple, :yahoo]
-    types = [:apple]
+    types = [:playinbrowser, :apple, :yahoo]
 
     div.col_left do
-=begin
       h2 { "News" }
-      text '<script id="feed-122131857610955" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Fblog.bloople.net%2Frss%2FArrowKeyControl&amp;detail=25&amp;limit=5&amp;showtitle=false&amp;striphtml=true&amp;type=js&amp;id=122131857610955"></script>'
-=end
+      text '<script id="feed-122131857610955" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Fblog.bloople.net%2Frss%2FKeyControl&amp;detail=25&amp;limit=5&amp;showtitle=false&amp;striphtml=true&amp;type=js&amp;id=122131857610955"></script>'
       h2 { "About" }
       div.screenshot do
-        img :src => '/images/screenshot.png'
-        text "Screenshot of ArrowKeyControl"
+        img :src => '/images/screenshot.jpg'
+        text "Screenshot of KeyControl"
       end
-      p { "ArrowKeyControl is a fast-paced game for the Apple Dashboard that tests your speed." }
-      p { "The idea is simple - the game shows an arrow, and you have to hit the corresponding arrow key; get it right, and you go again; get it wrong, or hit the key too slowly, and it's game over. Did I mention you have to keep getting faster all the time?" }
-      p { "The faster you are, the more you score. Your scores are automatically submited to this web site, so you can compare scores with other players." }
+      p { "KeyControl is a game for the Apple Dashboard and Yahoo! Widgets that tests your typing ability and reaction time. The quicker you react to changes on the screen, the more you score. And as you play, the game gets harder - you have to react faster and faster to beat the computer. Your scores are automatically submited to this web site, so you can compare scores with other players. Warning: KeyControl is addictive!" }
       h2 { "How to Play" }
       ol do
-        li { "To begin a game, click the Play button on the widget. You will have 1.5 seconds to get ready." }
-        li { "The widget will then display an arrow. You have to hit the corresponding arrow key as fast as possible - you've got 1 second to hit the first key." }
-        li { "While the game is showing the arrow, the background of the game fills from left to right in red - this shows how much time you have left to hit the key; if this fills up before you hit the key, the game ends." }
-        li { "The faster you press the correct key, the more you score. The game then displays another arrow key (sometimes the same one as the last one), and reduces the amount of time you have to hit the next key (so you have to get faster!)." }
-        li { "This continues until you aren't fast enough to keep up with the computer, or you hit the wrong key." }
+        li { "To begin a game, click the Play button on the widget. You will have 3 seconds to get ready." }
+        li { "The widget will then display a letter or number. You have to hit that letter or number on the keyboard as fast as possible - you've got 1.5 seconds to hit the first key." }
+        li { "The faster you press the correct key, the more you score. The game then displays the next letter or number, and reduces the amount of time you have to hit the next key (so you have to get faster!)." }
+        li { "This continues until you aren't fast enough to keep up with the computer - then it's Game Over!" }
       end
-      h2 { "How to get ArrowKeyControl" }
+      h2 { "How to get KeyControl" }
       p.manual! { '<a name="download"></a>Please select your platform, then follow the correct download instructions below:' }
       div.choice! do
         ul do
-          #li { '<a href="#download" onclick="show(\'playinbrowser\');">Play in your browser</a>' }
+          li { '<a href="#download" onclick="show(\'playinbrowser\');">Play in your browser</a>' }
           li { '<a href="#download" onclick="show(\'apple\');">Download for the Apple Dashboard</a>' }
-          #li { '<a href="#download" onclick="show(\'yahoo\');">Download for Yahoo! Widgets</a>' }
+          li { '<a href="#download" onclick="show(\'yahoo\');">Download for Yahoo! Widgets</a>' }
         end
       end
 
@@ -141,7 +135,7 @@ module Akc::Views
     end
 
     @content_for[:apple] = capture(true) do
-      h3 { "Get ArrowKeyControl for the Apple Dashboard" }
+      h3 { "Get KeyControl for the Apple Dashboard" }
       ol do
         li do
           text "Which web browser are you using?"
@@ -152,20 +146,18 @@ module Akc::Views
         end
         li { "Show Dashboard, click the Plus sign to display the Widget Bar and click the widget's icon in the Widget Bar to open it." }
       end
-      p { '<a href="/ArrowKeyControl.zip">Download now</a>' }
+      p { '<a id="dl" href="/KeyControl.zip"><img src="/images/download.png" alt="Download now" /></a>' }
     end
-=begin
     @content_for[:yahoo] = capture(true) do
-      h3 { "Get ArrowKeyControl on Yahoo! Widgets" }
+      h3 { "Get KeyControl on Yahoo! Widgets" }
       p { "Click the Open Widget button below:" }
       text "<iframe scrolling=\"no\" frameborder=\"0\" src=\"http://badge.ydp.clientapps.yahoo.com/badge/widgets/badge?aid=w6344&amp;tc=cccccc&amp;bc=303030&amp;cn=keycontrol\" style=\"width:180px;height:190px;padding:0;border:0;\" allowTransparency=\"true\"></iframe>"
     end
     @content_for[:playinbrowser] = capture(true) do
       h3 { "Play in your browser" }
-      p { "You can play ArrowKeyControl right here in your browser. Just click the Play button below to begin!" }
-      text "<object type=\"application/x-shockwave-flash\" data=\"/ArrowKeyControl.swf\" width=\"187\" height=\"140\"><param name=\"movie\" value=\"/ArrowKeyControl.swf\" /></object>"
+      p { "You can play KeyControl right here in your browser. Just click the Play button below to begin!" }
+      text "<object type=\"application/x-shockwave-flash\" data=\"/KeyControl.swf\" width=\"187\" height=\"140\"><param name=\"movie\" value=\"/KeyControl.swf\" /></object>"
     end
-=end
 
     noscript.noscript! do
       text(types.map { |type| @content_for[type] }.join("\n\n"))
@@ -208,8 +200,28 @@ module Akc::Views
     end
 
     div.user_show_col_left do
+  #    h3 { "Avatar and Social Network" }
+     # div.avatars_wrap! do
+    #    span.avatar_wrap { large_avatar(@user) }
+    #    div.friends! { "Coming soon..." }
+#        ul.friends! do
+#          @user.friends.each do |friend|
+#            li { span.avatar_wrap { small_avatar(friend) } + friend.name }
+#          end
+#        end
+     #   div.clear { " " }
+    #  end
+
       h3 { "Summary" }
       table do
+=begin
+        tr do
+          td { "Social network" + div.friends! { "Coming soon..." } }
+          td(:class => 'last_r') do
+            "Avatar" + span.avatar_wrap { large_avatar(@user) }
+          end
+        end
+=end
         if @user.has_avatar?
           tr do
             td { "Avatar" }
@@ -269,9 +281,6 @@ module Akc::Views
       _scores_by_users(@users)
       p { a('RSS feed of averaged high scores', :href => '/high_scores_average.rss') }
     end
-
-    div.clear { " " }
-
     p.utc! { "Note: all dates are in <acronym title=\"Greenwich Mean Time\">GMT</acronym> / <acronym title=\"Coordinated Universal Time\">UTC</acronym>." }
     p.local! { "Note: all dates are in your local time." }
   end
@@ -295,7 +304,7 @@ module Akc::Views
         end
 
         @users.each do |u|
-          last_active = u.scores.find(:first, :order => "akc_scores.when DESC")
+          last_active = u.scores.find(:first, :order => "kc_scores.when DESC")
           last_active = last_active.nil? ? "Never" : last_active.when
           top = u.scores.find(:first, :order => 'score DESC')
           top = top.nil? ? "None" : top.score
@@ -319,14 +328,14 @@ module Akc::Views
     rss(:version => '2.0') do
       channel do
         title "Top 50 individual scores"
-        description "Top 50 individual scores"
+        description "Top 50 individual high scores"
         link "http://akc.bloople.net/"
         for s in @scores
           item do
             title "#{s.user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when}"
             description "#{s.user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
-            link("http://akc.bloople.net/users/#{s.user.id}")
+            link("http://kc.bloople.net/users/#{s.user.id}")
           end
         end
       end
@@ -347,7 +356,7 @@ module Akc::Views
             title "#{u.name} has an averaged high score of #{number_with_delimiter u.high_score}"
             description "#{u.name} has an average of #{number_with_delimiter u.high_score} over their last 100 scores, or if they have less than 100 scores submitted, the average of all their scores. #{u.name}'s latest score was submitted at #{nice_date_time u.latest_score.when} UTC."
             pubDate u.latest_score.when.to_s(:rfc822)
-            link("http://akc.bloople.net/users/#{u.id}")
+            link("http://kc.bloople.net/users/#{u.id}")
           end
         end
       end
@@ -356,7 +365,7 @@ module Akc::Views
 
   def latest_scores_by_user
     @render_layout = false
-    @headers['Content-Type'] = 'application/rss+xml; charset=UTF-8'
+    @headers['Content-Type'] = 'application/rss+xmll'
     instruct! :xml, :version => '1.0'
     rss(:version => '2.0') do
       channel do
@@ -368,7 +377,7 @@ module Akc::Views
             title "#{number_with_delimiter s.score} at #{nice_date_time s.when}"
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
-            link("http://akc.bloople.net/users/#{@user.id}")
+            link("http://kc.bloople.net/users/#{@user.id}")
           end
         end
       end
@@ -389,7 +398,7 @@ module Akc::Views
             title "#{number_with_delimiter s.score} at #{nice_date_time s.when}"
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
-            link("http://akc.bloople.net/users/#{@user.id}")
+            link("http://kc.bloople.net/users/#{@user.id}")
           end
         end
       end
@@ -406,6 +415,21 @@ module Akc::Views
     end
   end
 
+  def check_out_kc
+    h2 { "The KeyControl website" }
+    div.screenshot do
+      img :src => '/images/site_changes_12_2008/profile.png'
+      text "A user's profile"
+    end
+    p { "Hello, #{@user.name}. I'd like a couple minutes of your time to tell you about some of the major features on <a href='http://kc.bloople.net/'>the KeyControl website</a> that benefit <strong>you</strong>." }
+    p { "You have your very own <a href='http://kc.bloople.net/users/#{@user.id}'>profile</a> at the KeyControl website</a>. Your profile has all of your scores, including your top 10 scores, as well as a graph of your scores over time - so you can see if you're improving." }
+    p { "You can also upload an avatar image to your profile. This avatar will be displayed next your username across the KeyControl website." }
+    p { "The website also has the global <a href='http://kc.bloople.net/high_scores'>high scores</a> list; perhaps you're on it! Are any of your friends playing KeyControl? Then why not compare your scores with theirs?" }
+    h3 { "What is this message?" }
+    p { "Very occasionally, I put out messages like this one to tell KeyControl users about major changes to KeyControl or the KeyControl website. You can stop these messages for ever appearing by clicking the 'i' or 's' button in the lower-right-hand corner of the KeyControl widget and unchecking 'Internet Scoring'." }
+    div.clear { " " }
+  end
+
   def update_user
     h2 { "Customise your account" }
     form :action => "/users/update", :method => :post, :enctype => 'multipart/form-data' do
@@ -420,7 +444,7 @@ module Akc::Views
       div do
         label_for :avatar_image
         text image_column(@user, 'avatar')
-        end
+      end
       div do
         input :type => 'submit', :class => 'submit', :value => "Save"
       end

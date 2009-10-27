@@ -1,16 +1,21 @@
-$DEBUG = 1
-
 require '_configuration'
 
 require 'rubygems'
-require 'active_record'
 
+require 'mysqlplus'
+
+class Mysql
+  alias_method :query, :c_async_query
+end
+
+require 'active_record'
+require 'lib/active_record_mysql_gone_patch'
+ 
 require 'will_paginate'
 require 'ostruct'
-require 'pp'
-
+ 
 $:.unshift Pathname.new('./lib/camping/lib/').realpath
-
+ 
 require 'camping'
 require 'camping/server'
 require 'lib/markaby/lib/markaby'
@@ -31,3 +36,6 @@ Dir.glob("*.rb").each do |file|
     klass.create if klass.respond_to? :create
   end
 end
+
+require 'irb'
+IRB.start(__FILE__)
