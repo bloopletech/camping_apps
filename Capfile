@@ -37,7 +37,7 @@ namespace :deploy do
   end
 
   task :after_update_code, :roles => :app do
-    cmd = "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}"
+    cmd = "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}/init/"
     puts cmd
     system cmd
     run "ln -nfs #{deploy_to}/shared/system/blog/assets #{release_path}/blog/public/assets"
@@ -48,7 +48,7 @@ namespace :deploy do
   end
 
   task :after_setup, :roles => :app do
-    cmd =  "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}"
+    cmd =  "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}/init/"
     puts cmd
     system cmd
     run "mkdir #{deploy_to}/shared/system/blog #{deploy_to}/shared/system/blog/public/assets"
