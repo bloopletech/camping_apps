@@ -47,7 +47,7 @@ module Akc::Views
               self << content
             end
             div.footer! do
-              p { "&copy; 2009 Brenton Fletcher. Check out <a href=\"http://blog.bloople.net\">my blog</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
+              p { "&copy; 2008-#{Date.today.year} Brenton Fletcher. Check out <a href=\"http://blog.bloople.net\">my blog</a>. Comments? <a href=\"mailto:i@bloople.net\">i@bloople.net</a>. Made on a Mac with Camping." }
             end
           end
         end
