@@ -23,7 +23,7 @@ Camping::Models::Base.establish_connection(DBCONN)
 Camping::Models.create_schema
 Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
  
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['CAMPING_ENV'] =~ /^d/
  
 Dir.glob("*.rb").each do |file|
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''

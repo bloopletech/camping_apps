@@ -1,24 +1,4 @@
-require '_configuration'
-
-require 'rubygems'
-
-require 'mysqlplus'
-
-class Mysql
-  alias_method :query, :c_async_query
-end
-
-require 'active_record'
-require 'lib/active_record_mysql_gone_patch'
- 
-require 'will_paginate'
-require 'ostruct'
- 
-$:.unshift Pathname.new('./lib/camping/lib/').realpath
- 
-require 'camping'
-require 'camping/server'
-require 'lib/markaby/lib/markaby'
+require 'init/requires'
 
 Camping::Models::Base.establish_connection(DBCONN)
 
