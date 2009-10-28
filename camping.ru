@@ -7,76 +7,16 @@
 # change establish_connection line to connect to your database, then run:
 # rackup camping.ru
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
- 
-require '_configuration'
- 
-require 'rubygems'
 
-require 'mysqlplus'
+require 'init/requires'
 
-class Mysql
-  alias_method :query, :c_async_query
-end
-
-require 'active_record'
-require 'lib/active_record_mysql_gone_patch'
- 
-require 'will_paginate'
-require 'ostruct'
- 
-$:.unshift Pathname.new('./lib/camping/lib/').realpath
- 
-require 'camping'
-require 'camping/server'
-require 'lib/markaby/lib/markaby'
- 
-class Fixnum
-  alias_method :xchr_old, :xchr  
- 
-  def xchr
-    @@XChar_Cache ||= (0..255).map{|x| x.send :xchr_old} 
-    @@XChar_Cache[self] or xchr_old 
-  end
-end
- 
-module TBIBase
-  def self.included(base)
-    base.class_eval <<-END
-      def r404(p=env.PATH)
-        r(404, "<h3>Oops! Page could not be found.</h3>")
-      end
-      def r500(k,m,x)
-        puts $!
-        puts $!.backtrace
-        r(500, "<h3>Oops! An error occured; please try again.</h3>")
-      end
-      alias_method :initialize_without_rootfix, :initialize
-      def initialize_with_rootfix(env)
-        initialize_without_rootfix(env)
-        @root = ''
-      end
-      alias_method :initialize, :initialize_with_rootfix
-    END
-  end
-end
- 
+#Yeahhh... this is not exactly optimal
 Thread.new do
   while(true)
     sleep(300)
     GC.start
   end
 end
-
-=begin
-DBCONN = {
- :adapter => 'mysql',
- :database => 'camping',
- :username => 'root',
- :password => '',
- :host => 'localhost',
- :pool => 50
-}
-=end
 
 Camping::Models::Base.establish_connection(DBCONN)
  
@@ -86,7 +26,6 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 ActiveRecord::Base.logger = Logger.new(STDOUT)
  
 Dir.glob("*.rb").each do |file|
-  next if file[0, 1] == '_'
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
   load file
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil

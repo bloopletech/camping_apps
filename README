@@ -1,4 +1,4 @@
-You will need to add a file called _configuration.rb with contents similar to:
+You will need to add a file called init/configuration.rb with contents similar to:
 
 #start file
 DBCONN = { :adapter => 'mysql',

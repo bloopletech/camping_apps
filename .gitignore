@@ -1,5 +1,5 @@
 .svn
-_configuration.rb
+init/configuration.rb
 *.log
 *.sql
 .DS_Store
