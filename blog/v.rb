@@ -6,7 +6,9 @@ module Blog::Views
         title "Coderplay #{' - ' + @title if @title}"
         link :rel => 'stylesheet', :type => 'text/css', :href => '/style.css'
         link :rel => 'alternate', :type => 'application/rss+xml', :href => "/rss#{"/#@tag" if @tag != 'Index'}"
-        link :rel => 'shortcut icon', :type => 'image/x-icon', :href => '/murfy32.png'
+        script :src => "/tiny_mce/tiny_mce.js"
+        script :src => "/js.js"
+#        link :rel => 'shortcut icon', :type => 'image/x-icon', :href => '/murfy32.png'
       end
       body do
         div.wrap! do
@@ -15,7 +17,12 @@ module Blog::Views
               a(:href => R(Index), :accesskey => 'I') { span "Coderplay" }
             end
             h2 do
-              "Like a truck through a plate glass window, Brenton Fletcher is comin' at you with more code than you can handle."
+              "The good kind of crazy"
+=begin
+              ["Like a truck through a plate glass window, Brenton Fletcher is comin' at you with more code than you can handle.",
+               "OMG LOL PONEIS!!",
+               ""
+=end
             end
           end
           div.sidebar! do
@@ -242,7 +249,7 @@ module Blog::Views
       end
       div do
         label_for :body, post
-        textarea.body! post.body, :name => :body, :cols => 80, :rows => 30, :accesskey => 'B'
+        textarea.body! post.body, :name => :body, :cols => 80, :rows => 30, :accesskey => 'B', :class => "tinymce"
       end
       div do
         label_for :nickname, post

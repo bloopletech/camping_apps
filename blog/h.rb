@@ -31,7 +31,7 @@ module Blog::Helpers
         ul.menu.send(role) do
           submenu.each do |x|
             liopts = (x == submenu.last) ? { :class => 'last' } : { }
-            li(liopts) { x[/\A\w+\z/] ? a(x, :href => R(Controllers.const_get(x), *args)) : x }
+            li(liopts) { x[/\A\w+\z/] ? a(x, :href => R(Blog::Controllers.const_get(x), *args)) : x }
           end
         end unless submenu.empty?
       end

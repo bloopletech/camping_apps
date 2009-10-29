@@ -2,14 +2,10 @@ module StaticAssetsClass
   #TODO: Not actually *needed*, also should not be a massive string
   def self.included(base)
     base.class_eval <<-EOF
-      class StaticAssets < R '/(.+)\\\.(css|gif|js|jpg|png|zip|txt|ico|swf|flv)'
-        MIME_TYPES = { '.css' => 'text/css', '.gif' => 'image/gif', '.js' => 'text/javascript', '.jpg' => 'image/jpeg', '.zip' => 'application/zip',
-         '.txt' => 'text/plain', '.ico' => 'image/vnd.microsoft.icon', '.png' => 'image/png', '.swf' => 'application/x-shockwave-flash',
-          '.flv' => 'application/octet-stream' }
-
+      class StaticAssets < R '/(.+)\\\.(css|js|gif|jpg|png|ico|zip|txt|swf|flv|htm)'
         def get(path, ext)
           path = path + "." + ext
-          @headers['Content-Type'] = MIME_TYPES[path[/\.\\\w+$/, 0]] || "text/plain"
+          @headers['Content-Type'] = Rack::Mime::MIME_TYPES[".\#{ext}"] || "text/plain"
           if path.include? ".." # prevent directory traversal attacks
             @status = "403"
             "403 - Invalid path"
