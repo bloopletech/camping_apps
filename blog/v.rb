@@ -206,8 +206,7 @@ module Blog::Views
   def _post post, full = false
     div.post do
       h2 { a post.title, :href => R(Read, post.nickname) }
-      excerpt, body = *post.body.split(/^---+/, 2)
-      div.body { text RedCloth.new("#{excerpt}#{body if full}").to_html }
+      div.body { text post.body }
       p.subtitle do
         text "#{nice_date_time(post.created_at)}"
       end

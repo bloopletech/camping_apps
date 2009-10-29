@@ -1,3 +1,6 @@
+#!/usr/bin/ruby
+# encoding: utf-8
+
 require 'init/requires'
 
 Camping::Models::Base.establish_connection(DBCONN)
@@ -7,8 +10,7 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
-Dir.glob("*.rb").each do |file|
-  next if file[0, 1] == '_'
+(ARGV.empty? ? Dir.glob("*.rb") : ARGV).each do |file|
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
   load file
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil
