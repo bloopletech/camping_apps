@@ -57,7 +57,7 @@ module Akc::Controllers
             user = User.create(:name => name, :crypt => crypt)
           end
 
-          Score.create(:version => version, :user => user, :score => score, :when => Time.now.getgm, :source => source)
+          Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
 
           mab { text "" }
         else

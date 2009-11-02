@@ -30,7 +30,8 @@ Dir.glob("*.rb").each do |file|
   load file
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil
   unless klass.nil?
-    klass::Base.send(:include, TBIBase)
+    klass.send(:include, CampingCallPatches)
+    klass::Base.send(:include, CampingBasePatches)
     klass.create if klass.respond_to? :create
     map("/#{title.downcase}") { run klass }
   end

@@ -1,19 +1,19 @@
 module Blog::Models
   class CreateTheBasics < V 1.0
     def self.up
-      create_table :blog_admins, :force => true do |table|
+      create_table :blog_admins do |table|
         table.string :name, :password
       end
       print "Password for #{user = ENV['USER']}? "
       Admin.create :name => user, :password => $stdin.gets.chomp
       
-      create_table :blog_posts, :force => true do |table|
+      create_table :blog_posts do |table|
         table.string :title, :tags, :nickname
         table.text :body
         table.timestamps
       end
       
-      create_table :blog_comments, :force => true do |table|
+      create_table :blog_comments do |table|
         table.integer :post_id
         table.string :username
         table.text :body
@@ -28,6 +28,7 @@ module Blog::Models
     has_many :comments, :order => 'created_at ASC', :dependent => :destroy
     validates_presence_of :title, :nickname
     validates_uniqueness_of :nickname
+    named_scope :published, :conditions => "published_at <= NOW()"
   end
   
   class Comment < Base
@@ -37,5 +38,12 @@ module Blog::Models
     validates_associated :post
     belongs_to :post
     attr_accessor :bot
+  end
+
+  class AddPublishedAt < V 1.1
+    def self.up
+      add_column :blog_posts, :published_at, :datetime
+      Blog::Models::Post.all.each { |p| p.update_attribute(:published_at, p.created_at) }
+    end
   end
 end

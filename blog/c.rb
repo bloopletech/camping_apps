@@ -4,20 +4,20 @@ module Blog::Controllers
     TAG_PATTERN = ['% ? %', '? %', '% ?', '?']
     #TODO: Following code is ridiculous
     def get format = 'html', tag = 'Index'
+      posts = logged_in? ? Post : Post.published
+
       @tag = tag
       conditions = tag ? { :conditions => TAG_PATTERN.map { |t| "tags LIKE " + ActiveRecord::Base.connection.quote(t.gsub('?', tag)) }.join(" OR ") } : {}
-      @total_pages = (Post.count(:all, conditions) / 5.0).ceil
+      @total_pages = (posts.count(:all, conditions) / 5.0).ceil
       @has_older_pages = @total_pages > 1
       standard_conds = { :order => 'created_at DESC' }
       standard_conds[:limit] = 5 if format == 'html' or format == ''
-      @posts = Post.find :all, conditions.merge(standard_conds)
+      @posts = posts.find :all, conditions.merge(standard_conds)
       if format == 'rss'
          rss = ::RSS.feed :title => 'Coderplay', :about => 'http://blog.bloople.net/rss',
           :link => 'http://blog.bloople.net/', :description => 'Personal blog of Brenton Fletcher' do |feed|
-          for post in @posts
-            feed.item :title => post.title, :link => URL(Read, post.nickname).to_s,
-              :date => post.created_at,
-              :description => RedCloth.new("#{post.body.split(/^---+/, 2).first}").to_html
+          @posts.each do |post|
+            feed.item :title => post.title, :link => URL(Read, post.nickname).to_s, :date => post.created_at, :description => post.body
           end
         end
         r(200, rss.to_s, 'Content-Type' => 'application/rss+xml; charset=UTF-8')
@@ -30,14 +30,14 @@ module Blog::Controllers
   class Search < R '/search'
     def post
 #        @page = page.to_i
-#        count = Post.count :all, :conditions => "tags LIKE '%#{@tag}%'"
+#        count = Post.published.count :all, :conditions => "tags LIKE '%#{@tag}%'"
 #        start = (@page * 5)
 #        @has_older_posts = (start + 5) < count
 #        @has_newer_posts = @page > 1
 #        @total_pages = (count / 5.0).ceil
       c = ActiveRecord::Base.connection
       @search_query = input.query
-      @posts = Post.find :all, :conditions => "title LIKE #{c.quote "%#{@search_query}%"} OR body LIKE #{c.quote "%#{@search_query}%"}", :order => 'created_at DESC'#, :limit => 5, :offset => start
+      @posts = Post.published.find :all, :conditions => "title LIKE #{c.quote "%#{@search_query}%"} OR body LIKE #{c.quote "%#{@search_query}%"}", :order => 'created_at DESC'#, :limit => 5, :offset => start
       render :search
     end
   end
@@ -46,23 +46,23 @@ module Blog::Controllers
     def get(tag, page)
       @tag = tag
       @page = page.to_i
-      count = Post.count :all, :conditions => "tags LIKE '%#{@tag}%'"
+      count = Post.published.count :all, :conditions => "tags LIKE '%#{@tag}%'"
       start = (@page * 5)
       @has_older_posts = (start + 5) < count
       @has_newer_posts = @page > 1
       @total_pages = (count / 5.0).ceil
-      @posts = Post.find :all, :conditions => "tags LIKE '%#{@tag}%'", :order => 'created_at DESC', :limit => 5, :offset => start
+      @posts = Post.published.find :all, :conditions => "tags LIKE '%#{@tag}%'", :order => 'created_at DESC', :limit => 5, :offset => start
       render :archive
     end
   end
   
   class New < R '/new', '/new/([-\w]*)'
     def get tag = nil
-      @post = Post.new :tags => "Index #{tag}".strip if logged_in?
+      return unless logged_in?
+      @post = Post.new(:tags => "Index #{tag}".strip, :published_at => Time.now)
       render :new
     end
     def post
-      return unless logged_in?
       @post = Post.create :title => input.title, :nickname => input.nickname, :tags => input.tags, :body => input.body
       if @post.valid?
         redirect Read, @post.nickname
@@ -81,7 +81,8 @@ module Blog::Controllers
     def post
       return unless logged_in?
       @post = Post.find input['id']
-      @post.update_attributes :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname
+      @post.update_attributes :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname,
+       :published_at => input.published_at
       if @post.valid?
         redirect Read, @post.nickname
       else
@@ -169,12 +170,12 @@ module Blog::Controllers
   # Lowest precedence to allow urls like /<nickname>
   class Read < R '/read/([-\w]+)', '/([-\w]+)'
     def get id
-      @post = Post.find :first, :conditions => ['id = ? OR nickname = ?', id, id]
+      @post = (logged_in? ? Post : Post.published).find :first, :conditions => ['id = ? OR nickname = ?', id, id]
       @comment = Comment.new :body => input.comment, :username => input.name
       render :view if @post
     end
     def post id
-      @post = Post.find :first, :conditions => ['id = ? OR nickname = ?', id, id]
+      @post = (logged_in? ? Post : Post.published).find :first, :conditions => ['id = ? OR nickname = ?', id, id]
       @comment = @post.comments.new :bot => input.bot, :username => (name = input.name), :body => (comment = input.comment)
       if @comment.save
         redirect self / "/read/#{id}"

@@ -2,23 +2,27 @@ require 'init/configuration'
 
 require 'rubygems'
 
+#ActiveRecord + MySQL async + patches
 require 'mysqlplus'
-
 class Mysql
   alias_method :query, :c_async_query
 end
 
+require 'tzinfo'
 require 'active_record'
 require 'lib/active_record_mysql_gone_patch'
- 
+#end
+
 require 'will_paginate'
 require 'ostruct'
- 
+
+#Camping + markaby 
 $:.unshift Pathname.new('./lib/camping/lib/').realpath
  
 require 'camping'
 require 'camping/server'
 require 'lib/markaby/lib/markaby'
+#end
 
 class Fixnum
   alias_method :xchr_old, :xchr  
@@ -29,9 +33,9 @@ class Fixnum
   end
 end
 
-module TBIBase
+module CampingBasePatches
   def self.included(base)
-    base.class_eval <<-END
+    base.class_eval do
       def r404(p=env.PATH)
         r(404, "<h3>Oops! Page could not be found.</h3>")
       end
@@ -46,11 +50,60 @@ module TBIBase
         @root = ''
       end
       alias_method :initialize, :initialize_with_rootfix
-    END
+    end
   end
 end
 
+module CampingCallPatches
+  def self.included(base)
+    base.class_eval do
+      class << self
+        alias_method :call_without_patches, :call
+        def call(e)
+          begin
+            Camping::Models::Base.connection_pool.clear_stale_cached_connections!
+            z = Time.now
+
+            o = call_without_patches(e)
+
+            puts "time to serve #{e.to_hash['PATH_INFO']}: #{Time.now - z}"
+          ensure
+            Camping::Models::Base.connection_pool.release_connection
+          end
+          o
+        end
+      end
+    end
+  end
+end
+  
+Time.zone_default = "Adelaide"
 ActiveRecord::Base.default_timezone = :utc
+ActiveRecord::Base.time_zone_aware_attributes = true
+
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:default => '%d %B %Y') #TODO fix so shows time as well
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:default => '%d %B %Y')
+
+=begin
+module Camping
+  module Base
+    def call(e)
+      begin
+        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
+        Time.zone = TIME_ZONE
+        z = Time.now
+
+        o = super
+
+        puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
+      ensure
+        Camping::Models::Base.connection_pool.release_connection
+      end
+      o
+    end
+  end
+end
+=end
 
 =begin
 Alt of above

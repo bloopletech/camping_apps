@@ -34,6 +34,10 @@ module Blog::Views
               input :type => :text, :name => :query, :value => @search_query || ''
               input :type => :submit, :class => :submit, :value => 'Search'
             end
+#            h2 'Popular works'
+#            ["arrow-key-control", "json2html", "rss2htmlvideo"].each do |nickname|
+#              post = Models::Post.find_by_nickname(nickname)
+#              p { }
             h2 'About me'
             img(:src => '/images/me.jpg')
             p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Web Design</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
@@ -256,6 +260,9 @@ module Blog::Views
         input.nickname! :name => :nickname, :type => :text, :size => 81, :value => post.nickname
         label_for :tags, post, :accesskey => 'T'
         input.tags! :name => :tags, :type => :text, :size => 81, :value => post.tags
+        label_for :published, post
+        input.published! :name => :published_at, :type => :text, :size => 81, :value => post.published_at
+        p.in_form { "Today is #{Date.today}" }
         input :type => :hidden, :name => :id, :value => post.id
         input :type => :submit, :class => "submit", :value => 'Save', :accesskey => 'S'
       end

@@ -14,8 +14,13 @@ require 'init/requires'
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
-conf = OpenStruct.new(:server => ARGV[0] || 'mongrel', :host => '0.0.0.0', :port => 8005, :database => { :adapter => 'mysql', :database => 'camping', :username => 'root', :password => '', :host => 'localhost', :pool => 50 })
-paths = ["."]
+Camping::Models::Base.establish_connection(DBCONN)
+
+Camping::Models.create_schema
+Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Session)
+
+conf = OpenStruct.new(:server => 'mongrel', :host => '0.0.0.0', :port => 8005, :database => { :adapter => 'mysql', :database => 'camping', :username => 'root', :password => '', :host => 'localhost', :pool => 50 })
+paths = ARGV.empty? ? ["."] : ARGV
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 server = Camping::Server::Base.new(conf, paths)
 server.start

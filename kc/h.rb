@@ -44,7 +44,7 @@ module Kc::Helpers
 
 
   def nice_date_time(date)
-    return date.strftime("%d/%m/%Y %I:%M%p")
+    return date.utc.strftime("%d/%m/%Y %I:%M%p")
   end
 
   def h(text)

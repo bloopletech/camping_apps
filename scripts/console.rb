@@ -19,5 +19,7 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 end
 
+silence_warnings { ARGV = [] }
+
 require 'irb'
 IRB.start(__FILE__)

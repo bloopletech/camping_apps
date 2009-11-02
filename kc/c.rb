@@ -56,7 +56,7 @@ module Kc::Controllers
           user = User.create(:name => name, :crypt => crypt, :seen_site_changes_12_2008 => true)
         end
 
-        Score.create(:version => version, :user => user, :score => score, :when => Time.now.getgm, :source => source)
+        Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
 
         unless user.seen_site_changes_12_2008?
           user.seen_site_changes_12_2008 = true

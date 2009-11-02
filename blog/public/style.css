@@ -32,6 +32,7 @@ input, textarea { width: 492px; margin: 5px 0; padding: 4px; border: 1px solid #
 input.submit { margin-left: 98px; width: 100px; }
 input:hover, textarea:hover { background-color: #ddefff; }
 form div { clear: left; }
+p.in_form { margin-left: 98px; }
 
 .errorExplanation, #errorExplanation, .notification, #success, #errors { background-color: #ffffcc; border: 1px solid #ffff00; padding: 8px; color: #303030; margin: 8px 0; }
 .flash p { margin-bottom: 0; }

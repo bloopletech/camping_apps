@@ -43,7 +43,7 @@ module Blog::Helpers
   # shortcut for error-aware labels
   def label_for name, record = nil, attr = name, options = {}
     errors = record && !record.body.blank? && !record.valid? && record.errors.on(attr)
-    label name.to_s, { :for => name }, options.merge(errors ? { :class => :error } : {})
+    label name.to_s.humanize, { :for => name }, options.merge(errors ? { :class => :error } : {})
   end
 
   # find all tags
