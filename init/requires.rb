@@ -8,7 +8,6 @@ class Mysql
   alias_method :query, :c_async_query
 end
 
-require 'tzinfo'
 require 'active_record'
 require 'lib/active_record_mysql_gone_patch'
 #end

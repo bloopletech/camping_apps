@@ -565,8 +565,8 @@ module Camping
     # And array with [statuc, headers, body] is expected at the output.
     def call(e)
       begin
-        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
-        z = Time.now
+#        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
+#        z = Time.now
 
         X.M
         e = H[e.to_hash]
@@ -574,10 +574,10 @@ module Camping
         e.REQUEST_METHOD = m
         o = k.new(e).service(*a).to_a
 
-        puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
-      ensure
-        Camping::Models::Base.connection_pool.release_connection
-      end
+#        puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
+#      ensure
+#        Camping::Models::Base.connection_pool.release_connection
+#      end
       o
     end
 
