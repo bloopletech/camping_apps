@@ -1,5 +1,10 @@
 module Blog::Views
   def layout
+    if @render_layout == false
+      self << yield
+      return
+    end
+
     xhtml11 do
       head do
         meta :'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8'
@@ -211,8 +216,28 @@ module Blog::Views
     
     div.clear {}
   end
-      
-  
+
+  def rss_feed
+    @render_layout = false
+    @headers['Content-Type'] = 'application/rss+xml; charset=UTF-8'
+    instruct! :xml, :version => '1.0'
+    rss(:version => '2.0') do
+      channel do
+        title "Coderplay"
+        description "Personal blog of Brenton Fletcher"
+        link "http://blog.bloople.net/"
+        @posts.each do |post|
+          item do
+            title post.title
+            link URL(Read, post.nickname).to_s
+            pubDate post.created_at.to_s(:rfc822)
+            description post.body
+          end
+        end
+      end
+    end
+  end
+
   # Partials
   def _post post, full = false
     div.post do

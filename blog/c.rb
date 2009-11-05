@@ -13,17 +13,7 @@ module Blog::Controllers
       standard_conds = { :order => 'created_at DESC' }
       standard_conds[:limit] = 5 if format == 'html' or format == ''
       @posts = posts.find :all, conditions.merge(standard_conds)
-      if format == 'rss'
-         rss = ::RSS.feed :title => 'Coderplay', :about => 'http://blog.bloople.net/rss',
-          :link => 'http://blog.bloople.net/', :description => 'Personal blog of Brenton Fletcher' do |feed|
-          @posts.each do |post|
-            feed.item :title => post.title, :link => URL(Read, post.nickname).to_s, :date => post.created_at, :description => post.body
-          end
-        end
-        r(200, rss.to_s, 'Content-Type' => 'application/rss+xml; charset=UTF-8')
-      else
-        render :index
-      end
+      render format == 'rss' ? :rss_feed : :index
     end
   end
 
