@@ -53,7 +53,8 @@ module Blog::Controllers
       render :new
     end
     def post
-      @post = Post.create :title => input.title, :nickname => input.nickname, :tags => input.tags, :body => input.body
+      @post = Post.create :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname,
+       :published_at => input.published_at
       if @post.valid?
         redirect Read, @post.nickname
       else
