@@ -76,7 +76,7 @@ module CampingCallPatches
   end
 end
   
-Time.zone_default = "Adelaide"
+Time.zone_default = ActiveSupport::TimeZone["Adelaide"] #TODO best way to grab adelaide timezone?
 ActiveRecord::Base.default_timezone = :utc
 ActiveRecord::Base.time_zone_aware_attributes = true
 

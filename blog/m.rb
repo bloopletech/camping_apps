@@ -26,7 +26,7 @@ module Blog::Models
   
   class Post < Base
     has_many :comments, :order => 'created_at ASC', :dependent => :destroy
-    validates_presence_of :title, :nickname
+    validates_presence_of :title, :nickname, :published_at
     validates_uniqueness_of :nickname
     named_scope :published, :conditions => "published_at <= NOW()"
   end

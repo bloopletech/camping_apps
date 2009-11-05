@@ -53,11 +53,12 @@ module Blog::Controllers
       render :new
     end
     def post
-      @post = Post.create :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname,
+      @post = Post.new :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname,
        :published_at => input.published_at
-      if @post.valid?
+      if @post.save
         redirect Read, @post.nickname
       else
+        @post.errors.full_messages.each { |msg| add_error(msg) }
         render :new
       end
     end
@@ -71,12 +72,12 @@ module Blog::Controllers
     
     def post
       return unless logged_in?
+      puts "input: #{input.inspect}"
       @post = Post.find input['id']
-      @post.update_attributes :title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname,
-       :published_at => input.published_at
-      if @post.valid?
+      if @post.update_attributes(:title => input.title, :body => input.body, :tags => input.tags, :nickname => input.nickname, :published_at => input.published_at)
         redirect Read, @post.nickname
       else
+        @post.errors.full_messages.each { |msg| add_error(msg) }
         render :edit
       end
     end
