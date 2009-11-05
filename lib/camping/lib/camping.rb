@@ -564,7 +564,7 @@ module Camping
     # argument is the environment variables hash as per the Rack specification.
     # And array with [statuc, headers, body] is expected at the output.
     def call(e)
-      begin
+#      begin
 #        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
 #        z = Time.now
 
