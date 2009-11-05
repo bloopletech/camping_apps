@@ -237,9 +237,9 @@ module WikiWatcher
       Models::Edit.delete(edits[500..-1].map { |edit| edit.id }) if edits.length > 500
 
       from = edits.empty? ? nil : Models::Edit.find(:first, :order => 'id DESC').published
-      doc = Hpricot(Net::HTTP.get(URI.parse(INITIAL_URL + "&rclimit=" + (edits.empty? ? "10" : "500&rcend=" << from.xmlschema))))
+      doc = Hpricot(Net::HTTP.get(URI.parse(INITIAL_URL + "&rclimit=" + (edits.empty? ? "10" : "500&rcend=" << from.utc.xmlschema))))
 
-      edits = edits.empty? ? [] : Models::Edit.find_all_by_published(from.strftime('%Y-%m-%d %H:%M:%S'), :select => 'rev_id, page_id, published')
+      edits = edits.empty? ? [] : Models::Edit.find_all_by_published(from.utc, :select => 'rev_id, page_id, published')
       (doc/:rc).reject { |edit| edits.detect { |e| e.rev_id == edit.attributes['revid'].to_i and e.page_id == edit.attributes['pageid'].to_i } }.to_a.reverse.each do |edit|
         Models::Edit.create(:article => edit.attributes['title'],
          :summary => (edit.attributes['comment'].blank? ? nil : parse_wikitext(edit.attributes['comment'], edit.attributes['title'])),
