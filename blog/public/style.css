@@ -28,7 +28,7 @@ ul.menu li.last { margin-right: none; border-right: none; }
 
 /* form stuff */
 label { width: 92px; display: block; float: left; text-align: right; padding: 9px 6px 0 0; }
-input, textarea { width: 492px; margin: 5px 0; padding: 4px; border: 1px solid #808080; }
+input, textarea { width: 462px; margin: 5px 0; padding: 4px; border: 1px solid #808080; }
 input.submit { margin-left: 98px; width: 100px; }
 input:hover, textarea:hover { background-color: #ddefff; }
 form div { clear: left; }
@@ -50,7 +50,7 @@ table th { background-color: #5555ff; color: #eeeeee; }
 p.subtitle, p.username { font-size: 90%; color: #808080; text-align: left; }
 div.comment { margin: 15px 0; border-bottom: 1px dotted #a0a0a0; }
 
-pre { padding: 4px; border: 1px solid #808080; width: 590px; height: 300px; overflow: auto; margin-bottom: 15px; }
+pre { padding: 4px; border: 1px solid #808080; width: 560px; height: 300px; overflow: auto; margin-bottom: 15px; }
 pre, code { font-family: Monaco, "Courier New", sans-serif; background-color: #000000; color: #00ff00; font-size: 90%; }
 
 blockquote { margin: 0 50px; }
