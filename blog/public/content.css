@@ -14,3 +14,5 @@ pre, code { font-family: Monaco, "Courier New", sans-serif; background-color: #0
 ul { margin: 15px 30px; }
 li { margin: 5px 0; }
 * html ul { padding-left: 30px; }
+
+b, strong { font-weight: bold; }
