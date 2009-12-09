@@ -3,14 +3,6 @@ require 'json/add/rails'
 
 Camping.goes :WW2
 
-module WW2::Base
-  alias_method :orig_initialize, :initialize
-  def initialize(r, e, m)
-    orig_initialize(r, e, m)
-    @root = ''
-  end
-end
-
 module WW2::Models
   class X < Base; end
   def self.get_edits(from)
