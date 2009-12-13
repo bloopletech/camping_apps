@@ -510,50 +510,32 @@ module Kc::Views
     end
   end
 
-  def _scores(scores, show_user)
+  def _scores(scores, show_user, show_rank = false)
     table.scores do
       tr do
+        th { "Rank" } if show_rank
         th { "Score" }
         th { "Username" } if show_user
         th.last_r { "When" }
       end
 
-      scores.each do |s|
-        text "<tr#{s == scores.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(s.score)}</td>#{show_user ? "<td>#{small_avatar(s.user)}#{a(h(s.user.name), :href => "/users/#{s.user.id}")}</td>" : ''}<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td></tr>"
-=begin
-        attrs = {}
-        attrs[:class] = 'last_b' if s == scores.last
-        tr(attrs) do
-          td.score { number_with_delimiter s.score }
-          td { small_avatar(s.user) + a(h(s.user.name), :href => "/users/#{s.user.id}").to_s } if show_user
-          text "<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td>"
-        end
-=end
+      scores.each_with_index do |s, i|
+        text "<tr#{s == scores.last ? ' class=\'last_b\'' : ''}>#{show_rank ? "<td>#{i + 1}</td>" : ""}<td>#{number_with_delimiter(s.score)}</td>#{show_user ? "<td>#{small_avatar(s.user)}#{a(:href => "/users/#{s.user.id}") { wbrize(s.user.name) }}</td>" : ''}<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td></tr>"
       end
     end
   end
 
-  def _scores_by_users(users)
+  def _scores_by_users(users, show_rank = false)
     table.scores do
       tr do
-        th { "Avg. score" }
+        th { "Rank" } if show_rank
+        th { "Average" }
         th { "Username" }
         th.last_r { "Last active" }
       end
 
-      users.each do |u|
-        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td></tr>"
-=begin
-        attrs = {}
-        attrs[:class] = 'last_b' if u == users.last
-        tr(attrs) do
-          td.score { number_with_delimiter(u.high_score) }
-          #puts "dss: #{'' + a(h(u.name), :href => "/users/#{u.id}")}"
-          #puts "dss: #{(small_avatar(u) + a(h(u.name), :href => "/users/#{u.id}")).class}"
-          td { small_avatar(u) + a(h(u.name), :href => "/users/#{u.id}").to_s }
-          text "<td class='last_r score_when' rel='#{u.scores_when.to_i * 1000}'>#{nice_date_time u.scores_when}</td>"
-        end
-=end
+      users.each_with_index do |u, i|
+        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}>#{show_rank ? "<td>#{i + 1}</td>" : ""}<td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(:href => "/users/#{u.id}") { wbrize(u.name) }}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td></tr>"
       end
     end
   end

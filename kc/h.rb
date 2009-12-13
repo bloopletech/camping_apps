@@ -75,12 +75,17 @@ module Kc::Helpers
   end
 
   def number_with_delimiter(number, delimiter=",", separator=".")
-     begin
-       parts = number.to_s.split('.')
-       parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
-       parts.join separator
-     rescue
-       number
-     end
-   end
+    begin
+      parts = number.to_s.split('.')
+      parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
+      parts.join separator
+    rescue
+      number
+    end
+  end
+
+  #implicitly html-escapes the input
+  def wbrize(s)
+    s.scan(/.{1,15}/).map { |c| h c }.join("<wbr />")
+  end
 end

@@ -66,23 +66,25 @@ module Akc::Views
       p { "<span class=\"bignum\">#{number_with_delimiter @score_count}</span> scores submitted by <span class=\"bignum\">#{number_with_delimiter @user_count}</span> users" }
       p { a("More statistics...", :href => '/statistics') }
       h2 { "Top 3 Averaged High Scores" }
-      _scores_by_users(@users)
+      _scores_by_users(@users, true)
       h2 { "Top 3 Individual High Scores" }
-      _scores(@scores, true)
+      _scores(@scores, true, true)
       h2 { "Top 3 Users by Number of Scores Submitted" }
       table.scores do
         tr do
+          th { "Rank" }
           th { "No. submitted" }
           th { "Username" }
           th.last_r { "Last active" }
         end
 
-        @users_by_scores_submitted.each do |u|
+        @users_by_scores_submitted.each_with_index do |u, i|
           last_active = u.latest_score.when
           
           attrs = {}
           attrs['class'] = 'last_b' if u == @users_by_scores_submitted.last
           tr attrs do
+            td { i + 1 }
             td.score { number_with_delimiter(u.scores.count) }
             td { a(h(u.name), :href => "/users/#{u.id}") }
             text "<td class='last_r' rel='#{last_active.to_i * 1000}'>#{nice_date_time last_active}</td>"
@@ -126,22 +128,7 @@ module Akc::Views
         li { "This continues until you aren't fast enough to keep up with the computer, or you hit the wrong key." }
       end
       h2 { "How to get ArrowKeyControl" }
-      p.manual! { '<a name="download"></a>Please select your platform, then follow the correct download instructions below:' }
-      div.choice! do
-        ul do
-          #li { '<a href="#download" onclick="show(\'playinbrowser\');">Play in your browser</a>' }
-          li { '<a href="#download" onclick="show(\'apple\');">Download for the Apple Dashboard</a>' }
-          #li { '<a href="#download" onclick="show(\'yahoo\');">Download for Yahoo! Widgets</a>' }
-        end
-      end
-
-      types.each do |type|
-        div(:id => type) {}
-      end
-    end
-
-    @content_for[:apple] = capture(true) do
-      h3 { "Get ArrowKeyControl for the Apple Dashboard" }
+      p { "ArrowKeyControl is an Apple Dashboard widget; simply follow the intructions below to start playing." }
       ol do
         li do
           text "Which web browser are you using?"
@@ -154,29 +141,10 @@ module Akc::Views
       end
       p { '<a href="/ArrowKeyControl.zip">Download now</a>' }
     end
-=begin
-    @content_for[:yahoo] = capture(true) do
-      h3 { "Get ArrowKeyControl on Yahoo! Widgets" }
-      p { "Click the Open Widget button below:" }
-      text "<iframe scrolling=\"no\" frameborder=\"0\" src=\"http://badge.ydp.clientapps.yahoo.com/badge/widgets/badge?aid=w6344&amp;tc=cccccc&amp;bc=303030&amp;cn=keycontrol\" style=\"width:180px;height:190px;padding:0;border:0;\" allowTransparency=\"true\"></iframe>"
-    end
-    @content_for[:playinbrowser] = capture(true) do
-      h3 { "Play in your browser" }
-      p { "You can play ArrowKeyControl right here in your browser. Just click the Play button below to begin!" }
-      text "<object type=\"application/x-shockwave-flash\" data=\"/ArrowKeyControl.swf\" width=\"187\" height=\"140\"><param name=\"movie\" value=\"/ArrowKeyControl.swf\" /></object>"
-    end
-=end
-
-    noscript.noscript! do
-      text(types.map { |type| @content_for[type] }.join("\n\n"))
-    end
 
     @content_for[:head] = capture(true) do
       link :href => '/high_scores_absolute.rss', :rel => 'alternate', :title => 'RSS feed of individual high scores', :type => 'application/rss+xml'
       link :href => '/high_scores_average.rss', :rel => 'alternate', :title => 'RSS feed of averaged high scores', :type => 'application/rss+xml'
-      script :type => 'text/javascript' do
-        text "var types = {#{types.map { |type| "\"#{type}\": \"#{@content_for[type].gsub('"', '\"').gsub("\n", "")}\"" }.join(", ")}};" 
-      end
     end
 
     div.clear { " " }
@@ -261,12 +229,12 @@ module Akc::Views
   def high_scores
     div.col_right do
       h2 { "Top 1000 Individual High Scores" }
-      _scores(@scores, true)
+      _scores(@scores, true, true)
       p { a('RSS feed of individual high scores', :href => '/high_scores_absolute.rss') }
     end
     div.col_left do
       h2 { "Top 1000 Averaged High Scores" }
-      _scores_by_users(@users)
+      _scores_by_users(@users, true)
       p { a('RSS feed of averaged high scores', :href => '/high_scores_average.rss') }
     end
 
@@ -486,50 +454,86 @@ module Akc::Views
     end
   end
 
-  def _scores(scores, show_user)
+  def _shoutbox(shouts)
+    table.shoutbox! do
+      tr do
+        th { a(:name => 'shoutbox') + "Shout" }
+        th { "User" }
+        th.last_r { "When" }
+      end
+      shouts.each do |s|
+        attrs = {}
+        attrs["class"] = 'last_b' if s == shouts[99] or s == shouts.last
+        tr(attrs) do
+          td { s.text }
+          td { s.username + (s == shouts[99] or s == shouts.last ? a(:name => 'shoutbox_form') : '').to_s }
+          td(:class => 'last_r shout', :rel => s.posted.to_i * 1000) { nice_date_time s.posted }
+        end
+      end
+    end
+
+    form :action => '/add_shout', :method => :post do
+      div do
+        label_for :username
+        input :name => :username, :type => :text
+      end
+      div do
+        label_for :text
+        textarea :name => :text, :rows => 3
+      end
+      div do
+        label(:for => 'shout_captcha') { "Enter the word on the right:" }
+        img :src => "/images/captcha.png"
+        input :name => :captcha, :type => :text
+      end
+      div do
+        input :type => :submit, :class => :submit, :value => 'Say it!'
+      end
+    end
+  end
+
+  def login
+    form :action => R(Login), :method => :post do
+      div do
+        label_for :name
+        input :name => :name, :type => :text
+      end
+      div do
+        label_for :password
+        input :name => :password, :type => :password
+      end
+      div do
+        input.submit :type => :submit, :name => :login, :value => 'Login'
+      end
+    end
+  end
+
+  def _scores(scores, show_user, show_rank = false)
     table.scores do
       tr do
+        th { "Rank" } if show_rank
         th { "Score" }
         th { "Username" } if show_user
         th.last_r { "When" }
       end
 
-      scores.each do |s|
-        text "<tr#{s == scores.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(s.score)}</td>#{show_user ? "<td>#{small_avatar(s.user)}#{a(h(s.user.name), :href => "/users/#{s.user.id}")}</td>" : ''}<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td></tr>"
-=begin
-        attrs = {}
-        attrs[:class] = 'last_b' if s == scores.last
-        tr(attrs) do
-          td.score { number_with_delimiter s.score }
-          td { small_avatar(s.user) + a(h(s.user.name), :href => "/users/#{s.user.id}").to_s } if show_user
-          text "<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td>"
-        end
-=end
+      scores.each_with_index do |s, i|
+        text "<tr#{s == scores.last ? ' class=\'last_b\'' : ''}>#{show_rank ? "<td>#{i + 1}</td>" : ""}<td>#{number_with_delimiter(s.score)}</td>#{show_user ? "<td>#{small_avatar(s.user)}#{a(:href => "/users/#{s.user.id}") { wbrize(s.user.name) }}</td>" : ''}<td class='last_r score_when' rel='#{s.when.to_i * 1000}'>#{nice_date_time s.when}</td></tr>"
       end
     end
   end
 
-  def _scores_by_users(users)
+  def _scores_by_users(users, show_rank = false)
     table.scores do
       tr do
-        th { "Avg. score" }
+        th { "Rank" } if show_rank
+        th { "Average" }
         th { "Username" }
         th.last_r { "Last active" }
       end
 
-      users.each do |u|
-        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td></tr>"
-=begin
-        attrs = {}
-        attrs[:class] = 'last_b' if u == users.last
-        tr(attrs) do
-          td.score { number_with_delimiter(u.high_score) }
-          #puts "dss: #{'' + a(h(u.name), :href => "/users/#{u.id}")}"
-          #puts "dss: #{(small_avatar(u) + a(h(u.name), :href => "/users/#{u.id}")).class}"
-          td { small_avatar(u) + a(h(u.name), :href => "/users/#{u.id}").to_s }
-          text "<td class='last_r score_when' rel='#{u.scores_when.to_i * 1000}'>#{nice_date_time u.scores_when}</td>"
-        end
-=end
+      users.each_with_index do |u, i|
+        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}>#{show_rank ? "<td>#{i + 1}</td>" : ""}<td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(:href => "/users/#{u.id}") { wbrize(u.name) }}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td></tr>"
       end
     end
   end
