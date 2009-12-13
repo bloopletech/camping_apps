@@ -72,9 +72,9 @@ module Akc::Views
       h2 { "Top 3 Users by Number of Scores Submitted" }
       table.scores do
         tr do
-          td { "No. submitted" }
-          td { "Username" }
-          td.last_r { "Last active" }
+          th { "No. submitted" }
+          th { "Username" }
+          th.last_r { "Last active" }
         end
 
         @users_by_scores_submitted.each do |u|
@@ -490,7 +490,7 @@ module Akc::Views
     table.scores do
       tr do
         th { "Score" }
-        th { "User" } if show_user
+        th { "Username" } if show_user
         th.last_r { "When" }
       end
 
@@ -518,7 +518,7 @@ module Akc::Views
       end
 
       users.each do |u|
-        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td>"
+        text "<tr#{u == users.last ? ' class=\'last_b\'' : ''}><td>#{number_with_delimiter(u.high_score)}</td><td>#{small_avatar(u)}#{a(h(u.name), :href => "/users/#{u.id}")}</td><td class='last_r score_when' rel='#{u.latest_score.when.to_i * 1000}'>#{nice_date_time u.latest_score.when}</td></tr>"
 =begin
         attrs = {}
         attrs[:class] = 'last_b' if u == users.last
