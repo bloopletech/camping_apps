@@ -62,3 +62,5 @@ namespace :deploy do
     run "rm -rf #{release_path}/quiz/public/quiz; ln -nfs /home/bloople/www/bloople.net/public/quiz #{release_path}/quiz/public/quiz"
   end
 end
+
+after :deploy, 'deploy:cleanup'
