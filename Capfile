@@ -43,10 +43,8 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}/shared/system/blog/assets #{release_path}/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"
-    run "ln -nfs #{deploy_to}/shared/system/quiz/images/users #{release_path}/quiz/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
     run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
-    run "rm -rf #{release_path}/quiz/public/quiz; ln -nfs /home/bloople/www/bloople.net/public/quiz #{release_path}/quiz/public/quiz"
   end
 
   task :after_setup, :roles => :app do
@@ -56,10 +54,8 @@ namespace :deploy do
     run "mkdir #{deploy_to}/shared/system/blog #{deploy_to}/shared/system/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"
-    run "ln -nfs #{deploy_to}/shared/system/quiz/images/users #{release_path}/quiz/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
     run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
-    run "rm -rf #{release_path}/quiz/public/quiz; ln -nfs /home/bloople/www/bloople.net/public/quiz #{release_path}/quiz/public/quiz"
   end
 end
 

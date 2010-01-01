@@ -32,7 +32,7 @@ dirs += Dir.glob("#{PRIVATE_CAMPING_DIR}/*.rb") if File.directory?(PRIVATE_CAMPI
 
 dirs.each do |file|
   title = File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
-  load file
+  Dir.chdir(File.dirname(file)) { load file }
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil
   unless klass.nil?
     klass.send(:include, CampingCallPatches)
