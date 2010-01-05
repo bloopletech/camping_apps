@@ -86,7 +86,7 @@ module Akc::Views
           tr attrs do
             td { i + 1 }
             td.score { number_with_delimiter(u.scores.count) }
-            td { a(h(u.name), :href => "/users/#{u.id}") }
+            td { tag!(:a, :href => "/users/#{u.id}") { small_avatar(u) + wbrize(u.name) } }
             text "<td class='last_r' rel='#{last_active.to_i * 1000}'>#{nice_date_time last_active}</td>"
           end
         end
@@ -164,14 +164,14 @@ module Akc::Views
     div.user_show_col_right do
       h3 { "Top 10 scores" }
       _scores(@high_scores, false)
-      p { a('All of ' + h(@user.name) + '\'s scores', :href => "/users/#{@user.id}/all_scores") }
+      p { tag!(:a, :href => "/users/#{@user.id}/all_scores") { 'All of ' + wbrize(@user.name) + '\'s scores' } }
       p { a('RSS feed for top scores', :href => "/users/#{@user.id}/high_scores.rss") }
     end
 
     div.user_show_col_middle do
       h3 { "Latest 10 scores" }
       _scores(@latest_scores, false)
-      p { a('All of ' + h(@user.name) + '\'s scores', :href => "/users/#{@user.id}/all_scores") }
+      p { tag!(:a, :href => "/users/#{@user.id}/all_scores") { 'All of ' + wbrize(@user.name) + '\'s scores' } }
       p { a('RSS feed for latest scores', :href => "/users/#{@user.id}/latest_scores.rss") }
     end
 
@@ -295,7 +295,6 @@ module Akc::Views
             description "#{s.user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://akc.bloople.net/users/#{s.user.id}")
-            guid("http://akc.bloople.net/users/#{s.user.id}")
           end
         end
       end
@@ -317,7 +316,6 @@ module Akc::Views
             description "#{u.name} has an average of #{number_with_delimiter u.high_score} over their last 100 scores, or if they have less than 100 scores submitted, the average of all their scores. #{u.name}'s latest score was submitted at #{nice_date_time u.latest_score.when} UTC."
             pubDate u.latest_score.when.to_s(:rfc822)
             link("http://akc.bloople.net/users/#{u.id}")
-            guid("http://akc.bloople.net/users/#{u.id}")
           end
         end
       end
@@ -339,7 +337,6 @@ module Akc::Views
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://akc.bloople.net/users/#{@user.id}")
-            guid("http://akc.bloople.net/users/#{@user.id}")
           end
         end
       end
@@ -361,7 +358,6 @@ module Akc::Views
             description "#{@user.name} scored #{number_with_delimiter s.score} at #{nice_date_time s.when} UTC."
             pubDate s.when.to_s(:rfc822)
             link("http://akc.bloople.net/users/#{@user.id}")
-            guid("http://akc.bloople.net/users/#{@user.id}")
           end
         end
       end
