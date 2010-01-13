@@ -13,7 +13,6 @@ module Blog::Views
         link :rel => 'alternate', :type => 'application/rss+xml', :href => "/rss#{"/#@tag" if @tag != 'Index'}"
         script :src => "/tiny_mce/tiny_mce.js"
         script :src => "/js.js"
-#        link :rel => 'shortcut icon', :type => 'image/x-icon', :href => '/murfy32.png'
       end
       body do
         div.wrap! do
@@ -23,13 +22,35 @@ module Blog::Views
             end
             h2 do
               "The good kind of crazy"
-=begin
-              ["Like a truck through a plate glass window, Brenton Fletcher is comin' at you with more code than you can handle.",
-               "OMG LOL PONEIS!!",
-               ""
-=end
             end
           end
+
+          div.content! do
+            menu[:top][:visitor] = []
+            menu[:top][:admin] << a('New', :href => self / "/new#{"/#@tag" if @tag != 'Index'}") if logged_in?
+            menu[:top][:admin] << a('Assets', :href => "/assets") if logged_in?
+            menu[:top][:admin] << 'Logout' if logged_in?
+            div.bar! { menu :top } if logged_in?
+
+            @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
+            unless @state[:flash][:success].empty?
+              div.success! do
+                ul { @state[:flash][:success].each { |s| li { h s } } }
+              end
+            end
+            @state[:flash][:success] = []
+
+            unless @state[:flash][:errors].empty?
+              div.errors! do
+                p { "There were some errors:" }
+                ul { @state[:flash][:errors].each { |s| li { h s } } }
+              end
+            end
+            @state[:flash][:errors] = []
+            
+            self << yield
+          end
+
           div.sidebar! do
             h2.first 'Tags'
             p { "Use the links below to browse my past works." }
@@ -60,31 +81,6 @@ module Blog::Views
             p { a('More...', :href => 'http://www.last.fm/user/bloopletech') }
             h2 'Statistics'
             p { "#{Blog::Models::Post.count} posts and #{Blog::Models::Comment.count} comments." }
-          end
-          div.content! do
-            menu[:top][:visitor] = []
-            menu[:top][:admin] << a('New', :href => self / "/new#{"/#@tag" if @tag != 'Index'}") if logged_in?
-            menu[:top][:admin] << a('Assets', :href => "/assets") if logged_in?
-            menu[:top][:admin] << 'Logout' if logged_in?
-            div.bar! { menu :top } if logged_in?
-
-            @state[:flash] = { :success => [], :errors => [] } unless @state.key? :flash
-            unless @state[:flash][:success].empty?
-              div.success! do
-                ul { @state[:flash][:success].each { |s| li { h s } } }
-              end
-            end
-            @state[:flash][:success] = []
-
-            unless @state[:flash][:errors].empty?
-              div.errors! do
-                p { "There were some errors:" }
-                ul { @state[:flash][:errors].each { |s| li { h s } } }
-              end
-            end
-            @state[:flash][:errors] = []
-            
-            self << yield
           end
 
           div.clear { "" }

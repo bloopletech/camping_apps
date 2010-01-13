@@ -15,7 +15,7 @@ module Blog; VERSION = 0.99
     ActiveRecord::Base.default_timezone = :utc
   end
 
-  #TODO: Used? If so, change so HTML 4, otherwise drop this cod
+  #TODO: Used? If so, change so HTML 4, otherwise drop this code
   # beautiful XHTML 11
   class Mab
     def xhtml11(&block)
