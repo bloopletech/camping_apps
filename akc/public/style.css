@@ -72,6 +72,8 @@ form#scores input { width: 300px; }
 #screenshot_wrapper { width: 408px; float: right; }
 #screenshot_wrapper .screenshot { margin: 0 0 10px 0; }
 
+.oz_quiz_screenshot { width: auto; }
+
 #choice { display: none; }
 
 .rss2html-note { display: none; }

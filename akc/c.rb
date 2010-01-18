@@ -6,6 +6,13 @@ module Akc::Controllers
     end
   end
 
+  class OzQuizReleased < R '/oz_quiz_released/(\d+)'
+    def get(id)
+      @user = User.find(id)
+      render :oz_quiz_released
+    end
+  end
+
   class Index < R '/'
     def get
       #z = Time.now
@@ -59,7 +66,13 @@ module Akc::Controllers
 
           Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
 
-          mab { text "" }
+          if !user.seen_oz_quiz_released?
+            user.seen_oz_quiz_released = true
+            user.save!
+            mab { text "0|http://akc.bloople.net/oz_quiz_released/#{user.id}" }
+          else
+            mab { text "" }
+          end
         else
           mab { text "1|http://akc.bloople.net/pleaseupgrade" }
         end

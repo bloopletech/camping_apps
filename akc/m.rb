@@ -67,4 +67,11 @@ module Akc::Models
       end
     end
   end
+
+
+  class AddSeenOzQuizReleased < V 7
+    def self.up
+      add_column :akc_users, :seen_oz_quiz_released, :boolean, :default => false
+    end
+  end
 end

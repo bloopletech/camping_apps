@@ -552,7 +552,7 @@ module Kc::Views
     p { "Oz Quiz also has <a href='http://ozquiz.brentonfletcher.com/'>internet scoring</a>, as well as personalised user pages to show your quiz scores." }
     p { "Oz Quiz is available for the iPhone and iPod Touch, and is <a href='http://itunes.com/apps/ozquiz'>on sale</a> for $2.49 Australian (or $1.99 US) 'til Australia Day, so check it out soon." }
     h3 { "What is this message?" }
-    p { "Very occasionally, I put out messages like this one to tell ArrowKeyControl users about major changes to ArrowKeyControl, the ArrowKeyControl website, or if I am releassing a new project I think you might like. You can stop these messages for ever appearing by clicking the 'i' or 's' button in the lower-right-hand corner of the KeyControl widget and unchecking 'Internet Scoring'." }
+    p { "Very occasionally, I put out messages like this one to tell KeyControl users about major changes to KeyControl, the KeyControl website, or if I am releassing a new project I think you might like. You can stop these messages for ever appearing by clicking the 'i' or 's' button in the lower-right-hand corner of the KeyControl widget and unchecking 'Internet Scoring'." }
     div.clear { " " }
   end
 end
