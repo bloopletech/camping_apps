@@ -369,7 +369,7 @@ module Concise::Views
 
           self << yield
         end
-        p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"} in #{File.stat(__FILE__).size} bytes of code. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://rubyonrails.org"} on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
+        p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://blog.bloople.net"} in #{File.stat(__FILE__).size} bytes of code. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://rubyonrails.org"} on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
       end
     end
   end
@@ -501,7 +501,7 @@ module Concise::Views
   def about
     h2 { "About Concise" }
     p { "Concise is a list of questions and an attempt to answer those questions elegantly in as few words as possile." }
-    p { "The questions are (currently) posted by the moderator of this site, #{a 'Brenton Fletcher', :href => "http://i.bloople.net"}. You can ask for a question to be posted on this site by #{a 'emailing Brenton', :href => "mailto:i@bloople.net"}. Brenton will attempt to post questions covering a range of topics, so that there's something for everyone." }
+    p { "The questions are (currently) posted by the moderator of this site, #{a 'Brenton Fletcher', :href => "http://blog.bloople.net"}. You can ask for a question to be posted on this site by #{a 'emailing Brenton', :href => "mailto:i@bloople.net"}. Brenton will attempt to post questions covering a range of topics, so that there's something for everyone." }
     p { "The answers are supplied by you, the user. For each question, the answers are displayed in order of score, then by how short they are. You can vote up an answer if you think it's good (and you can vote the answer down if you think it's bad!)." }
     p { "Answers are limited in length to 140 characters - just like Twitter. Hopefully this site can, like Twitter, help people express themselves eloquently in a short space."}
   end

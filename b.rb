@@ -90,7 +90,7 @@ module B::Views
   def index
     h1 { "Books" }
     ul { @books.each { |b| li { a(b.title, :href => "/#{b.url}") } } }
-    p { "Created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"}." }
+    p { "Created by #{a "Brenton Fletcher", :href => "http://blog.bloople.net"}." }
   end
 
   def toc

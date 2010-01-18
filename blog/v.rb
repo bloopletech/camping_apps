@@ -64,6 +64,10 @@ module Blog::Views
 #            ["arrow-key-control", "json2html", "rss2htmlvideo"].each do |nickname|
 #              post = Models::Post.find_by_nickname(nickname)
 #              p { }
+            h2 'Feeds'
+            p { "<a href='/rss'><img src='/images/feed_icon.png'> RSS feed of all posts<br>" +
+             "<a href='/rss/Development'><img src='/images/feed_icon.png'> RSS feed of software development posts</a><br>" +
+             "<a href='/rss/Ruby'><img src='/images/feed_icon.png'> RSS feed of Ruby posts" }
             h2 'About me'
             img(:src => '/images/me.jpg')
             p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Interactive</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
@@ -85,7 +89,7 @@ module Blog::Views
 
           div.clear { "" }
 
-          div.footer! { "&copy; 2008-#{Date.today.year} #{a "Brenton Fletcher", :href => "http://i.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com/mac"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "blokk #{VERSION}", :href => 'http://murfy.de/read/blokk'} (modified) on Camping." }
+          div.footer! { "&copy; 2008-#{Date.today.year} #{a "Brenton Fletcher", :href => "http://blog.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com/mac"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "blokk #{VERSION}", :href => 'http://murfy.de/read/blokk'} (modified) on Camping." }
         end
       end
     end

@@ -47,7 +47,7 @@ module Watchlist::Views
 
             self << content
           end
-          p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
+          p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://blog.bloople.net"}. <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>Email me</a>! Made on a #{a "Mac", :href => "http://apple.com"}. Powered by #{a "Ruby", :href => "http://ruby-lang.org"} on #{a "Camping", :href => "http://code.whytheluckystiff.net/camping/"}." }
         end
       end
     else

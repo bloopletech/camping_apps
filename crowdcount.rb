@@ -90,7 +90,7 @@ module Crowdcount::Views
       end
     end
 
-    p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://i.bloople.net"} in #{File.stat(__FILE__).size} bytes of code." }
+    p.footer! { "Created by #{a "Brenton Fletcher", :href => "http://blog.bloople.net"} in #{File.stat(__FILE__).size} bytes of code." }
   end
 
 end
