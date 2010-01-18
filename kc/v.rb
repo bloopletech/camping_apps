@@ -535,4 +535,24 @@ module Kc::Views
       end
     end
   end
+
+
+
+
+
+
+  def oz_quiz_released
+    h2 { "Oz Quiz released" }
+    div.screenshot do
+      img :src => '/images/oz_quiz_released/screenshot.jpg'
+      text "Oz Quiz in action"
+    end
+    p { "Hello, #{@user.name}. I'd like a couple minutes of your time to tell you about a new iPhone application I (the developer of KeyControl) have released." }
+    p { "<a href='http://itunes.com/apps/ozquiz'>Oz Quiz</a> is a quiz application with more than 600 carefully researched questions on all aspects of Australian history, politics, popular culture, our indigenous people, environment, technology, arts, music, sport, geography, law, demography and more." }
+    p { "Oz Quiz also has <a href='http://ozquiz.brentonfletcher.com/'>internet scoring</a>, as well as personalised user pages to show your quiz scores." }
+    p { "Oz Quiz is available for the iPhone and iPod Touch, and is <a href='http://itunes.com/apps/ozquiz'>on sale</a> for $2.49 Australian (or $1.99 US) 'til Australia Day, so check it out soon." }
+    h3 { "What is this message?" }
+    p { "Very occasionally, I put out messages like this one to tell ArrowKeyControl users about major changes to ArrowKeyControl, the ArrowKeyControl website, or if I am releassing a new project I think you might like. You can stop these messages for ever appearing by clicking the 'i' or 's' button in the lower-right-hand corner of the KeyControl widget and unchecking 'Internet Scoring'." }
+    div.clear { " " }
+  end
 end

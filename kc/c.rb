@@ -6,6 +6,13 @@ module Kc::Controllers
     end
   end
 
+  class OzQuizReleased < R '/oz_quiz_released/(\d+)'
+    def get(id)
+      @user = User.find(id)
+      render :oz_quiz_released
+    end
+  end
+
   class Index < R '/'
     def get
       #z = Time.now
@@ -58,7 +65,11 @@ module Kc::Controllers
 
         Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
 
-        unless user.seen_site_changes_12_2008?
+        if !user.seen_oz_quiz_released?
+          user.seen_oz_quiz_released = true
+          user.save!
+          mab { text "0|http://kc.bloople.net/oz_quiz_released/#{user.id}" }
+        elsif !user.seen_site_changes_12_2008?
           user.seen_site_changes_12_2008 = true
           user.save!
           mab { text "0|http://kc.bloople.net/check_out_kc/#{user.id}" }
