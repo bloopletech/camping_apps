@@ -67,7 +67,7 @@ module Blog::Views
             h2 'Feeds'
             p { "<a href='/rss'><img src='/images/feed_icon.png'> RSS feed of all posts<br>" +
              "<a href='/rss/Developers'><img src='/images/feed_icon.png'> RSS feed of software development posts</a><br>" +
-             "<a href='/rss/Ruby'><img src='/images/feed_icon.png'> RSS feed of Ruby posts" }
+             "<a href='/rss/Ruby'><img src='/images/feed_icon.png'> RSS feed of Ruby posts</a>" }
             h2 'About me'
             img(:src => '/images/me.jpg')
             p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Interactive</a> in Adelaide, SA, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
