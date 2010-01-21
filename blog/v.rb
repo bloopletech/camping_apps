@@ -104,6 +104,9 @@ module Blog::Views
       div.post do
         p { a('Older posts', :href => "/archive/#{@tag}/1") }
       end if @has_older_pages
+
+      _oz_quiz_notice
+
       @posts.each { |post| _post post }
       div.post do
         p { a('Older posts', :href => "/archive/#{@tag}/1") }
@@ -118,6 +121,8 @@ module Blog::Views
     links << a('Older posts', :href => "/archive/#{@tag}/#{@page + 1}") if @has_older_posts
     links << a('Newer posts', :href => (@has_newer_posts ? "/archive/#{@tag}/#{@page - 1}" : "/"))
     p.pagination { links.join(' | ') }
+
+    _oz_quiz_notice
 
     @posts.each { |post| _post post }
 
@@ -164,6 +169,8 @@ module Blog::Views
   end
   
   def view
+    _oz_quiz_notice
+
     @title = @post.title
     _post @post, true
     
@@ -299,5 +306,10 @@ module Blog::Views
   def _index_archive_header
     h2.breaker "All posts#{@tag && @tag != "Index" ? " tagged with #{@tag}" : ""}#{@total_pages > 1 ? ", page #{(@page || 0) + 1} of #{@total_pages}" : ""}"
   end
-  
+
+  def _oz_quiz_notice
+    div.oz_quiz_notice do
+      p { "Like my <a href='http://blog.bloople.net/'>blog</a> <a href='http://kc.bloople.net/'>and</a> <a href='http://akc.bloople.net/'>my</a> <a href='http://json.bloople.net/'>other</a> <a href='http://rss.bloople.net/'>projects</a>? Support these projects and have some fun by <a href='http://itunes.com/apps/ozquiz'>checking out Oz Quiz</a>, a 600+ question Australian history &amp; popular culture quiz for the iPhone and iPod Touch I've co-developed." }
+    end
+  end  
 end
