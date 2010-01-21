@@ -60,7 +60,7 @@ module Kc::Controllers
             return
           end
         else
-          user = User.create(:name => name, :crypt => crypt, :seen_site_changes_12_2008 => true)
+          user = User.create(:name => name, :crypt => crypt, :seen_site_changes_12_2008 => true, :seen_oz_quiz_released => true)
         end
 
         Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)

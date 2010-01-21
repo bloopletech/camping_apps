@@ -61,7 +61,7 @@ module Akc::Controllers
               return
             end
           else
-            user = User.create(:name => name, :crypt => crypt)
+            user = User.create(:name => name, :crypt => crypt, :seen_oz_quiz_released => true)
           end
 
           Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
