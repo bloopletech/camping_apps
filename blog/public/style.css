@@ -71,5 +71,5 @@ blockquote { margin: 0 50px; }
 #sidebar img { vertical-align: middle; }
 
 
-.oz_quiz_notice { background-color: #ffffaa; border: #ffff00; padding: 15px; }
+.oz_quiz_notice { background-color: #ffffaa; border: 1px solid #ffff00; padding: 15px; }
 .oz_quiz_notice p { margin: 0; }

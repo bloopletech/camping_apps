@@ -1,5 +1,7 @@
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
+default_run_options[:pty] = true
+
 set :application, "camping"
 set :user, "bloople"
 set :port, 9979
