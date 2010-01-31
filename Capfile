@@ -28,7 +28,7 @@ namespace :deploy do
 
   desc "Restart the mongrel cluster"
   task :restart, :roles => :app do
-    run "cd #{deploy_to}/current/;killall -w rackup;(rackup -p 8004 -E none init/camping.ru >/dev/null 2>kc-err.log &); exit;"
+    run "cd #{deploy_to}/current/;killall -w rackup;(rackup -p 8004 -E none init/camping.ru >/dev/null 2>kc-err.log &); exit;", :pty => false
   end
 
   task :start, :roles => :app do

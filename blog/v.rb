@@ -196,8 +196,6 @@ module Blog::Views
         input.bot! :type => :hidden, :name => :bot, :value => 'spambot'
         input :type => :submit, :class => :submit, :value => 'OK', :onclick => "getElementById('bot').value='K'"
       end
-      # Later: Textile
-      a 'use Textile', :href => 'http://whytheluckystiff.net/ruby/redcloth', :target => '0' if false
     end
   end
 
