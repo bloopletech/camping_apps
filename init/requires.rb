@@ -60,7 +60,7 @@ module CampingCallPatches
         alias_method :call_without_patches, :call
         def call(e)
           begin
-            Camping::Models::Base.connection_pool.verify_active_connections!
+            Camping::Models::Base.connection_pool.clear_stale_cached_connections!
             z = Time.now
 
             o = call_without_patches(e)
