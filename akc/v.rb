@@ -534,6 +534,11 @@ module Akc::Views
     end
   end
 
+  def invalid_crypt
+    h2 { "Your username or password is incorrect" }
+    p { "Please check your username and password and play again." }
+  end
+
 
 
 

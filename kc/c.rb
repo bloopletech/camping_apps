@@ -56,8 +56,7 @@ module Kc::Controllers
         user = User.find_by_name(name)
         if user
           unless user.crypt == crypt
-            mab { text "0|http://kc.bloople.net/invalidcrypt" }
-            return
+            return mab { text "0|http://kc.bloople.net/invalidcrypt" }
           end
         else
           user = User.create(:name => name, :crypt => crypt, :seen_site_changes_12_2008 => true, :seen_oz_quiz_released => true)
@@ -68,16 +67,16 @@ module Kc::Controllers
         if !user.seen_oz_quiz_released?
           user.seen_oz_quiz_released = true
           user.save!
-          mab { text "0|http://kc.bloople.net/oz_quiz_released/#{user.id}" }
+          return mab { text "0|http://kc.bloople.net/oz_quiz_released/#{user.id}" }
         elsif !user.seen_site_changes_12_2008?
           user.seen_site_changes_12_2008 = true
           user.save!
-          mab { text "0|http://kc.bloople.net/check_out_kc/#{user.id}" }
+          return mab { text "0|http://kc.bloople.net/check_out_kc/#{user.id}" }
         else
-          mab { text "" }
+          return mab { text "" }
         end
       else
-        mab { text "1|http://kc.bloople.net/pleaseupgrade" }
+        return mab { text "1|http://kc.bloople.net/pleaseupgrade" }
       end
     end
   end
@@ -275,6 +274,12 @@ module Kc::Controllers
         @shout.errors.full_messages.each { |msg| add_error(msg) }
       end
       redirect '/'
+    end
+  end
+
+  class InvalidCrypt < R '/invalid_crypt'
+    def get
+      render :invalid_crypt
     end
   end
 

@@ -3,10 +3,10 @@ require 'init/configuration'
 require 'rubygems'
 
 #ActiveRecord + MySQL async + patches
-require 'mysqlplus'
-class Mysql
-  alias_method :query, :c_async_query
-end
+#require 'mysqlplus'
+#class Mysql
+#  alias_method :query, :c_async_query
+#end
 
 require 'active_record'
 require 'lib/active_record_mysql_gone_patch'
@@ -60,14 +60,14 @@ module CampingCallPatches
         alias_method :call_without_patches, :call
         def call(e)
           begin
-            Camping::Models::Base.connection_pool.clear_stale_cached_connections!
+#            Camping::Models::Base.connection_pool.clear_stale_cached_connections!
             z = Time.now
 
             o = call_without_patches(e)
 
             puts "time to serve #{e.to_hash['PATH_INFO']}: #{Time.now - z}"
           ensure
-            Camping::Models::Base.connection_pool.release_connection
+            Camping::Models::Base.clear_active_connections!
           end
           o
         end

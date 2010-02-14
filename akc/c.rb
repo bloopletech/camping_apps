@@ -53,28 +53,24 @@ module Akc::Controllers
     def get(source, version, name, crypt, score)
       User.transaction do
         source = (source == '' ? 'dashboard' : source)
-        if true#version == 11 or (source == 'dashboard' and version == 10)
-          user = User.find_by_name(name)
-          if user
-            unless user.crypt == crypt
-              mab { text "0|http://akc.bloople.net/invalidcrypt" }
-              return
-            end
-          else
-            user = User.create(:name => name, :crypt => crypt, :seen_oz_quiz_released => true)
-          end
 
-          Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
-
-          if !user.seen_oz_quiz_released?
-            user.seen_oz_quiz_released = true
-            user.save!
-            mab { text "0|http://akc.bloople.net/oz_quiz_released/#{user.id}" }
-          else
-            mab { text "" }
+        user = User.find_by_name(name)
+        if user
+          unless user.crypt == crypt
+            return mab { text "0|http://akc.bloople.net/invalid_crypt" }
           end
         else
-          mab { text "1|http://akc.bloople.net/pleaseupgrade" }
+          user = User.create(:name => name, :crypt => crypt, :seen_oz_quiz_released => true)
+        end
+
+        Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
+
+        if !user.seen_oz_quiz_released?
+          user.seen_oz_quiz_released = true
+          user.save!
+          return mab { text "0|http://akc.bloople.net/oz_quiz_released/#{user.id}" }
+        else
+          return mab { text "" }
         end
       end
     end
@@ -273,6 +269,12 @@ module Akc::Controllers
         @shout.errors.full_messages.each { |msg| add_error(msg) }
       end
       redirect '/'
+    end
+  end
+
+  class InvalidCrypt < R '/invalid_crypt'
+    def get
+      render :invalid_crypt
     end
   end
 
