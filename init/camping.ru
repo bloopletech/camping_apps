@@ -37,6 +37,9 @@ dirs.each do |file|
   unless klass.nil?
     klass.send(:include, CampingCallPatches)
     klass::Base.send(:include, CampingBasePatches)
+
+    klass.send(:include, CampingCaching)
+
     klass.create if klass.respond_to? :create
     map("/#{title.downcase}") { run klass }
   end

@@ -21,6 +21,8 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
 
 conf = OpenStruct.new(:server => 'mongrel', :host => '0.0.0.0', :port => 8005, :database => { :adapter => 'mysql', :database => 'camping', :username => 'root', :password => '', :host => 'localhost', :pool => 50 })
 paths = ARGV.empty? ? ["."] : ARGV
+                                             
+#Camping::Base.send(:include, CampingCaching) if ENV['CACHING_IN_DEVELOPMENT']
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 server = Camping::Server::Base.new(conf, paths)
 server.start

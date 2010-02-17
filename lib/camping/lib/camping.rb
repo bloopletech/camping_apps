@@ -564,21 +564,11 @@ module Camping
     # argument is the environment variables hash as per the Rack specification.
     # And array with [statuc, headers, body] is expected at the output.
     def call(e)
-#      begin
-#        Camping::Models::Base.connection_pool.clear_stale_cached_connections!
-#        z = Time.now
-
         X.M
         e = H[e.to_hash]
         k,m,*a=X.D e.PATH_INFO,(e.REQUEST_METHOD||'get').downcase
         e.REQUEST_METHOD = m
-        o = k.new(e).service(*a).to_a
-
-#        puts "time to serve #{e.PATH_INFO}: #{Time.now - z}"
-#      ensure
-#        Camping::Models::Base.connection_pool.release_connection
-#      end
-      o
+        k.new(e).service(*a).to_a
     end
 
     # The Camping scriptable dispatcher.  Any unhandled method call to the app module will

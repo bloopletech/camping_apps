@@ -1,3 +1,5 @@
+ENVIRONMENT = (!ENV.key?("CAMPING_ENV") || ENV["CAMPING_ENV"] == "development") ? "development" : "production"
+
 require 'init/configuration'
 
 require 'rubygems'
@@ -22,6 +24,8 @@ require 'camping'
 require 'camping/server'
 require 'lib/markaby/lib/markaby'
 #end
+
+require 'lib/caching'
 
 class Fixnum
   alias_method :xchr_old, :xchr  

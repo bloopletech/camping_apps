@@ -14,6 +14,8 @@ module Akc::Controllers
   end
 
   class Index < R '/'
+    @cacheable = true
+
     def get
       #z = Time.now
       @users = User.find(:all, :include => :latest_score, :order => 'high_score DESC, akc_scores.when DESC', :limit => 3)
@@ -77,6 +79,8 @@ module Akc::Controllers
   end
   
   class HighScores < R '/high_scores'
+    @cacheable = true
+
     def get
       @scores = Score.find(:all, :include => :user, :order => 'score DESC', :limit => 1000)
       @users = User.find(:all, :include => :latest_score, :order => 'high_score DESC, akc_scores.when DESC', :limit => 1000)
@@ -106,6 +110,8 @@ module Akc::Controllers
   end
 
   class ScoresByDateGraph < R '/scores_by_date_graph'
+    @cacheable = true
+
     def get
       scores = ActiveRecord::Base.connection.select_all("SELECT COUNT(id) AS count, DATE(akc_scores.when) AS date FROM akc_scores GROUP BY DATE(akc_scores.when) ORDER BY DATE(akc_scores.when) ASC")
 
@@ -137,6 +143,8 @@ module Akc::Controllers
   end
 
   class HighScoresGraph < R '/high_scores_graph'
+    @cacheable = true
+
     def get
       scores = Score.find(:all, :order => "score DESC", :limit => 50)
 
