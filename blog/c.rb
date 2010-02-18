@@ -1,6 +1,7 @@
 module Blog::Controllers
-  
   class Index < R '/', '/index', '/tag/()([-\w]*)', '/all()()', '/(rss)', '/(rss)/([-\w]+)'
+#    @cacheable = true
+
     TAG_PATTERN = ['% ? %', '? %', '% ?', '?']
     #TODO: Following code is ridiculous
     def get format = 'html', tag = 'Index'

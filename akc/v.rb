@@ -99,6 +99,7 @@ module Akc::Views
 
       h2 { "Shoutbox" }
       div.shouts! { _shoutbox(@shouts) }
+      p { "This page is cached, and so may not include data from the last 10 minutes." }
       p.utc! { "Note: all dates are in <acronym title=\"Greenwich Mean Time\">GMT</acronym> / <acronym title=\"Coordinated Universal Time\">UTC</acronym>." }
       p.local! { "Note: all dates are in your local time." }
     end
@@ -227,6 +228,7 @@ module Akc::Views
   end
 
   def high_scores
+    p { "This page is cached, and so may not include data from the last 10 minutes." }
     div.col_right do
       h2 { "Top 1000 Individual High Scores" }
       _scores(@scores, true, true)
@@ -246,6 +248,7 @@ module Akc::Views
 
   def statistics
     h2 { "Statistics" }
+    p { "These graphs are cached, and so may not include data from the last 10 minutes." }
     p { img :src => "/scores_by_date_graph" }
     p { img :src => "/high_scores_graph" }
   end
