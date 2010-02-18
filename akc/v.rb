@@ -399,44 +399,6 @@ module Akc::Views
   end
 
 
-  def _shoutbox(shouts)
-    table.shoutbox! do
-      tr do
-        th { a(:name => 'shoutbox') + "Shout" }
-        th { "User" }
-        th.last_r { "When" }
-      end
-      shouts.each do |s|
-        attrs = {}
-        attrs["class"] = 'last_b' if s == shouts[99] or s == shouts.last
-        tr(attrs) do
-          td { s.text }
-          td { s.username + (s == shouts[99] or s == shouts.last ? a(:name => 'shoutbox_form') : '').to_s }
-          td(:class => 'last_r shout', :rel => s.posted.to_i * 1000) { nice_date_time s.posted }
-        end
-      end
-    end
-
-    form :action => '/add_shout', :method => :post do
-      div do
-        label_for :username
-        input :name => :username, :type => :text
-      end
-      div do
-        label_for :text
-        textarea :name => :text, :rows => 3
-      end
-      div do
-        label(:for => 'shout_captcha') { "Enter the word on the right:" }
-        img :src => "/images/captcha.png"
-        input :name => :captcha, :type => :text
-      end
-      div do
-        input :type => :submit, :class => :submit, :value => 'Say it!'
-      end
-    end
-  end
-
   def login
     form :action => R(Login), :method => :post do
       div do
@@ -471,6 +433,7 @@ module Akc::Views
       end
     end
 
+    p { "Note that shoutbox messages will take up to 10 minutes to appear." }
     form :action => '/add_shout', :method => :post do
       div do
         label_for :username

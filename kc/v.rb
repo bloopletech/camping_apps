@@ -473,6 +473,7 @@ module Kc::Views
       end
     end
 
+    p { "Note that shoutbox messages will take up to 10 minutes to appear." }
     form :action => '/add_shout', :method => :post do
       div do
         label_for :username
