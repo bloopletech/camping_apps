@@ -28,7 +28,7 @@ namespace :deploy do
 
   desc "Restart the mongrel cluster"
   task :restart, :roles => :app do
-    run "cd #{deploy_to}/current/;rake restart_rackup_production; exit;", :pty => false
+    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
   end
 
   task :start, :roles => :app do
