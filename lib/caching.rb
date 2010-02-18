@@ -8,7 +8,7 @@ module CampingCaching
 
           path = @env.PATH_INFO
           path = "/index" if path == '/' || path == ''
-          path = "#{self.class.top_level_module.to_s.downcase}/public/cache/#{path.gsub(/^\//, '').gsub('/', '#')}"
+          path = "#{self.class.top_level_module::PATH}/public/cache/#{path.gsub(/^\//, '').gsub('/', '#')}"
 
           if File.exists?(path) && (Time.now - File.mtime(path)) < 600
             puts "Servicing request from cache"
