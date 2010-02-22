@@ -239,7 +239,10 @@ module WikiWatcher
       Models::Edit.delete(edits[500..-1].map { |edit| edit.id }) if edits.length > 500
 
       from = edits.empty? ? nil : Models::Edit.find(:first, :order => 'id DESC').published
-      doc = Hpricot(Net::HTTP.get(URI.parse(INITIAL_URL + "&rclimit=" + (edits.empty? ? "10" : "500&rcend=" << from.utc.xmlschema))))
+
+      uri = URI.parse(INITIAL_URL + "&rclimit=" + (edits.empty? ? "10" : "500&rcend=" << from.utc.xmlschema))
+      http = Net::HTTP.new(uri.host)
+      doc = Hpricot(http.get(uri.request_uri, { "User-Agent" => "WikiWatcher http://wikiwatcher.bloople.net/ i@bloople.net" }).body)
 
       edits = edits.empty? ? [] : Models::Edit.find_all_by_published(from.utc, :select => 'rev_id, page_id, published')
       (doc/:rc).reject { |edit| edits.detect { |e| e.rev_id == edit.attributes['revid'].to_i and e.page_id == edit.attributes['pageid'].to_i } }.to_a.reverse.each do |edit|
