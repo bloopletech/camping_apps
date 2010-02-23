@@ -2,9 +2,16 @@ module CampingCaching
   module Base
     def self.included(base)
       base.class_eval do
+        def current_request_is_cacheable?
+          self.class.cacheable && @env.REQUEST_METHOD.downcase == "get" && @env.QUERY_STRING == "" && @state.user_id.nil? &&
+           (@state.flash.nil? || @state.flash == { :success => [], :errors => [] }) &&
+           (@state.keys.map { |x| x.to_sym } - [:flash, :user_id]).empty?
+        end
+
         alias_method :service_without_caching, :service
         def service(*a)
-          return service_without_caching(*a) unless self.class.cacheable && @env.REQUEST_METHOD.downcase == "get" && @env.QUERY_STRING == ""
+          puts "Camping blob: #{@state.inspect}"
+          return service_without_caching(*a) unless current_request_is_cacheable?
 
           path = @env.PATH_INFO
           path = "/index" if path == '/' || path == ''
@@ -12,18 +19,14 @@ module CampingCaching
 
           if File.exists?(path) && (Time.now - File.mtime(path)) < 600
             puts "Servicing request from cache"
-
-            [200, Marshal.load(File.read("#{path}.headers")), File.new(path, "r")]
+            Marshal.load(File.read(path))
           else
             puts "Cache miss, generating response"
 
             o = service_without_caching(*a).to_a #changes this method to return array instead of controller instance
+            o[2] = o[2].body.to_s #Ties us to ruby 1.8 and current camping implementation
 
-            str = ""
-            o[2].each { |line| str << line }
-
-            File.open("#{path}.headers", "w") { |f| f << Marshal.dump(o[1]) }
-            File.open(path, "w") { |f| f << str }
+            File.open(path, "w") { |f| f << Marshal.dump(o) }
 
             o
           end
