@@ -53,7 +53,7 @@ module Akc::Controllers
 
   class AddScore < R '/add/(.*?)/(\d+)/(.*?)/(.*?)/(\d+)'
     def get(source, version, name, crypt, score)
-      User.transaction do
+#      User.transaction do
         source = (source == '' ? 'dashboard' : source)
 
         user = User.find_by_name(name)
@@ -75,7 +75,7 @@ module Akc::Controllers
           return mab { text "" }
         end
       end
-    end
+#    end
   end
   
   class HighScores < R '/high_scores'

@@ -10,7 +10,6 @@ module CampingCaching
 
         alias_method :service_without_caching, :service
         def service(*a)
-          puts "Camping blob: #{@state.inspect}"
           return service_without_caching(*a) unless current_request_is_cacheable?
 
           path = @env.PATH_INFO
