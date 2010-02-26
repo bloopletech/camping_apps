@@ -29,6 +29,10 @@ namespace :deploy do
   task :stop, :roles => :app do
     run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
   end
+  
+  task :before_symlink, :roles => :app do
+    stop
+  end
 
   task :start, :roles => :app do
     run "cd #{deploy_to}/current/;rake clear_caches;rake start_rackup_production; exit;", :pty => false
@@ -36,7 +40,6 @@ namespace :deploy do
 
   desc "Restart the server"
   task :restart, :roles => :app do
-    stop
     start
   end
 
