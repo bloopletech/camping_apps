@@ -21,22 +21,17 @@ role :db,  "bloople.net", :primary => true
 set :runner, user
 
 namespace :deploy do
-  task :stop, :roles => :app do
-    run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
-  end
-  
-  task :before_symlink, :roles => :app do
-    stop
-  end
+#  task :stop, :roles => :app do
+#    run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
+#  end
 
-  task :start, :roles => :app do
-    run "cd #{deploy_to}/current/;rake clear_caches;rake start_rackup_production; exit;", :pty => false
-  end
+#  task :start, :roles => :app do
+#    restart
+#  end
 
   desc "Restart the server"
   task :restart, :roles => :app do
-    stop #Not needed on a deploy
-    start
+    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
   end
 
   desc "The spinner task is used by :cold_deploy to start the application up"
