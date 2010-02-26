@@ -38,6 +38,21 @@ namespace :deploy do
   task :migrate, :roles => :db, :only => { :primary => true } do
   end
 
+  task :finalize_update, :except => { :no_release => true } do
+    run "chmod -R g+w #{latest_release}" if fetch(:group_writable, true)
+
+    # mkdir -p is making sure that the directories are there for some SCM's that don't
+    # save empty folders
+    run <<-CMD
+      rm -rf #{latest_release}/log #{latest_release}/public/system #{latest_release}/tmp/pids &&
+      mkdir -p #{latest_release}/public &&
+      mkdir -p #{latest_release}/tmp &&
+      ln -s #{shared_path}/log #{latest_release}/log &&
+      ln -s #{shared_path}/system #{latest_release}/public/system &&
+      ln -s #{shared_path}/pids #{latest_release}/tmp/pids
+    CMD
+  end
+
   task :after_update_code, :roles => :app do
     cmd = "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}/init/"
     puts cmd
@@ -50,14 +65,7 @@ namespace :deploy do
   end
 
   task :after_setup, :roles => :app do
-    cmd =  "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}/init/"
-    puts cmd
-    system cmd
-    run "mkdir #{deploy_to}/shared/system/blog #{deploy_to}/shared/system/blog/public/assets"
-    run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
-    run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"
-    run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
-    run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
+    after_update_code
   end
 end
 
