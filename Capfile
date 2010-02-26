@@ -21,11 +21,6 @@ role :db,  "bloople.net", :primary => true
 set :runner, user
 
 namespace :deploy do
-  desc "The spinner task is used by :cold_deploy to start the application up"
-  task :spinner, :roles => :app do
-    restart
-  end
-
   task :stop, :roles => :app do
     run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
   end
@@ -40,8 +35,13 @@ namespace :deploy do
 
   desc "Restart the server"
   task :restart, :roles => :app do
-    stop
+    stop #Not needed on a deploy
     start
+  end
+
+  desc "The spinner task is used by :cold_deploy to start the application up"
+  task :spinner, :roles => :app do
+    restart
   end
 
   task :migrate, :roles => :db, :only => { :primary => true } do
