@@ -40,6 +40,7 @@ namespace :deploy do
 
   desc "Restart the server"
   task :restart, :roles => :app do
+    stop
     start
   end
 
