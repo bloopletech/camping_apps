@@ -26,13 +26,18 @@ namespace :deploy do
     restart
   end
 
-  desc "Restart the mongrel cluster"
-  task :restart, :roles => :app do
-    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
+  task :stop, :roles => :app do
+    run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
   end
 
   task :start, :roles => :app do
-    restart
+    run "cd #{deploy_to}/current/;rake clear_caches;rake start_rackup_production; exit;", :pty => false
+  end
+
+  desc "Restart the server"
+  task :restart, :roles => :app do
+    stop
+    start
   end
 
   task :migrate, :roles => :db, :only => { :primary => true } do
