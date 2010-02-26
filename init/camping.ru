@@ -8,6 +8,9 @@
 # rackup camping.ru
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
 
+Dir.chdir(File.dirname(__FILE__) + '/..')
+STDERR.reopen "log/errors.log", "a"
+
 require 'init/requires'
 
 #Yeahhh... this is not exactly optimal
