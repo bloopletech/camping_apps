@@ -31,7 +31,9 @@ namespace :deploy do
 
   desc "Restart the server"
   task :restart, :roles => :app do
-    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
+    sudo "monit -c /etc/monit/monitrc restart rackup", :pty => false
+    run "cd #{deploy_to}/current/;rake clear_caches; exit;", :pty => false
+#    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
   end
 
   desc "The spinner task is used by :cold_deploy to start the application up"
