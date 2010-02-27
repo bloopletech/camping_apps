@@ -20,6 +20,8 @@ task :sr => :start_rackup
 
 task :stop_rackup_production do
   system("kill `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
+  sleep(5)
+  system("kill -9 `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
 end
 
 task :restart_rackup_production => [:stop_rackup_production, :start_rackup_production] #test
