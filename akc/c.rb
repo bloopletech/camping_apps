@@ -53,6 +53,10 @@ module Akc::Controllers
 
   class AddScore < R '/add/(.*?)/(\d+)/(.*?)/(.*?)/(\d+)'
     def get(source, version, name, crypt, score)
+      source = CGI.unescape(source)
+      name = CGI.unescape(name)
+      crypt = CGI.unescape(crypt)
+
 #      User.transaction do
         source = (source == '' ? 'dashboard' : source)
 
