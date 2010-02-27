@@ -8,7 +8,7 @@ end
 
 desc "Starts the server using rackup for production"
 task :start_rackup_production do
-  system("rackup -p 8004 -E none -D -P tmp/pids/rack.pid init/camping.ru")
+  system("rackup -p 8004 -E none -D -P #{File.dirname(__FILE__)}/tmp/pids/rack.pid init/camping.ru")
 end
 
 desc "Starts the server using rackup for the current environment"
@@ -19,7 +19,7 @@ end
 task :sr => :start_rackup
 
 task :stop_rackup_production do
-  system("kill -HUP `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
+  system("kill `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
 end
 
 task :restart_rackup_production => [:stop_rackup_production, :start_rackup_production] #test
