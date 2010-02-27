@@ -73,4 +73,17 @@ module Kc::Models
       add_column :kc_users, :seen_oz_quiz_released, :boolean, :default => false
     end
   end
+
+  class FixUrlEscaping < V 8
+    def self.up
+      require 'cgi'
+
+      Kc::Models::User.find(:all).each do |u|
+        next if u.name.nil? || u.crypt.nil?
+        u.name = CGI.unescape(u.name).gsub(/ +/, ' ')
+        u.crypt = CGI.unescape(u.crypt).gsub(/ +/, ' ')
+        u.save!
+      end
+    end
+  end
 end

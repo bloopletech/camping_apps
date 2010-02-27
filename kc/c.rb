@@ -53,6 +53,10 @@ module Kc::Controllers
 
   class AddScore < R '/add/(|.*?/)(\d+)/(.*?)/(.*?)/(\d+)'
     def get(source, version, name, crypt, score)
+      source = CGI.unescape(source).gsub(/ +/, ' ')
+      name = CGI.unescape(name).gsub(/ +/, ' ')
+      crypt = CGI.unescape(crypt).gsub(/ +/, ' ')
+
       source = (source == '' ? 'konfabulator' : source.chop)
       if true#version == 11 or (source == 'konfabulator' and version == 10)
         user = User.find_by_name(name)
