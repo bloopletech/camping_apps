@@ -31,7 +31,7 @@ namespace :deploy do
 
   desc "Restart the server"
   task :restart, :roles => :app do
-    sudo "monit -c /etc/monit/monitrc restart rackup", :pty => false
+    sudo "monit -c /etc/monit/monitrc restart rackup"
     run "cd #{deploy_to}/current/;rake clear_caches; exit;", :pty => false
 #    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
   end
