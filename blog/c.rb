@@ -11,7 +11,7 @@ module Blog::Controllers
       conditions = tag ? { :conditions => TAG_PATTERN.map { |t| "tags LIKE " + ActiveRecord::Base.connection.quote(t.gsub('?', tag)) }.join(" OR ") } : {}
       @total_pages = (posts.count(:all, conditions) / 5.0).ceil
       @has_older_pages = @total_pages > 1
-      standard_conds = { :order => 'created_at DESC' }
+      standard_conds = { :order => 'published_at DESC' }
       standard_conds[:limit] = 5 if format == 'html' or format == ''
       @posts = posts.find :all, conditions.merge(standard_conds)
       render format == 'rss' ? :rss_feed : :index
