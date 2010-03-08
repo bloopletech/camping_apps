@@ -72,7 +72,7 @@ module Blog::Views
             img(:src => '/images/me.jpg')
             p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Interactive</a> in Adelaide, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
             p { "You can email me at <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;</a>." }
-            p { a('More...', :href => 'http://bloople.net/about/') }
+            p { a('More information about my other projects and commercial work', :href => 'http://bloople.net/about/') }
             h2 'Recent comments'
             Blog::Models::Comment.find(:all, :order => 'created_at DESC', :limit => 5).each do |c|
               h4 { a(ellipsis(c.body), :href => R(Read, c.post.id) + "#comment-#{c.id}") + " on " + a(c.post.title, :href => R(Read, c.post.id)) }
@@ -237,7 +237,7 @@ module Blog::Views
           item do
             title post.title
             link URL(Read, post.nickname).to_s
-            pubDate post.created_at.to_s(:rfc822)
+            pubDate post.published_at.to_s(:rfc822)
             description post.body
           end
         end
@@ -251,7 +251,7 @@ module Blog::Views
       h2 { a post.title, :href => R(Read, post.nickname) }
       div.body { text post.body }
       p.subtitle do
-        text "#{nice_date_time(post.created_at)}"
+        text "#{nice_date_time(post.published_at)}"
       end
       cs = post.comments.size
       
