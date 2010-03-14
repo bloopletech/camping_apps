@@ -1,3 +1,32 @@
+Dependencies:
+
+actionmailer (2.2.2)
+actionpack (2.2.2)
+activerecord (2.2.2)
+activeresource (2.2.2)
+activesupport (2.2.2)
+cgi_multipart_eof_fix (2.5.0)
+daemons (1.0.10)
+ezcrypto (0.7.2)
+fastthread (1.0.7)
+gem_plugin (0.2.3)
+gruff (0.3.6)
+hpricot (0.8.2)
+htmlentities (4.0.0)
+image_science (1.2.1)
+mongrel (1.1.5)
+mysql (2.8.1)
+rack (1.1.0)
+rails (2.2.2)
+rake (0.8.7)
+RedCloth (4.2.3)
+rmagick (2.12.2)
+RubyInline (3.8.4)
+will_paginate (2.3.12)
+ZenTest (4.2.1)
+
+Setup:
+
 You will need to add a file called init/configuration.rb with contents similar to:
 
 #start file

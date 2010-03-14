@@ -1,7 +1,7 @@
 .svn
-init/configuration.rb
-*.log
-*.sql
+/init/configuration.rb
+/log
+/**/*.sql
 .DS_Store
 stuff
 open.app

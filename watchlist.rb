@@ -4,7 +4,6 @@ require 'camping/session'
 require 'htmlentities/string'
 require 'lib/common'
 
-gem 'mislav-will_paginate', '~> 2.3'
 require 'will_paginate'
 require 'will_paginate/view_helpers'
 
