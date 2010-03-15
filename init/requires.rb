@@ -5,7 +5,10 @@ require 'init/configuration'
 require 'rubygems'
 
 gem 'hpricot', '0.6'
+gem 'activesupport', '2.2.2'
 gem 'activerecord', '2.2.2'
+gem 'actionpack', '2.2.2'
+gem 'rails', '2.2.2'
 
 #ActiveRecord + MySQL async + patches
 #require 'mysqlplus'
