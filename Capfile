@@ -60,9 +60,7 @@ namespace :deploy do
   end
 
   task :after_update_code, :roles => :app do
-    cmd = "scp -P #{port} init/configuration.rb #{user}@bloople.net:#{release_path}/init/"
-    puts cmd
-    system cmd
+    run "ln -nfs #{deploy_to}/shared/configuration.rb #{release_path}/init/configuration.rb"
     run "ln -nfs #{deploy_to}/shared/system/blog/assets #{release_path}/blog/public/assets"
     run "ln -nfs #{deploy_to}/shared/system/kc/images/users #{release_path}/kc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"

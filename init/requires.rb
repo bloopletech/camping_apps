@@ -4,6 +4,9 @@ require 'init/configuration'
 
 require 'rubygems'
 
+gem 'hpricot', '0.6'
+gem 'activerecord', '2.2.2'
+
 #ActiveRecord + MySQL async + patches
 #require 'mysqlplus'
 #class Mysql
@@ -16,6 +19,8 @@ require 'lib/active_record_mysql_gone_patch'
 
 require 'will_paginate'
 require 'ostruct'
+
+#require 'pathname' 
 
 #Camping + markaby 
 $:.unshift Pathname.new('./lib/camping/lib/').realpath
