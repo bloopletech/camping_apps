@@ -276,9 +276,9 @@ def WikiWatcher.create
   Thread.new do
     while(true)
       z = Time.now
-      puts "Getting latest"
+#      puts "Getting latest"
       get_latest
-      puts "Got latest, elapsed #{Time.now - z}"
+#      puts "Got latest, elapsed #{Time.now - z}"
       sleep(30)
     end
   end
