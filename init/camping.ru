@@ -8,11 +8,11 @@
 # rackup camping.ru
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
 
-#if ENV['CAMPING_ENV'] != 'development'
+if ENV['CAMPING_ENV'] != 'development' #TODO: fix so == 'production'
   STDIN.reopen "/dev/null"
   STDOUT.reopen "/dev/null", "a"
   STDERR.reopen "log/errors.log", "a"
-#end
+end
 
 Dir.chdir(File.dirname(__FILE__) + '/..')
 

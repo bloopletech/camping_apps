@@ -8,7 +8,7 @@ end
 
 desc "Starts the server using rackup for production"
 task :start_rackup_production do
-  system("rackup -p 8004 -E none -P #{File.dirname(__FILE__)}/tmp/pids/rack.pid init/camping.ru &")
+  system("rackup -p 8004 -E none -P #{File.dirname(__FILE__)}/tmp/pids/rack.pid init/camping.ru")
 end
 
 desc "Starts the server using rackup for the current environment"
