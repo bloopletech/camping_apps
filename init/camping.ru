@@ -8,7 +8,7 @@
 # rackup camping.ru
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
 
-if ENV['CAMPING_ENV'] == 'production'
+if ENV['CAMPING_ENV'] != 'development'
   if (pid = fork)
     Signal.trap('HUP', 'IGNORE')
     Process.detach(pid)
