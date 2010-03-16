@@ -9,6 +9,8 @@
 # ensure your VirtualHost files have <subdomain>.example.com pointing to localhost:9292/<subdomain>/ .
 
 Dir.chdir(File.dirname(__FILE__) + '/..')
+STDIN.reopen "/dev/null"
+STDOUT.reopen "/dev/null", "a"
 STDERR.reopen "log/errors.log", "a"
 
 require 'init/requires'
