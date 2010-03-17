@@ -19,8 +19,9 @@ end
 task :sr => :start_rackup
 
 task :stop_rackup_production do
-  system("kill `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
-  sleep(5)
+  #Find out why failing in monit
+#  system("kill `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
+#  sleep(5)
   system("kill -9 `cat tmp/pids/rack.pid`") if File.exists?("tmp/pids/rack.pid")
 end
 
