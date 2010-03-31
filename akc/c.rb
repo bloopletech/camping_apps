@@ -277,7 +277,9 @@ module Akc::Controllers
   class AddShout < R '/add_shout'
     def post
       @shout = Shout.new(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
-      unless @shout.save
+      if @shout.save
+        add_success("Your shout has been published; it may take up to 10 minutes for your shout to appear on this page.")
+      else
         @shout.errors.full_messages.each { |msg| add_error(msg) }
       end
       redirect '/'
