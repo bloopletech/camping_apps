@@ -278,7 +278,7 @@ module Akc::Controllers
     def post
       @shout = Shout.new(:username => input.username, :text => input.text, :captcha => input.captcha, :posted => Time.now.getgm)
       if @shout.save
-        add_success("Your shout has been published; it may take up to 10 minutes for your shout to appear on this page.")
+        add_success("Your shout has been published; it may take up to 10 minutes for your shout to be visible to other people.")
       else
         @shout.errors.full_messages.each { |msg| add_error(msg) }
       end
