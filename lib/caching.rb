@@ -4,7 +4,7 @@ module CampingCaching
       base.class_eval do
         def current_request_is_cacheable?
           self.class.cacheable && @env.REQUEST_METHOD.downcase == "get" && @env.QUERY_STRING == "" && @state.user_id.nil? &&
-           (@state.flash.nil? || @state.flash == { :success => [], :errors => [] }) &&
+           (@state[:flash].nil? || @state[:flash] == { :success => [], :errors => [] }) &&
            (@state.keys.map { |x| x.to_sym } - [:flash, :user_id]).empty?
         end
 
