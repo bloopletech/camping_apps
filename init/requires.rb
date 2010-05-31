@@ -4,7 +4,8 @@ require 'init/configuration'
 
 require 'rubygems'
 
-gem 'hpricot', '0.8.2'
+#gem 'hpricot', '0.8.2'
+gem 'hpricot', '0.6'
 gem 'activesupport', '2.3.8'
 gem 'activerecord', '2.3.8'
 gem 'actionpack', '2.3.8'
