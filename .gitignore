@@ -13,3 +13,4 @@ ajas/public/images/anime_titles
 **/*.sql
 *.log
 *.sql
+/log.txt
