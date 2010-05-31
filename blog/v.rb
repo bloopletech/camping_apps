@@ -70,7 +70,7 @@ module Blog::Views
              "<a href='/rss/Ruby'><img src='/images/feed_icon.png'> RSS feed of Ruby posts</a>" }
             h2 'About me'
             img(:src => '/images/me.jpg')
-            p { "I currently hold the position of Ruby on Rails developer with the award-winning <a href='http://www.katalyst.com.au'>Katalyst Interactive</a> in Adelaide, Australia. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
+            p { "I'm currently working for <a href='http://coupa.com/'>Coupa</a> as a Rails developer. My work has been mentioned in the media several times, <a href='/tag/Media'>click here</a> to see them all." }
             p { "You can email me at <a href='mailto:&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;'>&#105;&#064;&#098;&#108;&#111;&#111;&#112;&#108;&#101;&#046;&#110;&#101;&#116;</a>." }
             p { a('More information about my other projects and commercial work', :href => 'http://bloople.net/about/') }
             h2 'Recent comments'

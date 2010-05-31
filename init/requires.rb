@@ -4,11 +4,11 @@ require 'init/configuration'
 
 require 'rubygems'
 
-gem 'hpricot', '0.6'
-gem 'activesupport', '2.2.2'
-gem 'activerecord', '2.2.2'
-gem 'actionpack', '2.2.2'
-gem 'rails', '2.2.2'
+gem 'hpricot', '0.8.2'
+gem 'activesupport', '2.3.8'
+gem 'activerecord', '2.3.8'
+gem 'actionpack', '2.3.8'
+gem 'rails', '2.3.8'
 
 #ActiveRecord + MySQL async + patches
 #require 'mysqlplus'
@@ -44,6 +44,8 @@ class Fixnum
   end
 end
 
+#use Rack::MailExceptions, MAIL_EXCEPTIONS_CONFIG
+
 module CampingBasePatches
   def self.included(base)
     base.class_eval do
@@ -51,8 +53,8 @@ module CampingBasePatches
         r(404, "<h3>Oops! Page could not be found.</h3>")
       end
       def r500(k,m,x)
-        puts $!
-        puts $!.backtrace
+#        puts $!
+#        puts $!.backtrace
         r(500, "<h3>Oops! An error occured; please try again.</h3>")
       end
       alias_method :initialize_without_rootfix, :initialize
