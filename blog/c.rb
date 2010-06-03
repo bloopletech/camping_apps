@@ -114,8 +114,8 @@ module Blog::Controllers
       fn = "#{Time.now.to_i}_#{rand(999999)}"
 
       ImageScience.with_image(input.upload[:tempfile].path) do |img|
-        img.thumbnail(1000) { |thumb| thumb.save("#{PATH}/public/assets/#{fn}.jpg") }
-        img.thumbnail(400) { |thumb| thumb.save("#{PATH}/public/assets/#{fn}_small.jpg") }
+        img.thumbnail(1000) { |thumb| thumb.save("#{Blog::PATH}/public/assets/#{fn}.jpg") }
+        img.thumbnail(400) { |thumb| thumb.save("#{Blog::PATH}/public/assets/#{fn}_small.jpg") }
       end
       
       redirect "/assets"
@@ -125,8 +125,8 @@ module Blog::Controllers
   class DeleteAsset < R '/assets/delete/(.+)'
     def get filename
       return unless logged_in?
-      File.delete("#{PATH}/public/assets/#{filename}")
-      File.delete("#{PATH}/public/assets/#{filename.gsub(/\.jpg$/, '')}_small.jpg")
+      File.delete("#{Blog::PATH}/public/assets/#{filename}")
+      File.delete("#{Blog::PATH}/public/assets/#{filename.gsub(/\.jpg$/, '')}_small.jpg")
       redirect "/assets"
     end
   end
@@ -137,7 +137,7 @@ module Blog::Controllers
     def get(path)
       @headers['Content-Type'] = MIME_TYPES[path[/\.\w+$/, 0]] || "text/plain"
       unless path.include? ".." # prevent directory traversal attacks
-        @headers['X-Accel-Redirect'] = "#{PATH}/public/assets/#{path}"
+        @headers['X-Accel-Redirect'] = "#{Blog::PATH}/public/assets/#{path}"
       else
         @status = "403"
         "403 - Invalid path"
