@@ -212,9 +212,9 @@ module Blog::Views
       end
     end
 
-    Dir.glob("#{PATH}/public/assets/*_small.jpg") do |filename|
+    Dir.glob("#{Blog::PATH}/public/assets/*_small.jpg") do |filename|
       div.asset do
-        fn = "#{filename.gsub(/^#{Regexp.escape(PATH)}\/public/, '')}"
+        fn = "#{filename.gsub(/^#{Regexp.escape(Blog::PATH)}\/public/, '')}"
         img :src => fn
         text "#{fn} "
         a 'Delete', :href => "/assets/delete/#{fn.gsub(/^\/assets\//, '').gsub(/_small.jpg$/, '.jpg')}", :onclick => "return confirm('Sure?');"
