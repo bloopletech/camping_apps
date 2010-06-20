@@ -4,10 +4,9 @@
 /**/*.sql
 .DS_Store
 stuff
-open.app
-open.rb
 portfolio/public
 ajas/public/images/anime_titles
+/blog/public/assets/
 /*/public/cache/*
 **/*.log
 **/*.sql
