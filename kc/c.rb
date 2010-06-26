@@ -70,17 +70,17 @@ module Kc::Controllers
 
         Score.create(:version => version, :user => user, :score => score, :when => Time.now, :source => source)
 
-        if !user.seen_oz_quiz_released?
-          user.seen_oz_quiz_released = true
-          user.save!
-          return mab { text "0|http://kc.bloople.net/oz_quiz_released/#{user.id}" }
-        elsif !user.seen_site_changes_12_2008?
-          user.seen_site_changes_12_2008 = true
-          user.save!
-          return mab { text "0|http://kc.bloople.net/check_out_kc/#{user.id}" }
-        else
+        #if !user.seen_oz_quiz_released?
+        #  user.seen_oz_quiz_released = true
+        #  user.save!
+        #  return mab { text "0|http://kc.bloople.net/oz_quiz_released/#{user.id}" }
+        #elsif !user.seen_site_changes_12_2008?
+        #  user.seen_site_changes_12_2008 = true
+        #  user.save!
+        #  return mab { text "0|http://kc.bloople.net/check_out_kc/#{user.id}" }
+        #else
           return mab { text "" }
-        end
+        #end
       else
         return mab { text "1|http://kc.bloople.net/pleaseupgrade" }
       end
