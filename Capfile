@@ -8,15 +8,15 @@ set :port, 9979
 set :scm, :git
 set :repository, "git@github.com:bloopletech/camping_apps.git"
 
-set :deploy_to, "/home/bloople/www/#{application}"
+set :deploy_to, "/www/#{application}"
 
 set :deploy_via, :remote_cache
 
 set :keep_releases, 2
 
-role :app, "bloople.net"
-role :web, "bloople.net"
-role :db,  "bloople.net", :primary => true
+role :app, "173.230.157.72"
+role :web, "173.230.157.72"
+role :db,  "173.230.157.72", :primary => true
 
 set :runner, user
 

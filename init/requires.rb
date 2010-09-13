@@ -11,15 +11,7 @@ gem 'activerecord', '2.3.8'
 gem 'actionpack', '2.3.8'
 gem 'rails', '2.3.8'
 
-#ActiveRecord + MySQL async + patches
-#require 'mysqlplus'
-#class Mysql
-#  alias_method :query, :c_async_query
-#end
-
 require 'active_record'
-require 'lib/active_record_mysql_gone_patch'
-#end
 
 require 'will_paginate'
 require 'ostruct'

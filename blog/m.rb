@@ -23,7 +23,7 @@ module Blog::Models
   end
   
   class Admin < Base; end
-  
+
   class Post < Base
     has_many :comments, :order => 'created_at ASC', :dependent => :destroy
     validates_presence_of :title, :nickname, :published_at

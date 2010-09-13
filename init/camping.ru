@@ -33,12 +33,7 @@ Camping::Models::Session.create_schema if Camping::Models.const_defined?(:Sessio
  
 ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['CAMPING_ENV'] =~ /^d/
 
-dirs = Dir.glob("*.rb")
-
-PRIVATE_CAMPING_DIR = "/home/bloople/www/private_camping/current"
-dirs += Dir.glob("#{PRIVATE_CAMPING_DIR}/*.rb") if ::File.directory?(PRIVATE_CAMPING_DIR)
-
-dirs.each do |file|
+Dir.glob("*.rb").each do |file|
   title = ::File.basename(file)[/^([\w_]+)/,1].gsub /_/,''
   Dir.chdir(::File.dirname(file)) { load file }
   klass = Object.const_get(Object.constants.grep(/^#{title}$/i)[0]) rescue nil

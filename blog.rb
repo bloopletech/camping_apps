@@ -1,5 +1,5 @@
 # encoding: utf-8
-%w(redcloth camping/ar camping/session image_science lib/common).each { |lib| require lib }
+%w(camping/ar camping/session image_science lib/common feedzirra).each { |lib| require lib }
 
 # Fix unicode urls
 $KCODE = 'u'
