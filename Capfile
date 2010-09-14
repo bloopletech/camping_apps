@@ -2,9 +2,9 @@ load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 
 default_run_options[:pty] = true
 
-set :application, "camping"
+set :application, "camping_apps"
 set :user, "bloople"
-set :port, 9979
+#set :port, 9979
 set :scm, :git
 set :repository, "git@github.com:bloopletech/camping_apps.git"
 
@@ -20,6 +20,10 @@ role :db,  "173.230.157.72", :primary => true
 
 set :runner, user
 
+def run_in_current(task)
+  run "cd #{release_path}; TERM=xterm-color rvm use 1.8.7; #{task}; exit;", :pty => false, :shell => 'bash -l'
+end
+
 namespace :deploy do
 #  task :stop, :roles => :app do
 #    run "cd #{deploy_to}/current/;rake stop_rackup_production; exit;", :pty => false
@@ -32,8 +36,7 @@ namespace :deploy do
   desc "Restart the server"
   task :restart, :roles => :app do
     sudo "monit -c /etc/monit/monitrc restart rackup"
-    run "cd #{deploy_to}/current/;rake clear_caches; exit;", :pty => false
-#    run "cd #{deploy_to}/current/;rake clear_caches;rake restart_rackup_production; exit;", :pty => false
+    run_in_current "rake clear_caches"
   end
 
   desc "The spinner task is used by :cold_deploy to start the application up"
@@ -66,6 +69,7 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}/shared/system/akc/images/users #{release_path}/akc/public/images/users"
     run "ln -nfs #{deploy_to}/shared/system/portfolio/images/works #{release_path}/portfolio/public/images/works"
     run "ln -nfs #{deploy_to}/shared/system/ajas/anime_titles #{release_path}/ajas/public/images/anime_titles"
+    run_in_current "rake generate_nginx_config"
   end
 
   task :after_setup, :roles => :app do
