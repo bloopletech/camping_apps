@@ -40,21 +40,21 @@ module Concise::Models
 
   class CreateConcise < V 0.1
     def self.up
-      create_table :concise_questions, :force => true do |t|
+      create_table :concise_questions do |t|
         t.column :body, :string
         t.datetime :created_at, :updated_at
       end
-      create_table :concise_responses, :force => true do |t|
+      create_table :concise_responses do |t|
         t.column :user_id, :integer
         t.column :question_id, :integer
         t.column :body, :string
         t.integer :positive_votes, :negative_votes
         t.datetime :created_at, :updated_at
       end
-      create_table :concise_users, :force => true do |table|
+      create_table :concise_users do |table|
         table.string :name, :password, :email
       end
-      create_table :concise_votes, :force => true do |table|
+      create_table :concise_votes do |table|
         table.integer :user_id, :response_id
         table.boolean :positive
       end

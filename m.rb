@@ -35,7 +35,7 @@ module M::Models
   
   class CreateMessages < V 1.0
     def self.up
-      create_table :m_messages, :force => true do |t|
+      create_table :m_messages do |t|
         t.column :message, :string, :limit => 255
       end
     end

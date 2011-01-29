@@ -1,5 +1,5 @@
 # encoding: utf-8
-#=begin 
+#=begin
 require 'hpricot'
 require 'htmlentities/string'
 require 'net/http'
@@ -24,7 +24,7 @@ module WikiWatcher::Models
 
   class CreateEdits < V 0.1
     def self.up
-      create_table :wikiwatcher_edits, :force => true do |t|
+      create_table :wikiwatcher_edits do |t|
         t.column :rev_id, :integer
         t.column :page_id, :integer
         t.column :article, :text
@@ -282,6 +282,6 @@ def WikiWatcher.create
       sleep(30)
     end
   end
-#=end 
+#=end
 end
 #=end

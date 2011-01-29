@@ -40,7 +40,7 @@ module Reauthrss::Models
 
   class CreateAccounts < V 1
     def self.up
-      create_table :reauthrss_accounts, :force => true do |t|
+      create_table :reauthrss_accounts do |t|
         t.column :username, :string
         t.column :password, :binary
         t.column :public_id, :string

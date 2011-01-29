@@ -13,7 +13,7 @@ module Things::Models
 
   class CreateThings < V 0.1
     def self.up
-      create_table :things_things, :force => true do |t|
+      create_table :things_things do |t|
         t.column :name, :string
         t.column :state, :boolean
         t.column :published, :datetime

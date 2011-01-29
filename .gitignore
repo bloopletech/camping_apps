@@ -3,13 +3,12 @@
 /log
 /**/*.sql
 .DS_Store
-stuff
-portfolio/public
-ajas/public/images/anime_titles
+/stuff
+/portfolio/public
+/ajas/public/images/anime_titles
 /blog/public/assets/
 /*/public/cache/*
-**/*.log
-**/*.sql
 *.log
 *.sql
 /log.txt
+/.redcar/

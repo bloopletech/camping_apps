@@ -10,7 +10,7 @@ module Crowdcount::Models
 
   class CreateCrowdcount < V 0.1
     def self.up
-      create_table :crowdcount_counts, :force => true do |t|
+      create_table :crowdcount_counts do |t|
         t.column :count, :integer
       end
       Count.create(:count => 0)
