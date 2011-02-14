@@ -57,7 +57,7 @@ module Akc::Controllers
       name = CGI.unescape(name).gsub(/ +/, ' ')
       crypt = CGI.unescape(crypt).gsub(/ +/, ' ')
 
-#      User.transaction do
+      User.transaction do
         source = (source == '' ? 'dashboard' : source)
 
         user = User.find_by_name(name)
@@ -79,7 +79,7 @@ module Akc::Controllers
           return mab { text "" }
         #end
       end
-#    end
+    end
   end
   
   class HighScores < R '/high_scores'
