@@ -56,6 +56,11 @@ module Blog::Helpers
     t[0...10].join(' ') + (t.length > 10 ? "..." : "")
   end
 
+  #implicitly html-escapes the input
+  def wbrize(s)
+    s.scan(/.{1,15}/).map { |c| h c }.join("<wbr />")
+  end
+
   def nice_date_time(dt)
     dt.in_time_zone('Adelaide').strftime('%I:%M %p on %A, %d/%m/%Y')
   end

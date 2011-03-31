@@ -75,7 +75,7 @@ module Blog::Views
             p { a('More information about my other projects and commercial work', :href => 'http://bloople.net/about/') }
             h2 'Recent comments'
             Blog::Models::Comment.find(:all, :order => 'created_at DESC', :limit => 5).each do |c|
-              h4 { a(ellipsis(c.body), :href => R(Read, c.post.id) + "#comment-#{c.id}") + " on " + a(c.post.title, :href => R(Read, c.post.id)) }
+              h4 { a(wbrize(ellipsis(c.body)), :href => R(Read, c.post.id) + "#comment-#{c.id}") + " on " + a(c.post.title, :href => R(Read, c.post.id)) }
             end
             #h2 'Twitter posts'
             #text '<script id="feed-1250996587956855" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Ftwitter.com%2Fstatuses%2Fuser_timeline%2F15440326.rss&detail=-1&limit=5&showtitle=false&type=js&id=1250996587956855"></script>'

@@ -21,7 +21,7 @@ role :db,  "178.79.147.14", :primary => true
 set :runner, user
 
 def run_in_current(task)
-  run "cd #{release_path}; TERM=xterm-color rvm use 1.8.7; #{task}; exit;", :pty => false, :shell => 'bash -l'
+  run "cd #{release_path}; TERM=xterm-color rvm use 1.8.7-p302; #{task}; exit;", :pty => false, :shell => 'bash -l'
 end
 
 namespace :deploy do
