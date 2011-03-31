@@ -56,6 +56,10 @@ module Blog::Helpers
     t[0...10].join(' ') + (t.length > 10 ? "..." : "")
   end
 
+  def h(text)
+    CGI::escapeHTML(text)
+  end
+
   #implicitly html-escapes the input
   def wbrize(s)
     s.scan(/.{1,15}/).map { |c| h c }.join("<wbr />")
