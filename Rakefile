@@ -3,12 +3,12 @@ prod = !dev
 
 desc "Starts the server using rackup for development"
 task :start_rackup_development do
-  system("rackup -p 8005 -E none init/camping.ru")
+  system("rackup _1.1.0_ -p 8005 -E none init/camping.ru")
 end
 
 desc "Starts the server using rackup for production"
 task :start_rackup_production do
-  system("rackup -p 8004 -E none -P #{File.dirname(__FILE__)}/tmp/pids/rack.pid init/camping.ru &")
+  system("rackup _1.1.0_ -p 8004 -E none -P #{File.dirname(__FILE__)}/tmp/pids/rack.pid init/camping.ru &")
 end
 
 desc "Starts the server using rackup for the current environment"
